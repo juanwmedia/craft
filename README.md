@@ -325,6 +325,8 @@ Generates production-quality UI mockups using [Stitch](https://stitch.withgraphi
 
 ## Installation
 
+> **Note:** Skills and agents are standard features supported by multiple AI coding tools. The paths below use `~/.claude/` (Claude Code). If you use a different tool, adapt the paths accordingly — e.g., `.cursor/skills/` for Cursor. The CRAFT methodology itself is tool-agnostic.
+
 ### 1. Clone this repository
 
 ```bash
@@ -333,22 +335,22 @@ git clone https://github.com/juanwmedia/craft.git ~/code/craft
 
 ### 2. Symlink skills and agents
 
-CRAFT skills are loaded from `~/.config/skills/`. Each skill needs its own symlink:
+CRAFT skills are loaded from `~/.claude/skills/`. Each skill needs its own symlink:
 
 ```bash
 # Create the skills directory if it doesn't exist
-mkdir -p ~/.config/skills
+mkdir -p ~/.claude/skills
 
 # Symlink each CRAFT skill
 for skill in contextualize refine arrange forge teardown craft evaluate understand; do
-  ln -s ~/code/craft/skills/$skill ~/.config/skills/$skill
+  ln -s ~/code/craft/skills/$skill ~/.claude/skills/$skill
 done
 
 # Symlink the agents directory
-ln -s ~/code/craft/agents ~/.config/agents
+ln -s ~/code/craft/agents ~/.claude/agents
 ```
 
-If you already have other skills in `~/.config/skills/`, this won't conflict — each skill is its own directory.
+If you already have other skills in `~/.claude/skills/`, this won't conflict — each skill is its own directory.
 
 ### 3. Verify
 
