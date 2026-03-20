@@ -2,9 +2,12 @@
 
 A skill-based methodology for building features with [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Each phase is a standalone [skill](https://docs.anthropic.com/en/docs/claude-code/skills) (slash command) that produces a concrete, versioned artifact — from product spec to production code.
 
-```
-Contextualize → Refine → Arrange → Forge → Teardown
-     spec        tech-spec   plan     code    close
+```mermaid
+graph LR
+    C["Contextualize"] -->|spec| R["Refine"]
+    R -->|tech-spec| A["Arrange"]
+    A -->|plan| F["Forge"]
+    F -->|code| T["Teardown"]
 ```
 
 ## Why CRAFT
@@ -428,10 +431,13 @@ features:
 
 ### Status flow
 
-```
-draft → spec-ready → tech-ready → planned → in-progress → done
-  ↑        ↑             ↑           ↑            ↑          ↑
-  /contextualize  /refine    /arrange     /forge      /teardown
+```mermaid
+graph LR
+    D["draft"] -->|/contextualize| SR["spec-ready"]
+    SR -->|/refine| TR["tech-ready"]
+    TR -->|/arrange| P["planned"]
+    P -->|/forge| IP["in-progress"]
+    IP -->|/teardown| Done["done"]
 ```
 
 ## Design principles
