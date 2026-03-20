@@ -333,22 +333,22 @@ git clone https://github.com/juanwmedia/craft.git ~/code/craft
 
 ### 2. Symlink skills and agents
 
-CRAFT skills are loaded from `~/.claude/skills/`. Each skill needs its own symlink:
+CRAFT skills are loaded from `~/.config/skills/`. Each skill needs its own symlink:
 
 ```bash
 # Create the skills directory if it doesn't exist
-mkdir -p ~/.claude/skills
+mkdir -p ~/.config/skills
 
 # Symlink each CRAFT skill
 for skill in contextualize refine arrange forge teardown craft evaluate understand; do
-  ln -s ~/code/craft/skills/$skill ~/.claude/skills/$skill
+  ln -s ~/code/craft/skills/$skill ~/.config/skills/$skill
 done
 
 # Symlink the agents directory
-ln -s ~/code/craft/agents ~/.claude/agents
+ln -s ~/code/craft/agents ~/.config/agents
 ```
 
-If you already have other skills in `~/.claude/skills/`, this won't conflict — each skill is its own directory.
+If you already have other skills in `~/.config/skills/`, this won't conflict — each skill is its own directory.
 
 ### 3. Verify
 
