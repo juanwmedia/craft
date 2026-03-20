@@ -1,6 +1,6 @@
 # CRAFT
 
-A skill-based methodology for building features with [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Each phase is a standalone [skill](https://docs.anthropic.com/en/docs/claude-code/skills) (slash command) that produces a concrete, versioned artifact — from product spec to production code.
+A skill-based methodology for building features with AI coding agents. Each phase is a standalone skill (slash command) that produces a concrete, versioned artifact — from product spec to production code.
 
 ```mermaid
 graph LR
@@ -12,7 +12,7 @@ graph LR
 
 ## Why CRAFT
 
-Claude Code is powerful, but without structure it drifts: specs get skipped, tests get faked, decisions vanish between sessions. CRAFT constrains each phase into a repeatable protocol with versioned artifacts, traceability from requirements to code, and strict TDD discipline during implementation.
+AI coding agents are powerful, but without structure they drift: specs get skipped, tests get faked, decisions vanish between sessions. CRAFT constrains each phase into a repeatable protocol with versioned artifacts, traceability from requirements to code, and strict TDD discipline during implementation.
 
 The methodology is opinionated. It enforces:
 
@@ -333,7 +333,7 @@ git clone https://github.com/juanwmedia/craft.git ~/code/craft
 
 ### 2. Symlink skills and agents
 
-CRAFT skills are loaded by Claude Code from `~/.claude/skills/`. Each skill needs its own symlink:
+CRAFT skills are loaded from `~/.claude/skills/`. Each skill needs its own symlink:
 
 ```bash
 # Create the skills directory if it doesn't exist
@@ -352,7 +352,7 @@ If you already have other skills in `~/.claude/skills/`, this won't conflict —
 
 ### 3. Verify
 
-Start a Claude Code session and type `/craft`. You should see the status dashboard. If you have no features yet, it will prompt you to run `/contextualize`.
+Start a new session and type `/craft`. You should see the status dashboard. If you have no features yet, it will prompt you to run `/contextualize`.
 
 ## Workflow: building a feature end-to-end
 
