@@ -1,16 +1,49 @@
 ---
-name: contextualize
-description: Use when starting work on a new feature or requirement that needs a product spec. Produces a versioned spec.md with user stories and acceptance criteria inside docs/specs/<feature>/.
+name: spec
+description: Define what to build. Without argument shows the feature dashboard. With a feature slug, produces a versioned spec.md with user stories and acceptance criteria inside docs/specs/<feature>/.
 disable-model-invocation: false
-argument-hint: feature-slug
+argument-hint: [feature-slug]
 allowed-tools: Read, Edit, Write, Glob, Grep, AskUserQuestion, Agent
 ---
 
-Part of the **CRAFT** methodology (**C**ontextualize → Refine → Arrange → Forge → Teardown).
+Part of the **Craft** methodology (**Spec** → Build → Close).
+
+## Without argument — Dashboard
+
+When no feature slug is provided, show a read-only status overview.
+
+1. Read `docs/specs/index.yaml`
+2. If it doesn't exist: "No features tracked yet. Run `/spec <feature-slug>` to start."
+3. Group features by status
+4. Display:
+
+> **Craft Status — [Project Name]**
+>
+> | Status | Count | Features |
+> |--------|-------|----------|
+> | done | 8 | core-flow, bilingual, guest-flow, ... |
+> | in-progress | 4 | conversation-blocks, off-catalog, ... |
+> | spec-ready | 1 | question-gating |
+> | draft | 6 | streaming, knowledge-graph, ... |
+>
+> **Active work**: question-gating — spec approved, no tech-plan yet.
+> **Suggested**: Run `/build question-gating` to design and implement.
+
+For a single feature (`/spec dojo-streaming`), check which artifacts exist:
+- `spec.md` → read frontmatter (status, version)
+- `tech-plan.md` → read frontmatter (status, based_on_spec_version)
+
+Display status, current phase, and suggested next action.
+
+**Dashboard mode is READ-ONLY. It never creates or modifies files.**
+
+---
+
+## With argument — Spec mode
 
 Produces the **product spec** (the WHAT) for a single feature. One spec per feature, never a monolith.
 
-## 1. Find or create the specs infrastructure
+### 1. Find or create the specs infrastructure
 
 1. Check if CLAUDE.md (or equivalent project context file) exists.
    - If NO context file AND no `docs/specs/` directory AND minimal source code:
@@ -25,7 +58,7 @@ Produces the **product spec** (the WHAT) for a single feature. One spec per feat
 4. Create `docs/specs/<feature>/` directory if it doesn't exist.
 5. If `docs/specs/<feature>/spec.md` already exists, read it — you're updating, not creating from scratch.
 
-## 2. Understand existing state
+### 2. Understand existing state
 
 Read the project context file (CLAUDE.md) and `docs/specs/index.yaml` to understand:
 - Existing features and their statuses
@@ -33,7 +66,7 @@ Read the project context file (CLAUDE.md) and `docs/specs/index.yaml` to underst
 - Dependencies between features
 - What has already been built
 
-## 3. Critical analysis — back and forth
+### 3. Critical analysis — back and forth
 
 Before writing anything, engage in collaborative discussion. Depth proportional to complexity.
 
@@ -57,7 +90,7 @@ Before writing anything, engage in collaborative discussion. Depth proportional 
 
 Use `AskUserQuestion` — one focused round at a time, not 20 questions at once. Prioritize by impact.
 
-## 4. Visual design gate
+### 4. Visual design gate
 
 For features that involve UI:
 
@@ -70,7 +103,7 @@ For features that involve UI:
 
 Backend-only features skip this step.
 
-## 5. Write the spec
+### 5. Write the spec
 
 Write `docs/specs/<feature>/spec.md` with this structure:
 
@@ -103,7 +136,7 @@ last_updated: YYYY-MM-DD
 - Anything unresolved (or "None" if everything is clear)
 ```
 
-## 6. Spec audit — evaluator-optimizer pass
+### 6. Spec audit — evaluator-optimizer pass
 
 Before presenting, attack every user story and acceptance criterion against:
 
@@ -120,11 +153,11 @@ Before presenting, attack every user story and acceptance criterion against:
 
 Collect gaps, present to user, resolve, update spec.
 
-## 7. Present for review
+### 7. Present for review
 
 Show the complete spec to the user BEFORE writing to disk. Wait for explicit approval or corrections. Iterate until approved.
 
-## 8. Update index
+### 8. Update index
 
 After the spec is approved and written:
 
@@ -139,12 +172,12 @@ After the spec is approved and written:
    ```
 2. Set `status: draft` in the spec frontmatter to `status: approved`.
 
-## 9. Transition
+### 9. Transition
 
 Tell the user:
 > "Spec approved. You can:
 > - Run `/evaluate` to audit the spec for completeness
-> - Run `/refine` to create the technical specification
+> - Run `/build` to design, plan, and implement
 >
 > `/evaluate` is optional but recommended for complex or high-risk features."
 
@@ -152,5 +185,6 @@ Tell the user:
 
 - This skill produces the WHAT, never the HOW. No architecture, types, file paths, or implementation details.
 - Never overwrite existing specs without user consent. If updating, increment `spec_version`.
-- Never mark specs as completed — that's Teardown's job.
+- Never mark specs as completed — that's `/close`'s job.
 - Each feature gets its own directory and spec. Never append to a monolith.
+- When invoked without argument, this skill is read-only (dashboard mode). It never creates or modifies files in dashboard mode.
