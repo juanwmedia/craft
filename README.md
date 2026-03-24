@@ -1,6 +1,6 @@
 # Craft
 
-A skill-based methodology for building features with AI coding agents. Three skills, three artifacts.
+A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin for building features with structured methodology. Three skills, three artifacts.
 
 ```mermaid
 graph LR
@@ -141,17 +141,20 @@ Generates production-quality UI mockups using [Stitch](https://stitch.withgraphi
 
 ## Installation
 
-> **Note:** Skills and agents are standard features supported by multiple AI coding tools. The paths below use `~/.claude/` (Claude Code). If you use a different tool, adapt the paths accordingly — e.g., `.cursor/skills/` for Cursor. The methodology itself is tool-agnostic.
+### Option A: Plugin marketplace (recommended)
 
-### 1. Clone this repository
+```bash
+/plugin marketplace add juanwmedia/craft
+/plugin install craft@craft
+```
+
+All 5 skills and the agent are installed automatically. Updates via `/plugin marketplace update`.
+
+### Option B: Manual symlinks
 
 ```bash
 git clone https://github.com/juanwmedia/craft.git ~/code/craft
-```
 
-### 2. Symlink skills and agents
-
-```bash
 mkdir -p ~/.claude/skills
 
 for skill in spec build close evaluate understand; do
@@ -160,8 +163,6 @@ done
 
 ln -s ~/code/craft/agents ~/.claude/agents
 ```
-
-If you already have other skills in `~/.claude/skills/`, this won't conflict — each skill is its own directory.
 
 ### Upgrading from v1
 
@@ -173,7 +174,7 @@ for old in contextualize refine arrange forge teardown craft; do
 done
 ```
 
-### 3. Verify
+### Verify
 
 Start a new session and type `/spec`. You should see the dashboard. If you have no features yet, it will prompt you to run `/spec <feature-slug>`.
 
