@@ -1,0 +1,23 @@
+{
+  "name": "craft",
+  "owner": {
+    "name": "Juan Núñez"
+  },
+  "metadata": {
+    "description": "Craft methodology — structured feature development with AI coding agents"
+  },
+  "plugins": [
+    {
+      "name": "craft",
+      "source": ".",
+      "description": "3 core skills (spec, build, close) + 2 auxiliary (evaluate, understand) + ui-designer agent",
+      "version": "2.0.0",
+      "author": {
+        "name": "Juan Núñez"
+      },
+      "license": "MIT",
+      "keywords": ["methodology", "skills", "tdd", "specs", "planning"],
+      "category": "productivity"
+    }
+  ]
+}
