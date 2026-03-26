@@ -64,16 +64,39 @@ Update `docs/specs/index.yaml`:
 - Tasks remain → `status: in-progress`
 - Spec version changed → update `spec_version` in index
 
-## 6. Propose commits
+## 6. Pre-commit checks
+
+Before proposing commits, run two automated checks:
+
+### Security scan
+
+Search the diff for hardcoded secrets:
+- API keys, tokens, passwords (patterns: `sk-`, `ghp_`, `AKIA`, `password =`, `secret =`)
+- Private keys (`-----BEGIN.*PRIVATE KEY-----`)
+- Connection strings with credentials
+
+If found: **STOP. Flag to user. Do not propose commits until resolved.**
+
+### Quality gate
+
+Detect the project's quality tools from manifest files (`package.json`, `composer.json`, `pyproject.toml`, `Cargo.toml`) and run them:
+- Formatter (prettier, black, gofmt)
+- Linter (eslint, phpstan, ruff, clippy)
+- Type checker (tsc, mypy, phpstan)
+
+If any fail: fix the issues before proposing commits. These are mechanical errors, not spec-related — fix them silently unless the fix is non-trivial.
+
+## 7. Propose commits
 
 Based on the changes, propose atomic commit(s):
 - Each commit should be a coherent unit of work
 - Commit messages explain WHY, not just WHAT
 - Include relevant files — never `git add -A` blindly
+- Confirm pre-commit checks (step 6) passed before presenting commits
 - Present the commit(s) to the user for approval
 - **Never commit without explicit user approval**
 
-## 7. Transition
+## 8. Transition
 
 If the feature is complete:
 > "Feature **[name]** complete. All tasks done, spec reconciled to v[N]. Index updated to `done`."
