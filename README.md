@@ -335,7 +335,23 @@ features:
     priority: P1
     spec_version: 2
     depends-on: []
+
+  # Features with phases track progress per-phase
+  - name: dojo-v2
+    title: Dojo v2 Architecture
+    status: in-progress
+    priority: P1
+    spec_version: 1
+    phases:
+      - name: vertical-slice
+        status: done
+      - name: full-coverage
+        status: in-progress
+      - name: scale
+        status: draft
 ```
+
+The dashboard shows phase progress inline: `dojo-v2 (Phase 2/3: full-coverage)`.
 
 ### Artifact versioning
 

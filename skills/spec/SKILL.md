@@ -15,25 +15,27 @@ When no feature slug is provided, show a read-only status overview.
 1. Read `docs/specs/index.yaml`
 2. If it doesn't exist: "No features tracked yet. Run `/spec <feature-slug>` to start."
 3. Group features by status
-4. Display:
+4. For features with `phases`, show phase progress inline
+5. Display:
 
 > **Craft Status — [Project Name]**
 >
 > | Status | Count | Features |
 > |--------|-------|----------|
 > | done | 8 | core-flow, bilingual, guest-flow, ... |
-> | in-progress | 4 | conversation-blocks, off-catalog, ... |
+> | in-progress | 2 | dojo-v2 **(Phase 2/3: full-coverage)**, off-catalog |
 > | spec-ready | 1 | question-gating |
 > | draft | 6 | streaming, knowledge-graph, ... |
 >
-> **Active work**: question-gating — spec approved, no tech-plan yet.
-> **Suggested**: Run `/build question-gating` to design and implement.
+> **Active work**: dojo-v2 — Phase 2 (full-coverage) in progress. Phase 1 (vertical-slice) done.
+> **Suggested**: Run `/build dojo-v2` to continue Phase 2.
 
 For a single feature (`/spec dojo-streaming`), check which artifacts exist:
+- `explore.md` → read frontmatter (status, tools explored)
 - `spec.md` → read frontmatter (status, version)
 - `tech-plan.md` → read frontmatter (status, based_on_spec_version)
 
-Display status, current phase, and suggested next action.
+Display status, current phase, and suggested next action. If the feature has phases, show which phase is active and which are complete.
 
 **Dashboard mode is READ-ONLY. It never creates or modifies files.**
 
@@ -209,6 +211,22 @@ After the spec is approved and written:
      spec_version: 1
      depends-on: [other-feature, another-feature]
    ```
+   If the spec has phases, add them to the index:
+   ```yaml
+   - name: dojo-v2
+     title: Dojo v2 Architecture
+     status: spec-ready
+     priority: P1
+     spec_version: 1
+     phases:
+       - name: vertical-slice
+         status: draft
+       - name: full-coverage
+         status: draft
+       - name: scale
+         status: draft
+   ```
+   Phase statuses follow the same flow as features: `draft` → `spec-ready` → `in-progress` → `done`. Update phase status during `/build` and `/close`.
 2. Set `status: draft` in the spec frontmatter to `status: approved`.
 
 ### 10. Transition
