@@ -6,7 +6,7 @@ argument-hint: feature-slug
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, EnterPlanMode, ExitPlanMode, TaskCreate, TaskUpdate, TaskList, TaskGet
 ---
 
-Part of the **Craft** methodology (Spec → **Build** → Close).
+Part of the **Craft** methodology (Explore (optional) → Spec → **Build** → Close).
 
 Replaces the v1 pipeline of /refine → /arrange → /forge with a single skill that uses native plan mode and task system.
 

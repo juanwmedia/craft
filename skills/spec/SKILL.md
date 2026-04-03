@@ -6,7 +6,7 @@ argument-hint: [feature-slug]
 allowed-tools: Read, Edit, Write, Glob, Grep, AskUserQuestion, Agent
 ---
 
-Part of the **Craft** methodology (**Spec** → Build → Close).
+Part of the **Craft** methodology (**Explore** (optional) → **Spec** → Build → Close).
 
 ## Without argument — Dashboard
 
@@ -65,6 +65,8 @@ Read the project context file (CLAUDE.md) and `docs/specs/index.yaml` to underst
 - Architecture, conventions, domain language
 - Dependencies between features
 - What has already been built
+
+**Check for exploration artifacts:** If `docs/specs/<feature>/explore.md` exists, read it carefully. The exploration documents technology decisions, capabilities, and constraints that MUST inform the spec. Reference specific findings from the exploration when making scope and design decisions. If the exploration flagged open questions, address them in the spec's "Open Questions" section or resolve them during the back-and-forth.
 
 ### 3. Critical analysis — back and forth
 
@@ -136,7 +138,44 @@ last_updated: YYYY-MM-DD
 - Anything unresolved (or "None" if everything is clear)
 ```
 
-### 6. Spec audit — evaluator-optimizer pass
+### 6. Scope check — propose phases if too large
+
+After writing the spec, assess scope. Count the acceptance criteria and estimate the number of implementation tasks:
+
+- **Small** (≤10 ACs, ≤8 tasks): single phase. Proceed normally.
+- **Large** (>10 ACs or >8 tasks or crosses multiple system layers): propose phases.
+
+When proposing phases:
+
+1. **Phase 1 is always a vertical slice** — the minimum that validates the core assumption end-to-end. If the feature introduces a new architecture, Phase 1 proves the architecture works with ONE real example.
+2. **Each phase is independently shippable** — it delivers user-visible value, not just infrastructure.
+3. **Each phase has its own acceptance criteria** — clearly marked in the spec.
+4. **`/build` picks one phase at a time** — never builds everything at once.
+
+Add a `## Phases` section to the spec:
+
+```markdown
+## Phases
+
+### Phase 1: Vertical slice
+ACs covered: AC-1, AC-3, AC-5
+Goal: One complete [flow/concept/path] working end-to-end.
+
+### Phase 2: Full coverage
+ACs covered: AC-2, AC-4, AC-6, AC-7
+Goal: All [variations/concepts/modes] working.
+
+### Phase 3: Scale and polish
+ACs covered: AC-8, AC-9, AC-10
+Goal: [Remaining work, optimizations, edge cases].
+```
+
+Tell the user:
+> "This feature is large. I've proposed N phases. Phase 1 is [description] — the minimum to prove the approach works. Want to review the phases before I finalize?"
+
+The user approves or adjusts the phase boundaries.
+
+### 7. Spec audit — evaluator-optimizer pass
 
 Before presenting, attack every user story and acceptance criterion against:
 
@@ -153,11 +192,11 @@ Before presenting, attack every user story and acceptance criterion against:
 
 Collect gaps, present to user, resolve, update spec.
 
-### 7. Present for review
+### 8. Present for review
 
 Show the complete spec to the user BEFORE writing to disk. Wait for explicit approval or corrections. Iterate until approved.
 
-### 8. Update index
+### 9. Update index
 
 After the spec is approved and written:
 
@@ -172,7 +211,7 @@ After the spec is approved and written:
    ```
 2. Set `status: draft` in the spec frontmatter to `status: approved`.
 
-### 9. Transition
+### 10. Transition
 
 Tell the user:
 > "Spec approved. You can:

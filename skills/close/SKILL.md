@@ -6,7 +6,7 @@ argument-hint: feature-slug
 allowed-tools: Read, Edit, Glob, Grep, Bash
 ---
 
-Part of the **Craft** methodology (Spec → Build → **Close**).
+Part of the **Craft** methodology (Explore (optional) → Spec → Build → **Close**).
 
 Closes a feature or session. Reconciles artifacts with reality and persists everything the next session needs.
 
