@@ -122,6 +122,33 @@ Before executing, verify complete AC-to-task coverage:
 
 If uncovered ACs exist, add tasks for them before proceeding. If orphan tasks exist (tasks covering no AC), either find their AC or remove them.
 
+## 3.6 Scope discipline (hard rules — enforced at build-time)
+
+**Phase purity check.** Before executing any task in the phase, re-read the phase's ACs. They must all target ONE user-visible outcome. If they cover more than one outcome → STOP. Do not execute. Return the user to `/spec` and split the phase (max 4) or extract as independent features.
+
+**Mid-build phase explosion is forbidden.** If during execution you realize the phase is actually multiple phases of work, STOP IMMEDIATELY. Options:
+1. Re-enter plan mode, split into multiple same-level phases (still under the max-4 cap), update the tech-plan, continue.
+2. If the extra work is an independent user-visible outcome → extract it as a new feature. Log the discovery, close the current phase at its ORIGINAL scope (even partial), open the new feature via `/spec`.
+
+**Never** create `- [ ] 1a`, `- [ ] 1b` sub-tasks that hide sub-phases. No nesting.
+
+**Cross-feature prohibition.** During `/build` of Feature A, you CANNOT modify:
+- Spec files of other features (`docs/specs/feature-B/spec.md`).
+- Code whose scope clearly belongs to another feature.
+- `index.yaml` entries of other features.
+
+If you discover something about Feature B while working on A:
+1. Log it in Feature A's tech-plan under `## Cross-Feature Discoveries` (append-only, one line per discovery).
+2. Do nothing else about it during this `/build`.
+3. `/close` will surface the discoveries as prompts for follow-up `/spec` or `/build` on those features.
+
+The only exception: if Feature B is a direct dependency blocking A, treat it as `BLOCKED` per the "When things go wrong" protocol and stop.
+
+**Scope bleed detection.** If completed tasks produce work beyond the phase's original ACs, this is scope bleed. Do not silently expand:
+- Small work directly supporting an AC → note in Iteration Log, continue.
+- Work that's its own concern → STOP. Create a follow-up phase or feature. Do not absorb.
+- Existing AC was wrong → pause, clarify via `AskUserQuestion`, record in Design Decisions with `[Clarified during build]`.
+
 ## 4. Create native tasks
 
 For each task in the tech-plan, call `TaskCreate`:

@@ -36,6 +36,29 @@ After reconciliation, increment `spec_version` and update `last_updated`.
 
 This is the KEY difference from v1: spec reconciliation happens here, once, after the work stabilizes — not mid-execution where it creates noisy versioning.
 
+## 2.5 Phase and scope discipline (retroactive checks)
+
+Before reconciling, apply three retroactive checks. Any failure STOPS the close and requires explicit resolution.
+
+**Phase explosion check.** Count phases in the feature at close-time. If more than at spec-time → STOP. Ask:
+- Were phases split legitimately (same feature's outcome)? → OK, continue reconciliation.
+- Did sub-phases appear mid-build? → BAD. Either extract the sub-phases as independent features NOW (reverse their code into separate commits), or acknowledge the original spec was wrong (document it, don't silently accept).
+
+**Scope-expansion smell detection.** The reconciliation must NOT contain any of these phrases:
+- "Scope expansion absorbed"
+- "Also bundled"
+- "Refinements absorbed"
+- "Side effects reconciled"
+
+These phrases are evidence of scope bleed. For each expansion:
+- Within the original feature boundary → the spec was wrong. Update ACs explicitly, do NOT hide as "expansion absorbed".
+- Different feature → extract NOW as its own feature, reverse the relevant code into a separate commit before closing.
+
+**Cross-feature discoveries surface.** Read the tech-plan's `## Cross-Feature Discoveries` section. For each discovery:
+- Announce it: *"During build, discovered X about feature Y."*
+- Propose a follow-up: `/spec` for feature Y, or a new `/spec`.
+- User decides. Never silently apply changes to other features during this close.
+
 ## 3. Reconcile tech-plan.md
 
 - Verify all completed tasks are marked `- [x]`

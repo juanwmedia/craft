@@ -177,6 +177,26 @@ Tell the user:
 
 The user approves or adjusts the phase boundaries.
 
+### 6.1 Phase discipline (hard rules)
+
+Phases are a SERIOUS commitment to bureaucracy. Before splitting a feature into phases, apply these non-negotiable checks:
+
+**Max 4 phases per feature.** If you need more, the feature is too big — split into multiple features, not more phases.
+
+**The phase/feature test**: each proposed phase must answer "what independent user-visible outcome does this deliver?"
+- If each phase has its OWN user-visible outcome → they are features, not phases. Reject the split; create separate features.
+- Only if phases are sequential steps toward ONE shared outcome → phases are legit.
+
+**No nested phases, ever.** `- name: phase-1a` under `phase-1` does not exist in this methodology. If tempted:
+- Split the phase into same-level phases (under the max-4 cap), OR
+- Extract one as an independent feature.
+
+**No grab-bag phase names.** Any phase named `polish`, `misc`, `cleanup`, `improvements`, `scale`, or anything vague is a smell. Grab-bag phases accumulate orthogonal work and become un-shippable. Name each phase by the concrete outcome it delivers. If you can't name the outcome crisply, you're making a bucket — stop and split into real features.
+
+**Umbrella features declare a close criterion at creation.** Any feature with `phases:` must include a `close_criterion:` field in its `index.yaml` entry. Without it, umbrellas accumulate forever. Example: `close_criterion: "Archives when phases A+B+C ship and phase D is extracted as independent feature."`
+
+If any rule above would be violated, STOP and propose the reorganization to the user. Write the spec only after the user approves.
+
 ### 7. Spec audit — evaluator-optimizer pass
 
 Before presenting, attack every user story and acceptance criterion against:

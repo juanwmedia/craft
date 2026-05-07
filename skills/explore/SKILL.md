@@ -78,6 +78,14 @@ After hands-on exploration, run an evaluation pass (evaluator-optimizer pattern)
 
 Present findings to the user for discussion. The user may spot things the evaluation missed.
 
+### Phase 4.5: Split-at-source check
+
+Before writing `explore.md`, verify the exploration covers ONE coherent unit of work:
+
+- Does it reveal multiple independent user-visible outcomes?
+- If yes → do NOT write a single `explore.md` bundling them. Propose N separate features to the user, one `/explore` each (or clearly delimited sections).
+- A single exploration that hides a basket of features is the same pattern that causes phase-explosion downstream. Refuse it at the source.
+
 ### Phase 5: Write the capabilities map
 
 Write `docs/specs/<feature>/explore.md`:
