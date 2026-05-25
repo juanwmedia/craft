@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Define what to build. Without argument shows the feature dashboard. With a feature slug, produces a versioned spec.md with user stories and acceptance criteria inside docs/specs/<feature>/.
+description: Define what to build. Without argument shows the feature dashboard. With a feature slug, produces a versioned spec.md with user stories and acceptance criteria inside docs/specs/<feature>/. Use when the user wants to plan a feature, define requirements, write acceptance criteria, or asks "what should we build?"
 disable-model-invocation: false
 argument-hint: [feature-slug]
 allowed-tools: Read, Edit, Write, Glob, Grep, AskUserQuestion, Agent
@@ -10,106 +10,54 @@ Part of the **Craft** methodology (**Explore** (optional) → **Spec** → Build
 
 ## Without argument — Dashboard
 
-When no feature slug is provided, show a read-only status overview.
+Show a read-only status overview:
 
 1. Read `docs/specs/index.yaml`
-2. If it doesn't exist: "No features tracked yet. Run `/spec <feature-slug>` to start."
-3. Group features by status
-4. For features with `phases`, show phase progress inline
-5. Display:
+2. If missing: "No features tracked yet. Run `/spec <feature-slug>` to start."
+3. Group features by status, show phase progress inline for phased features
+4. Display as a table with status, count, and feature names
+5. For a single feature, show which artifacts exist and suggest next action
 
-> **Craft Status — [Project Name]**
->
-> | Status | Count | Features |
-> |--------|-------|----------|
-> | done | 8 | core-flow, bilingual, guest-flow, ... |
-> | in-progress | 2 | dojo-v2 **(Phase 2/3: full-coverage)**, off-catalog |
-> | spec-ready | 1 | question-gating |
-> | draft | 6 | streaming, knowledge-graph, ... |
->
-> **Active work**: dojo-v2 — Phase 2 (full-coverage) in progress. Phase 1 (vertical-slice) done.
-> **Suggested**: Run `/build dojo-v2` to continue Phase 2.
-
-For a single feature (`/spec dojo-streaming`), check which artifacts exist:
-- `explore.md` → read frontmatter (status, tools explored)
-- `spec.md` → read frontmatter (status, version)
-- `tech-plan.md` → read frontmatter (status, based_on_spec_version)
-
-Display status, current phase, and suggested next action. If the feature has phases, show which phase is active and which are complete.
-
-**Dashboard mode is READ-ONLY. It never creates or modifies files.**
+Dashboard mode is read-only. It never creates or modifies files.
 
 ---
 
 ## With argument — Spec mode
 
-Produces the **product spec** (the WHAT) for a single feature. One spec per feature, never a monolith.
+Produces the **product spec** (the WHAT) for a single feature.
 
-### 1. Find or create the specs infrastructure
+### 1. Bootstrap infrastructure
 
-1. Check if CLAUDE.md (or equivalent project context file) exists.
-   - If NO context file AND no `docs/specs/` directory AND minimal source code:
-     this is a greenfield project. Ask the user:
-     > "This looks like a new project. I'll set up the basics:
-     > - Create a minimal CLAUDE.md with project name and stack
-     > - Create docs/specs/index.yaml
-     > Want me to proceed, or do you already have these elsewhere?"
-   - Bootstrap: create CLAUDE.md with project name, stack (ask user), and empty conventions section. Create docs/specs/index.yaml with project name.
-2. Look for `docs/specs/index.yaml`. If it doesn't exist, create it with the project name.
-3. Ask the user for a feature slug (kebab-case, e.g. `dojo-streaming`, `user-auth`).
-4. Create `docs/specs/<feature>/` directory if it doesn't exist.
-5. If `docs/specs/<feature>/spec.md` already exists, read it — you're updating, not creating from scratch.
+- Check/create `docs/specs/index.yaml` and `docs/specs/<feature>/` directory
+- For greenfield projects (no CLAUDE.md, no specs, minimal source): offer to bootstrap basics
+- If `spec.md` already exists, you're updating — read it first
 
 ### 2. Understand existing state
 
-Read the project context file (CLAUDE.md) and `docs/specs/index.yaml` to understand:
-- Existing features and their statuses
-- Architecture, conventions, domain language
-- Dependencies between features
-- What has already been built
+Read CLAUDE.md, `index.yaml`, and any existing `explore.md` for this feature. The exploration documents technology decisions and constraints that inform the spec.
 
-**Check for exploration artifacts:** If `docs/specs/<feature>/explore.md` exists, read it carefully. The exploration documents technology decisions, capabilities, and constraints that MUST inform the spec. Reference specific findings from the exploration when making scope and design decisions. If the exploration flagged open questions, address them in the spec's "Open Questions" section or resolve them during the back-and-forth.
+### 3. Critical analysis
 
-### 3. Critical analysis — back and forth
+Engage in collaborative discussion proportional to complexity:
+- Challenge assumptions: edge cases, implicit requirements, conflicts with existing specs
+- Detect gaps: error states, empty states, permissions, boundaries
+- Propose alternatives: simpler approaches, reusable patterns
+- Force clarity: reject vague words ("basic", "simple", "standard") until behavior is concrete
 
-Before writing anything, engage in collaborative discussion. Depth proportional to complexity.
-
-**Challenge assumptions:**
-- What edge cases are missing? (empty states, errors, concurrency, permissions)
-- Are there implicit assumptions the user hasn't stated?
-- Does this conflict with existing specs or architectural decisions?
-
-**Detect gaps:**
-- What happens when things go wrong? (network failure, invalid input, timeouts)
-- What about states the user didn't mention? (first-time user, empty data, max limits)
-- Are there security or data integrity implications?
-
-**Propose alternatives:**
-- Is there a simpler way to achieve the same behavior?
-- Could an existing pattern in the project be reused?
-
-**Force clarity:**
-- Do not accept vague requirements — ask until the behavior is concrete
-- Flag EVERY ambiguous word: "basic", "simple", "compact", "minimal", "standard", "normal"
-
-Use `AskUserQuestion` — one focused round at a time, not 20 questions at once. Prioritize by impact.
+Use `AskUserQuestion` — one focused round at a time. Prioritize by impact.
 
 ### 4. Visual design gate
 
-For features that involve UI:
-
-1. Ask: **"Do you have a design/mockup for this feature?"**
-2. Three paths:
-   - **User has a design** → ask to share it. Cross-check against requirements.
-   - **Generate with Stitch** → launch `ui-designer` subagent via `Agent` tool, passing the feature name and requirements.
-   - **User wants to skip** → annotate in spec with `> No visual reference provided.`
-3. If a design exists, review it against the requirements: are there UI states not covered? Scenarios without visible UI?
+For UI features:
+1. Ask if the user has a design
+2. Three paths: user provides one, generate with `ui-designer` agent, or skip (annotate in spec)
+3. If design exists, cross-check against requirements
 
 Backend-only features skip this step.
 
 ### 5. Write the spec
 
-Write `docs/specs/<feature>/spec.md` with this structure:
+Write `docs/specs/<feature>/spec.md`:
 
 ```markdown
 ---
@@ -127,141 +75,54 @@ last_updated: YYYY-MM-DD
 
 ## User Stories
 1. A user must be able to...
-2. A user must be able to...
 
 ## Acceptance Criteria
 1. GIVEN ... WHEN ... THEN ...
-2. GIVEN ... WHEN ... THEN ...
 
 ## Out of Scope
 - What this feature does NOT do
 
 ## Open Questions
-- Anything unresolved (or "None" if everything is clear)
+- Anything unresolved (or "None")
 ```
 
-### 6. Scope check — propose phases if too large
+### 6. Scope check — propose phases if large
 
-After writing the spec, assess scope. Count the acceptance criteria and estimate the number of implementation tasks:
-
-- **Small** (≤10 ACs, ≤8 tasks): single phase. Proceed normally.
-- **Large** (>10 ACs or >8 tasks or crosses multiple system layers): propose phases.
+After writing, assess scope:
+- **Small** (≤10 ACs, ≤8 tasks): single phase, proceed normally
+- **Large** (>10 ACs or >8 tasks or crosses multiple layers): propose phases
 
 When proposing phases:
+- Phase 1 is always a vertical slice proving the core assumption end-to-end
+- Each phase is independently shippable with its own ACs
 
-1. **Phase 1 is always a vertical slice** — the minimum that validates the core assumption end-to-end. If the feature introduces a new architecture, Phase 1 proves the architecture works with ONE real example.
-2. **Each phase is independently shippable** — it delivers user-visible value, not just infrastructure.
-3. **Each phase has its own acceptance criteria** — clearly marked in the spec.
-4. **`/build` picks one phase at a time** — never builds everything at once.
+Apply scope discipline (see `references/discipline.md`).
 
-Add a `## Phases` section to the spec:
+Add a `## Phases` section if applicable. Tell the user the scope assessment and ask for approval.
 
-```markdown
-## Phases
+### 7. Spec audit
 
-### Phase 1: Vertical slice
-ACs covered: AC-1, AC-3, AC-5
-Goal: One complete [flow/concept/path] working end-to-end.
-
-### Phase 2: Full coverage
-ACs covered: AC-2, AC-4, AC-6, AC-7
-Goal: All [variations/concepts/modes] working.
-
-### Phase 3: Scale and polish
-ACs covered: AC-8, AC-9, AC-10
-Goal: [Remaining work, optimizations, edge cases].
-```
-
-Tell the user:
-> "This feature is large. I've proposed N phases. Phase 1 is [description] — the minimum to prove the approach works. Want to review the phases before I finalize?"
-
-The user approves or adjusts the phase boundaries.
-
-### 6.1 Phase discipline (hard rules)
-
-Phases are a SERIOUS commitment to bureaucracy. Before splitting a feature into phases, apply these non-negotiable checks:
-
-**Max 4 phases per feature.** If you need more, the feature is too big — split into multiple features, not more phases.
-
-**The phase/feature test**: each proposed phase must answer "what independent user-visible outcome does this deliver?"
-- If each phase has its OWN user-visible outcome → they are features, not phases. Reject the split; create separate features.
-- Only if phases are sequential steps toward ONE shared outcome → phases are legit.
-
-**No nested phases, ever.** `- name: phase-1a` under `phase-1` does not exist in this methodology. If tempted:
-- Split the phase into same-level phases (under the max-4 cap), OR
-- Extract one as an independent feature.
-
-**No grab-bag phase names.** Any phase named `polish`, `misc`, `cleanup`, `improvements`, `scale`, or anything vague is a smell. Grab-bag phases accumulate orthogonal work and become un-shippable. Name each phase by the concrete outcome it delivers. If you can't name the outcome crisply, you're making a bucket — stop and split into real features.
-
-**Umbrella features declare a close criterion at creation.** Any feature with `phases:` must include a `close_criterion:` field in its `index.yaml` entry. Without it, umbrellas accumulate forever. Example: `close_criterion: "Archives when phases A+B+C ship and phase D is extracted as independent feature."`
-
-If any rule above would be violated, STOP and propose the reorganization to the user. Write the spec only after the user approves.
-
-### 7. Spec audit — evaluator-optimizer pass
-
-Before presenting, attack every user story and acceptance criterion against:
-
-| Dimension | Question |
-|-----------|----------|
-| Multiplicity | One or many? Upper limit? |
-| Lifecycle | Create, read, update, delete — which are intentionally excluded? |
-| Ownership | Who can see/modify this? |
-| Empty state | What before any data exists? |
-| Failure | What when external services fail? Validation fails? |
-| Boundaries | Max lengths, counts, rate limits? What at the boundary? |
-| Dependencies | Does this assume another feature exists? |
-| Temporal | "Daily", "each time" — what's the actual trigger? |
+Before presenting, self-evaluate against: multiplicity, lifecycle (CRUD), ownership, empty state, failure modes, boundaries, dependencies, temporal triggers.
 
 Collect gaps, present to user, resolve, update spec.
 
 ### 8. Present for review
 
-Show the complete spec to the user BEFORE writing to disk. Wait for explicit approval or corrections. Iterate until approved.
+Show the complete spec before writing to disk. Iterate until approved.
 
 ### 9. Update index
 
-After the spec is approved and written:
-
-1. Update `docs/specs/index.yaml` — add or update the feature entry:
-   ```yaml
-   - name: feature-slug
-     title: Feature Title
-     status: spec-ready
-     priority: P1
-     spec_version: 1
-     depends-on: [other-feature, another-feature]
-   ```
-   If the spec has phases, add them to the index:
-   ```yaml
-   - name: dojo-v2
-     title: Dojo v2 Architecture
-     status: spec-ready
-     priority: P1
-     spec_version: 1
-     phases:
-       - name: vertical-slice
-         status: draft
-       - name: full-coverage
-         status: draft
-       - name: scale
-         status: draft
-   ```
-   Phase statuses follow the same flow as features: `draft` → `spec-ready` → `in-progress` → `done`. Update phase status during `/build` and `/close`.
-2. Set `status: draft` in the spec frontmatter to `status: approved`.
+After approval:
+- Add/update the feature in `docs/specs/index.yaml` with name, title, status, priority, spec_version, phases if applicable
+- Set spec frontmatter status to `approved`
 
 ### 10. Transition
 
-Tell the user:
-> "Spec approved. You can:
-> - Run `/evaluate` to audit the spec for completeness
-> - Run `/build` to design, plan, and implement
->
-> `/evaluate` is optional but recommended for complex or high-risk features."
+Suggest `/evaluate` for a completeness audit or `/build` to start implementation.
 
 ## Guardrails
 
-- This skill produces the WHAT, never the HOW. No architecture, types, file paths, or implementation details.
-- Never overwrite existing specs without user consent. If updating, increment `spec_version`.
-- Never mark specs as completed — that's `/close`'s job.
-- Each feature gets its own directory and spec. Never append to a monolith.
-- When invoked without argument, this skill is read-only (dashboard mode). It never creates or modifies files in dashboard mode.
+- This skill produces the WHAT, not the HOW. No architecture, types, or file paths.
+- Do not overwrite existing specs without user consent. Increment `spec_version` on updates.
+- Each feature gets its own directory and spec.
+- Dashboard mode is read-only.

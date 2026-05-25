@@ -1,6 +1,6 @@
 ---
 name: build
-description: Design, plan, and implement a feature. Reads the approved spec, enters plan mode to produce a tech-plan with design decisions and atomic tasks, then executes using subagents and native task tracking. Iterates until stable.
+description: Design, plan, and implement a feature. Reads the approved spec, enters plan mode to produce a tech-plan with design decisions and atomic tasks, then executes using subagents and native task tracking. Iterates until stable. Use when the user wants to implement, code, or build a specified feature.
 disable-model-invocation: false
 argument-hint: feature-slug
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, EnterPlanMode, ExitPlanMode, TaskCreate, TaskUpdate, TaskList, TaskGet
@@ -8,58 +8,42 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, Ente
 
 Part of the **Craft** methodology (Explore (optional) → Spec → **Build** → Close).
 
-Replaces the v1 pipeline of /refine → /arrange → /forge with a single skill that uses native plan mode and task system.
+Spec defines the WHAT. This skill produces the HOW — architecture, tasks, and working code.
 
 ## 0. Resolve feature
 
 1. If the user passed an argument (e.g., `/build user-auth`), use it as the feature slug.
 2. If no argument, read `docs/specs/index.yaml` and find features with an approved `spec.md` but no `tech-plan.md`.
-3. If exactly ONE feature matches, use it. Tell the user: "Working on **[feature-slug]**."
-4. If MULTIPLE features match, list them and ask: "Which feature? [list]"
-5. If ZERO features match: "No features have an approved spec without a tech-plan. Run `/spec` first."
-6. If a feature has `status: in-progress` in `index.yaml` AND `tech-plan.md` exists with unchecked tasks (`- [ ]`), this is a **resume**. Skip to the resume protocol (section 1.5).
+3. If exactly one matches, use it.
+4. If multiple match, list them and ask.
+5. If zero match: "No features have an approved spec without a tech-plan. Run `/spec` first."
+6. If status is `in-progress` with unchecked tasks in `tech-plan.md`, this is a **resume** — skip to section 1.5.
 
 ## 1. Prerequisites
 
-Read `docs/specs/<feature>/spec.md`. If it doesn't exist or `status` is not `approved`, STOP:
-> "This feature needs an approved spec first. Run `/spec <feature>` to create one."
+Read `docs/specs/<feature>/spec.md`. If missing or not approved, stop — spec needed first.
 
-Also read:
-- Project context file (CLAUDE.md) for architecture, conventions, stack
-- `docs/specs/decisions.md` for cross-cutting decisions — do not contradict them
-- Related tech-plans in `docs/specs/` for patterns to reuse
-
-### Backward compatibility
-
-If v1 artifacts (`tech-spec.md`, `plan.md`) exist in the feature directory, use them as reference but produce your own `tech-plan.md`. Do not modify or depend on v1 artifacts.
+Also read: CLAUDE.md (conventions), `docs/specs/decisions.md` (cross-cutting decisions), related tech-plans (patterns to reuse).
 
 ## 1.5. Resume protocol
 
-When resuming a feature from a previous session:
-
+When resuming from a previous session:
 1. Read `tech-plan.md` — understand design decisions, completed tasks, iteration log
-2. Count completed vs remaining tasks. Report: "Resuming **[feature-slug]**: N of M tasks done. Next: Task K: [description]."
-3. Create native tasks (`TaskCreate`) for remaining unchecked tasks only
-4. Continue execution from the next unchecked task (step 5)
-5. Do NOT re-enter plan mode unless the remaining tasks need adjustment
+2. Report progress: "Resuming **[slug]**: N of M tasks done. Next: Task K."
+3. Create native tasks for remaining unchecked tasks only
+4. Continue execution from next unchecked task (step 5)
+5. Do not re-enter plan mode unless remaining tasks need adjustment
 
 ## 2. Enter plan mode
 
 Call `EnterPlanMode`. In plan mode:
 
 1. Read the spec completely
-2. Explore the codebase — use `Agent(Explore)` to find:
-   - Existing patterns, utilities, types that can be reused
-   - Similar features already implemented (follow their patterns)
-   - Database schema, API contracts, component structure
-3. Design the architecture:
-   - Which layers are touched? (DB, backend, API, frontend)
-   - What's the data flow?
-   - New models, migrations, routes needed?
-4. Identify non-obvious decisions and their trade-offs
-5. Decompose into the most atomic tasks possible
-6. Analyze parallelizability: which tasks are truly independent?
-7. Write the tech-plan to `docs/specs/<feature>/tech-plan.md`
+2. Explore the codebase — find existing patterns, utilities, similar features
+3. Design the architecture: layers touched, data flow, new models/migrations/routes
+4. Identify non-obvious decisions and trade-offs
+5. Decompose into atomic tasks, analyze parallelizability
+6. Write `docs/specs/<feature>/tech-plan.md`
 
 ### tech-plan.md structure
 
@@ -77,88 +61,43 @@ last_updated: YYYY-MM-DD
 ## Design Decisions
 
 ### D1: Decision Title
-- **Context**: Why this decision needs to be made
-- **Options considered**:
-  1. Option A — (trade-offs)
-  2. Option B — (trade-offs)
-- **Chosen**: Option B — rationale
+- **Context**: Why this decision matters
+- **Options**: A (trade-offs), B (trade-offs)
+- **Chosen**: B — rationale
 
 ## Tasks
 
 ### Batch 1: Foundation (parallel)
-- [ ] **T1**: Description
-  - **File(s)**: `path/to/file`
-  - **Covers**: AC-1 "description of criterion"
-- [ ] **T2**: Description
-  - **File(s)**: `path/to/file`
-  - **Covers**: AC-2 "description of criterion"
+- [ ] **T1**: Description — File(s): `path` — Covers: AC-1
+- [ ] **T2**: Description — File(s): `path` — Covers: AC-2
 
 ### Batch 2: Core logic (after batch 1)
-- [ ] **T3**: Description
-  - **File(s)**: `path/to/file`
-  - **Covers**: AC-1 "description", AC-3 "description"
+- [ ] **T3**: Description — File(s): `path` — Covers: AC-1, AC-3
 
 ## Iteration Log
 ```
 
-### Cross-cutting decisions
-
-If a decision affects MORE than this one feature, it belongs in `docs/specs/decisions.md` — not just in this tech-plan. Add it there AND reference it here.
+Cross-cutting decisions go in BOTH the tech-plan AND `docs/specs/decisions.md`.
 
 ## 3. Exit plan mode, get approval
 
-Call `ExitPlanMode`. The user reviews the tech-plan. Iterate until approved. Update `tech-plan.md` frontmatter: `status: approved`.
+Call `ExitPlanMode`. User reviews. Iterate until approved. Set `tech-plan.md` status to `approved`.
 
 ## 3.5. Verify coverage
 
-Before executing, verify complete AC-to-task coverage:
+Before executing, verify every AC has at least one task and every task covers at least one AC. Report: "Coverage: N/N ACs covered. 0 orphan tasks." Add tasks for gaps.
 
-1. List every acceptance criterion from `spec.md`
-2. For each AC, confirm at least one task has `Covers: AC-N`
-3. For each task, confirm it covers at least one AC
-4. Present the coverage check:
+## 3.6. Scope discipline
 
-> **Coverage: 12/12 ACs covered. 0 orphan tasks.**
+Apply scope discipline (see `references/discipline.md`).
 
-If uncovered ACs exist, add tasks for them before proceeding. If orphan tasks exist (tasks covering no AC), either find their AC or remove them.
-
-## 3.6 Scope discipline (hard rules — enforced at build-time)
-
-**Phase purity check.** Before executing any task in the phase, re-read the phase's ACs. They must all target ONE user-visible outcome. If they cover more than one outcome → STOP. Do not execute. Return the user to `/spec` and split the phase (max 4) or extract as independent features.
-
-**Mid-build phase explosion is forbidden.** If during execution you realize the phase is actually multiple phases of work, STOP IMMEDIATELY. Options:
-1. Re-enter plan mode, split into multiple same-level phases (still under the max-4 cap), update the tech-plan, continue.
-2. If the extra work is an independent user-visible outcome → extract it as a new feature. Log the discovery, close the current phase at its ORIGINAL scope (even partial), open the new feature via `/spec`.
-
-**Never** create `- [ ] 1a`, `- [ ] 1b` sub-tasks that hide sub-phases. No nesting.
-
-**Cross-feature prohibition.** During `/build` of Feature A, you CANNOT modify:
-- Spec files of other features (`docs/specs/feature-B/spec.md`).
-- Code whose scope clearly belongs to another feature.
-- `index.yaml` entries of other features.
-
-If you discover something about Feature B while working on A:
-1. Log it in Feature A's tech-plan under `## Cross-Feature Discoveries` (append-only, one line per discovery).
-2. Do nothing else about it during this `/build`.
-3. `/close` will surface the discoveries as prompts for follow-up `/spec` or `/build` on those features.
-
-The only exception: if Feature B is a direct dependency blocking A, treat it as `BLOCKED` per the "When things go wrong" protocol and stop.
-
-**Scope bleed detection.** If completed tasks produce work beyond the phase's original ACs, this is scope bleed. Do not silently expand:
-- Small work directly supporting an AC → note in Iteration Log, continue.
-- Work that's its own concern → STOP. Create a follow-up phase or feature. Do not absorb.
-- Existing AC was wrong → pause, clarify via `AskUserQuestion`, record in Design Decisions with `[Clarified during build]`.
+Commits are deferred to /close so reconciliation sees the full change set. Do not modify other features' files — log discoveries in `## Cross-Feature Discoveries` for /close to surface.
 
 ## 4. Create native tasks
 
-For each task in the tech-plan, call `TaskCreate`:
-- Subject: task description (e.g., "T1: Create users migration")
-- Description: file paths, AC references, batch info, what to implement
-
-This creates a visible, trackable task list that the user sees in real time. During execution:
-- Call `TaskUpdate` with `status: "in_progress"` BEFORE starting each task
-- Call `TaskUpdate` with `status: "completed"` AFTER the task passes verification
-- The user sees: completed tasks (checked, struck through), the current task (in progress with spinner), and pending tasks — a live progress dashboard throughout the build.
+For each task, call `TaskCreate`. During execution:
+- `TaskUpdate` with `in_progress` before starting each task
+- `TaskUpdate` with `completed` after verification
 
 ## 5. Execute
 
@@ -166,95 +105,47 @@ Work through tasks batch by batch.
 
 ### Parallelization
 
-- For parallel-safe tasks in the same batch: spawn subagents via `Agent` tool
-- Each subagent receives ONLY: the task description, relevant file paths, and test commands
-- For sequential tasks: execute directly
-- Spawn teams of subagents when the batch size warrants it
-- **Prioritize control over speed** — if unsure whether tasks are independent, run them sequentially
-
-### Subagent reporting
-
-Each subagent reports back with one of:
-- **DONE** — task completed, tests pass (if applicable). Include: files changed, lines added/removed.
-- **DONE_WITH_CONCERNS** — completed but something unexpected was found. Include: what the concern is, whether it affects other tasks.
-- **BLOCKED** — cannot proceed. Include: what's missing, what decision is needed.
-
-After all subagents in a batch complete:
-- Review results — read the actual code changes (do NOT trust reports blindly)
-- For `DONE_WITH_CONCERNS`: investigate the concern before starting the next batch
-- For `BLOCKED`: resolve the blocker, then re-run the task
+For parallel-safe tasks: spawn subagents via `Agent`. Each receives only the task description, file paths, and test commands. For sequential tasks: execute directly. Prioritize control over speed when independence is uncertain.
 
 ### Model selection for subagents
 
-When spawning subagents, use the `model` parameter of the `Agent` tool:
-- **haiku**: scaffolding, configuration files, static content, simple file creation
-- **sonnet**: implementation with business logic, tests, API endpoints, data processing
-- **opus**: tasks requiring deep architectural reasoning or complex multi-file coordination
+- **haiku**: scaffolding, config, static content
+- **sonnet**: business logic, tests, API endpoints (default)
+- **opus**: deep architectural reasoning, complex multi-file coordination
 
-Default to sonnet when unsure. Use haiku aggressively for mechanical tasks to save tokens.
+### Subagent reporting
+
+Each subagent reports: **DONE** (files changed, tests pass), **DONE_WITH_CONCERNS** (unexpected finding), or **BLOCKED** (needs decision). Review actual code after each batch — do not trust reports blindly.
 
 ### Task completion
 
-After each task:
-1. `TaskUpdate` to mark complete
-2. Update `tech-plan.md`: change `- [ ]` to `- [x]`
+After each task: `TaskUpdate` to complete, update tech-plan (`- [ ]` → `- [x]`).
 
 ### Testing
 
-Write tests when they add value:
-- **Always test**: business logic, data integrity, authentication, payment flows, API contracts
-- **Judgment call**: UI scaffolding, configuration, simple wiring, static content
-- When writing tests, prefer test-first (write the test, see it fail, then implement)
+Always test: business logic, data integrity, auth, payments, API contracts. Judgment call for: UI scaffolding, config, static content. Prefer test-first when writing tests.
 
 ### When things go wrong
 
-**Test fails unexpectedly**: investigate the root cause, fix, continue.
-
-**Plan assumption invalid**: re-enter plan mode (`EnterPlanMode`), adjust the tech-plan, append to the Iteration Log, exit plan mode, continue from the adjusted point.
-
-**Spec gap found** (missing edge case, behavior not contemplated):
-
-- **Non-blocking gap**: note it for `/close` reconciliation. Continue.
-- **Blocking gap** (downstream tasks depend on the answer): PAUSE. Ask the user a focused clarification question via `AskUserQuestion`. Record the decision in the tech-plan's Design Decisions section with prefix `[Clarified during build]`. Continue. The spec itself is NOT modified — formal reconciliation happens in `/close`.
-
-Never update `spec.md` during build. Never increment `spec_version` during build. Clarifications are design decisions, not spec amendments.
-
-**Premise broken** (fundamental approach doesn't work): STOP completely. Announce:
-> "The current approach cannot continue because [reason]. Suggest re-running `/build` with a different approach."
-Summarize what was done, what works, what doesn't.
+- **Test fails**: investigate root cause, fix, continue.
+- **Plan assumption invalid**: re-enter plan mode, adjust, append to Iteration Log, continue.
+- **Spec gap (non-blocking)**: note for /close reconciliation, continue.
+- **Spec gap (blocking)**: ask user via `AskUserQuestion`, record in Design Decisions with `[Clarified during build]`, continue. Do not modify spec.md — reconciliation happens in /close.
+- **Premise broken**: stop. Announce what failed and why. Summarize what works and what doesn't.
 
 ### Iteration Log
 
-When re-entering plan mode, append an entry:
-
-```markdown
-## Iteration Log
-
-### B1 — 2026-03-22
-- Initial plan: 8 tasks, 3 parallel batches
-- Result: 6/8 done. T7 failed — API doesn't support SSE
-
-### B2 — 2026-03-22
-- Changed SSE → WebSockets. Replaced T7-T8, added T9
-- Result: All pass
-```
-
-The Iteration Log tracks what changed, why, and the outcome. It is append-only.
+When re-entering plan mode, append what changed, why, and the outcome. Append-only.
 
 ## 6. Transition
 
-When all tasks are complete:
-> "All tasks complete. You can:
-> - Run `/evaluate` to audit all changes against the spec
-> - Run `/close` to reconcile specs, persist learnings, and commit
->
-> `/evaluate` is optional but catches implementation-spec misalignment."
+When all tasks complete, suggest `/close` to reconcile and commit, or `/evaluate` for a final audit.
+
+Update `docs/specs/index.yaml` status to `in-progress` when execution starts.
 
 ## Guardrails
 
-- The tech-plan is the contract. Never skip tasks. If a task seems unnecessary, flag it — don't silently skip.
-- Spec gaps are noted, not fixed. Spec reconciliation happens in `/close`.
-- **NO COMMITS during /build.** All commits are proposed in `/close` and require user approval.
+- The tech-plan is the contract. Flag unnecessary tasks — don't silently skip.
+- Spec gaps are noted, not fixed. Reconciliation happens in /close.
 - Iterate the plan as needed — the Iteration Log tracks changes.
-- Never proceed without an approved spec.
-- Update `docs/specs/index.yaml`: set feature status to `in-progress` when execution starts.
+- Do not proceed without an approved spec.

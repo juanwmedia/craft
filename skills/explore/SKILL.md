@@ -1,92 +1,59 @@
+---
+name: explore
+description: Hands-on technology exploration before design decisions. Use when the user faces a new library, SDK, framework, or needs to evaluate competing approaches (WebSocket vs SSE, Pinia vs composables). Also for feasibility questions ("is this even possible?") and migrations. Produces a capabilities map (explore.md) that informs /spec.
+disable-model-invocation: false
+argument-hint: [feature-slug]
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Agent
+---
+
 Part of the **Craft** methodology (**Explore** (optional) → Spec → Build → Close).
 
 Explore answers: **with what tools, libraries, or approaches should we build this?** It runs BEFORE `/spec` when the user faces technology decisions they can't make without hands-on experience.
 
-## When to use Explore
+## When to use
 
-Trigger `/explore` when ANY of these are true:
-- The user wants to adopt a new library, SDK, or framework they haven't used before
-- The user needs to evaluate competing approaches (WebSocket vs SSE, Pinia vs composables, etc.)
-- The user asks "is this even possible?" — a feasibility question
-- The user is migrating or upgrading (Laravel 12 → 13, raw API → SDK, etc.)
-- The user provides documentation URLs, blog posts, or release notes and wants to understand implications
+- New library, SDK, or framework the user hasn't used before
+- Evaluating competing approaches (WebSocket vs SSE, Pinia vs composables)
+- Feasibility questions ("is this even possible?")
+- Migrations or upgrades.
+- User provides documentation/release notes and wants to understand implications
 
-Do NOT use `/explore` when:
-- The tools are known and the user just wants to build (go to `/spec`)
-- It's a simple feature using established patterns (go to `/spec`)
-- The user already knows the answer and just wants validation (use `/evaluate`)
+Skip when tools are known and the user just wants to build (go to `/spec`).
 
-## How Explore works
+## How it works
 
-### Phase 1: Understand the question
+### 1. Understand the question
 
-1. If a feature slug is provided (`/explore dojo-v2`), check if `docs/specs/<feature>/` exists. Create it if not.
-2. If no slug is provided, ask: "What technology question do you need answered?" Then suggest a slug.
-3. Read any existing project context: CLAUDE.md, related specs, architecture docs.
-4. Ask the user: **"What are you trying to figure out?"**
-   - NOT "what do you want to build" (that's spec)
-   - NOT "how do you want to build it" (that's build)
-   - The question is: **what tool, library, or approach do you need to understand before you can plan?**
-5. From the answer, identify:
-   - What technology/library to explore
-   - What specific questions need answers
-   - What the user already knows vs. what's new
+If a feature slug is provided, check/create `docs/specs/<feature>/`. If not, ask what technology question needs answering and suggest a slug.
 
-### Phase 2: Research
+The question is: **what tool, library, or approach do you need to understand before you can plan?**
 
-Before putting anything in the user's hands, understand the technology:
+### 2. Research
 
-1. **Read documentation** — use Boost search-docs, Context7, WebFetch, or the user's provided URLs
-2. **Check compatibility** — does it work with the project's stack? Check version constraints, dependencies
-3. **Understand the API surface** — what primitives does the tool offer? What are the core concepts?
-4. **Identify constraints** — what CAN'T it do? What assumptions does it make?
-5. **Find relevant examples** — official examples, patterns from docs, community usage
+Read documentation (Context7, WebFetch, user-provided URLs). Check compatibility with the project's stack. Understand the API surface, core concepts, and constraints.
 
-Present a summary to the user: "Here's what I found. The SDK offers X, Y, Z. It requires A, constrains B. Shall we try it hands-on?"
+Present a summary to the user before going hands-on.
 
-### Phase 3: Hands-on exploration (THE CORE OF THIS SKILL)
+### 3. Hands-on exploration (the core)
 
-This is what makes `/explore` different from reading docs. The user TOUCHES the technology.
-
-**Guide, don't do.** Suggest what to try, let the user run it. When the user runs a command or writes code themselves, they build muscle memory and intuition that reading can't provide.
-
-**Incremental steps.** Start with the simplest possible thing that works:
+Guide, don't do. The user touches the technology:
 1. Install the tool
-2. Minimal "hello world" — prove it works at all
-3. Try the specific features relevant to the project
-4. Push boundaries — find the limits, the constraints, the gotchas
+2. Minimal "hello world" — prove it works
+3. Try features relevant to the project
+4. Push boundaries — find limits and gotchas
 
-**For each step:**
-- Explain WHAT we're testing and WHY before the user runs it
-- Suggest the exact command or code snippet
-- After the user runs it: discuss what happened, what it means, what we learned
-- If it fails: diagnose together, adjust, retry
+For each step: explain what we're testing and why, suggest the command/snippet, discuss what happened after.
 
-**Encourage the user to deviate.** "What happens if you change X?" "Try calling it without Y — what breaks?" The unexpected results teach more than the expected ones.
+Encourage deviation. "What happens if you change X?" The unexpected results teach most.
 
-**Ask questions, don't lecture.** "What do you think this method does?" "Does this remind you of anything in the current codebase?" "What would break if we used this in production?"
+### 4. Evaluate findings
 
-### Phase 4: Evaluate what we learned
+Run an evaluation pass:
+- List capabilities discovered and constraints found
+- Mark each as `[x] tested` or `[ ] assumed from docs`
+- Challenge assumptions — "what if this doesn't work in production?"
 
-After hands-on exploration, run an evaluation pass (evaluator-optimizer pattern):
-
-1. **List every capability discovered** — what does the tool actually do?
-2. **List every constraint discovered** — what can't it do? What surprised us?
-3. **Verify claims against evidence** — did we test this in Tinker, or are we assuming?
-4. **Flag unverified items** — things we believe but haven't tested. These become "test before building" items.
-5. **Challenge assumptions** — "We assumed X works. What if it doesn't? What's the fallback?"
-
-Present findings to the user for discussion. The user may spot things the evaluation missed.
-
-### Phase 4.5: Split-at-source check
-
-Before writing `explore.md`, verify the exploration covers ONE coherent unit of work:
-
-- Does it reveal multiple independent user-visible outcomes?
-- If yes → do NOT write a single `explore.md` bundling them. Propose N separate features to the user, one `/explore` each (or clearly delimited sections).
-- A single exploration that hides a basket of features is the same pattern that causes phase-explosion downstream. Refuse it at the source.
-
-### Phase 5: Write the capabilities map
+### 5. Write the capabilities map
 
 Write `docs/specs/<feature>/explore.md`:
 
@@ -103,50 +70,28 @@ tools_explored: [tool-1, tool-2]
 ## Question
 What we set out to answer.
 
-## Tools explored
-- Tool 1 — version, what it does
-
 ## Capabilities discovered
+- [x] Capability A — tested, works
+- [ ] Capability B — assumed from docs
 
-### Primitives available
-- Capability 1 — what it does, how to use it
-- Capability 2 — ...
-
-### Verified hands-on
-- [x] Capability A — tested in Tinker/browser, works
-- [x] Capability B — tested, works with caveats
-- [ ] Capability C — NOT tested, assumed from docs
-
-### Constraints
-- Constraint 1 — what it can't do, or what it requires
-- Constraint 2 — ...
+## Constraints
+- What it can't do or requires
 
 ## Decisions made
-- Decision 1 — we'll use X because Y (with evidence)
-- Decision 2 — we won't use Z because W
+- We'll use X because Y (with evidence)
 
-## Open questions (test before building)
-- Question 1 — needs empirical verification
-- Question 2 — depends on frontend testing
-
-## Impact on existing architecture
-- What changes if we adopt this
-- What stays the same
+## Open questions
+- Needs verification before building
 ```
 
-### Phase 6: Transition
+### 6. Transition
 
-Tell the user:
-> "Exploration complete. `explore.md` is ready.
-> - Run `/spec <feature>` to define what to build (the spec will read the exploration)
-> - Or continue exploring if questions remain"
+Suggest `/spec <feature>` to define what to build. The spec reads the exploration.
 
 ## Guardrails
 
-- **Explore answers technology questions, not product questions.** If the user starts describing features ("the student should see X"), redirect to `/spec`.
-- **Hands-on is mandatory.** Do not write `explore.md` based solely on reading docs. The user must run at least one thing themselves — Tinker, browser, CLI.
-- **Verified vs. assumed must be explicit.** Every capability is either `[x] tested` or `[ ] assumed`. No ambiguity.
-- **No implementation during explore.** Don't write production code. Tinker experiments, throwaway scripts, temp files. If the user starts building, redirect to `/build`.
-- **Explore can be short.** If the tool is simple and the questions are few, the exploration might take 15 minutes. Don't pad it. Write the capabilities map and move on.
-- **The user drives.** Suggest, don't dictate. The user runs commands. The user asks questions. The user decides when they understand enough. Your job is to guide, challenge, and document.
-- **Always evaluate.** Before writing `explore.md`, run at least one evaluation pass on the findings. Flag anything unverified.
+- Explore answers technology questions, not product questions. Features → `/spec`.
+- Hands-on is mandatory. No `explore.md` from docs alone.
+- Verified vs. assumed must be explicit.
+- No production code during explore. Throwaway experiments only.
+- The user drives. Suggest, don't dictate.
