@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Craft — living spec</title>
+<style>
+  :root{
+    --bg:#0d0f14;--panel:#161922;--panel2:#1c2029;--line:#272c37;
+    --ink:#e8eaed;--mut:#9aa3b2;--faint:#6b7280;
+    --green:#34d399;--amber:#fbbf24;--red:#f87171;--blue:#60a5fa;--violet:#a78bfa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1400px 700px at 80% -10%,#1a1f2b,transparent),var(--bg);
+    color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+
+  .topbar{display:flex;align-items:center;gap:22px;padding:16px 32px;border-bottom:1px solid var(--line);background:#12151d;position:sticky;top:0;z-index:10;flex-wrap:wrap}
+  .topbar .feat{font-weight:700;font-size:16px}
+  .topbar .tag{color:var(--mut);font-size:13.5px;flex:1;min-width:240px}
+  .back{color:var(--blue);text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap} .back:hover{text-decoration:underline}
+  .live{font-size:11px;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+  .live i{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 6px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+  .prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut)}
+  .bar{width:160px;height:7px;border-radius:4px;background:var(--panel2);overflow:hidden}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--blue))}
+
+  .dash{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;padding:24px 32px 90px;align-items:start}
+  @media(max-width:1100px){.dash{grid-template-columns:1fr}}
+  .main{display:flex;flex-direction:column;gap:26px;min-width:0}
+  h2{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);margin:0 0 13px;font-weight:600}
+  .badge{font-size:10px;font-weight:800;border-radius:5px;padding:2px 7px;margin-left:9px;vertical-align:middle}
+  .badge.done{background:var(--green);color:#0b1220} .badge.active{background:var(--blue);color:#0b1220} .badge.todo{background:var(--panel2);color:var(--faint)}
+  .mockup-frame{width:100%;height:560px;border:1px solid var(--line);border-radius:12px;background:#0f1115;display:block}
+
+  /* phase block */
+  .pblock{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px}
+  .pblock.done{border-color:rgba(52,211,153,.35)} .pblock.active{border-color:rgba(96,165,250,.45)}
+  .pblock-hd{padding:14px 18px;background:#191d26;border-bottom:1px solid var(--line)}
+  .pblock-name{font-weight:700;font-size:15px}
+  .pblock-out{margin-top:6px;font-size:12.5px;color:var(--green)} .pblock-out b{color:var(--ink)}
+  .pblock-grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:0}
+  @media(max-width:860px){.pblock-grid{grid-template-columns:1fr}}
+  .pcol{padding:16px 18px}
+  .pcol.what{border-right:1px solid var(--line);background:#14171f}
+  @media(max-width:860px){.pcol.what{border-right:none;border-bottom:1px solid var(--line)}}
+  .pcol-h{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);font-weight:600;margin-bottom:11px}
+
+  .acnode{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;transition:opacity .15s,border-color .15s}
+  .acnode .dot{width:9px;height:9px;border-radius:50%;flex:none;margin-top:5px;background:var(--faint)}
+  .acnode.ok .dot{background:var(--green)}
+  .acnode .nid{font-weight:700;font-size:11.5px;color:var(--blue);margin-right:5px}
+  .acnode .tx{font-size:13px;color:var(--ink)}
+  .acnode.gap{border-color:rgba(248,113,113,.55)}
+  .acnode .warn{display:block;color:var(--red);font-size:11px;margin-top:4px;font-weight:600}
+
+  .board{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .task{display:grid;grid-template-columns:22px 15px 1fr auto;gap:12px;align-items:start;padding:12px 14px;border-bottom:1px solid #1f232d;transition:opacity .15s,background .15s}
+  .task:last-child{border-bottom:none} .task:hover{background:#181c25}
+  .stat{font-size:14px;margin-top:1px}
+  .s-done{color:var(--green)} .s-doing{color:var(--blue)} .s-todo{color:var(--faint)}
+  .wtcell{margin-top:3px} .wt{width:10px;height:10px;border-radius:50%;display:inline-block}
+  .wt.trivial{background:var(--faint)} .flagi{color:var(--amber)}
+  .nm{font-weight:600;font-size:13.5px} .nm code{font-size:12px}
+  .nm .flag{color:var(--amber);margin-left:7px;font-size:10.5px;border:1px solid rgba(251,191,36,.4);border-radius:5px;padding:1px 6px}
+  .files{font:11.5px ui-monospace,Menlo,monospace;color:var(--mut);margin-top:3px}
+  .why2{font-size:12px;color:var(--faint);margin-top:3px}
+  .covers{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+  .covers .lab{font-size:11px;color:var(--faint)}
+  .covchip{font-size:10.5px;font-weight:700;color:var(--blue);background:rgba(96,165,250,.13);border-radius:5px;padding:1px 6px}
+  .gate{margin-top:7px;display:inline-block;font-size:11px;font-weight:700;color:var(--amber);background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);border-radius:6px;padding:2px 8px}
+  .stream{margin-top:7px;display:inline-block;font-size:11px;color:var(--faint);font-style:italic}
+  .viewdiff{color:var(--blue);font-size:11.5px;cursor:pointer;user-select:none;white-space:nowrap}
+  .viewdiff:hover{text-decoration:underline}
+  .diffbox{grid-column:1/-1;display:none;margin-top:10px;background:#0a0c10;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font:11.5px/1.55 ui-monospace,Menlo,monospace;overflow-x:auto}
+  .dl{display:block;white-space:pre} .dl.add{color:#7ee787;background:rgba(46,160,67,.13)} .dl.del{color:#ff7b72;background:rgba(248,81,73,.13)} .dl.hunk{color:#79c0ff} .dl.meta{color:#566070}
+
+  /* hover linking inside a block */
+  .pblock.dim .acnode, .pblock.dim .task{opacity:.3}
+  .acnode.hl, .task.hl{opacity:1 !important}
+  .acnode.hl{border-color:var(--blue)} .task.hl{background:#1b2333}
+
+  .pblock-fric{padding:12px 18px;border-top:1px solid var(--line);background:rgba(248,113,113,.06)}
+  .pfric{font-size:12.5px;color:var(--ink)} .pfric + .pfric{margin-top:7px}
+  .pfric .ico{color:var(--red);font-weight:700} .pfric .rel{color:var(--faint);font-size:11.5px}
+  .phase-gate{padding:11px 18px;border-top:1px dashed rgba(96,165,250,.5);background:rgba(96,165,250,.08);font-size:12.5px;color:var(--blue)}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px}
+  .card .id{display:inline-block;font-size:11px;font-weight:700;background:rgba(167,139,250,.16);color:var(--violet);border-radius:6px;padding:3px 8px;margin-bottom:9px}
+  .card h3{margin:0 0 7px;font-size:14.5px}
+  .card .why{font-size:12.5px;color:var(--mut);border-left:2px solid var(--blue);padding-left:10px}
+  .card .lk{margin-top:9px;font-size:11.5px;color:var(--faint)} .card .lk b{color:var(--blue)}
+
+  .xfric{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4);border-left:4px solid var(--red);border-radius:10px;padding:13px 16px;margin-bottom:11px}
+  .xfric .hd{font-weight:700;color:var(--red);font-size:13.5px} .xfric p{margin:6px 0 0;font-size:13px;color:var(--ink)}
+
+  .aside{display:flex;flex-direction:column;gap:22px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .panel h3{margin:0 0 12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600}
+  .nsbox{font-size:13.5px;line-height:1.5} .nsbox .star{color:var(--green)}
+  .sum{font-size:13px;color:var(--mut);line-height:1.95} .sum b{color:var(--ink)}
+  .covbar{height:7px;border-radius:4px;background:var(--panel2);overflow:hidden;margin:6px 0 10px} .covbar>i{display:block;height:100%;background:var(--green)}
+  .gapwarn{color:var(--red);font-weight:600}
+  .err{color:var(--red);padding:40px;font:14px ui-monospace,Menlo,monospace}
+  #exploration-sec{margin-top:8px}
+  .explore-toggle summary{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:600;cursor:pointer;list-style:none;padding:8px 0}
+  .explore-toggle summary::-webkit-details-marker{display:none}
+  .explore-toggle summary::before{content:'▸  '} .explore-toggle[open] summary::before{content:'▾  '}
+  .explore{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:10px;font-size:13.5px;line-height:1.6}
+  .explore h4{margin:15px 0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);font-weight:600} .explore h4:first-child{margin-top:0}
+  .explore .q{font-size:14.5px;color:var(--ink);font-style:italic}
+  .explore ul{margin:0;padding-left:0;list-style:none}
+  .explore li{margin:4px 0;color:var(--mut)}
+  .explore li .cap{margin-right:7px;font-weight:800}
+  .explore li .cap.t{color:var(--green)} .explore li .cap.a{color:var(--faint)}
+  .explore .src a{color:var(--blue);text-decoration:none;font-size:12px}
+</style>
+</head>
+<body>
+  <div class="topbar" id="topbar"></div>
+  <div class="dash">
+    <div class="main">
+      <section id="mockup-sec"><h2>What we're building</h2><div id="mockup"></div></section>
+      <section id="phases-sec"><h2>What ↔ How — by phase</h2><div id="phases"></div></section>
+      <section id="exploration-sec"><details class="explore-toggle"><summary>Exploration — how we chose the tools</summary><div class="explore" id="exploration"></div></details></section>
+    </div>
+    <aside class="aside">
+      <div id="aside-top"></div>
+      <section id="dec-sec"><h2>Decisions — the why</h2><div class="cards" id="decisions"></div></section>
+      <section id="xfric-sec"><h2>Cross-cutting frictions</h2><div id="xfric"></div></section>
+    </aside>
+  </div>
+
+  <!-- Baked mode embeds data here; served mode leaves it empty and fetches ./data.json -->
+  <script type="application/json" id="feature-data"></script>
+
+  <script>
+    const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    function taskRow(t){
+      const ic = t.status==='done'?'<span class="stat s-done">✓</span>':t.status==='doing'?'<span class="stat s-doing">◐</span>':'<span class="stat s-todo">○</span>';
+      const wt = t.weight==='substantial'?'<span class="flagi">⚑</span>':'<span class="wt trivial"></span>';
+      const tag = (t.gate||t.weight==='substantial')?`<span class="gate">⏸ I stop here</span>`:`<span class="stream">trivial</span>`;
+      const vd = t.diffFile?`<span class="viewdiff" data-file="${esc(t.diffFile)}">view diff</span>`:'';
+      const cov = (t.covers&&t.covers.length)?`<div class="covers"><span class="lab">covers</span>${t.covers.map(a=>`<span class="covchip">${esc(a)}</span>`).join('')}</div>`:'';
+      return `<div class="task" data-task="${esc(t.id)}" data-covers="${(t.covers||[]).join(' ')}">${ic}<div class="wtcell">${wt}</div>`+
+        `<div><div class="nm">${esc(t.title)}${t.weight==='substantial'?'<span class="flag">substantial</span>':''}</div>`+
+        `<div class="files">${esc(t.files)}</div>`+(t.why?`<div class="why2">${esc(t.why)}</div>`:'')+cov+tag+
+        `<pre class="diffbox" data-open="0"></pre></div><div>${vd}</div></div>`;
+    }
+
+    function renderPhases(d){
+      const phases = d.phases||[], what = d.what||[], tasks = d.tasks||[], frics = d.frictions||[];
+      if(!phases.length) return `<div class="board">${tasks.map(taskRow).join('')}</div>`;
+      return phases.map(p=>{
+        const acs = what.filter(a=>a.phase===p.id);
+        const pts = tasks.filter(t=>t.phase===p.id);
+        const acHtml = acs.length ? acs.map(a=>{
+          const covered = pts.some(t=>(t.covers||[]).includes(a.id));
+          return `<div class="acnode ${a.done?'ok':''} ${covered?'':'gap'}" data-ac="${esc(a.id)}"><i class="dot"></i>`+
+            `<div class="tx"><span class="nid">${esc(a.id)}</span>${esc(a.text)}${covered?'':'<span class="warn">⚠ no task covers this — gap</span>'}</div></div>`;
+        }).join('') : '<div class="files">— no acceptance criteria —</div>';
+        const taskHtml = pts.length ? `<div class="board">${pts.map(taskRow).join('')}</div>` : '<div class="files">— no tasks —</div>';
+        const pf = frics.filter(f=>f.relatesTo && (acs.some(a=>a.id===f.relatesTo)||pts.some(t=>t.id===f.relatesTo)));
+        const fricHtml = pf.length ? `<div class="pblock-fric">${pf.map(f=>`<div class="pfric"><span class="ico">⚠ ${esc(f.title)}</span> <span class="rel">(→ ${esc(f.relatesTo)})</span><br>${esc(f.text)}</div>`).join('')}</div>` : '';
+        const badge = `<span class="badge ${p.state}">${p.state==='done'?'DONE':p.state==='active'?'NOW':'TODO'}</span>`;
+        return `<div class="pblock ${p.state}" data-phase="${esc(p.id)}">`+
+          `<div class="pblock-hd"><span class="pblock-name">${esc(p.label)}</span>${badge}`+
+            (p.outcome?`<div class="pblock-out">★ <b>Usable when done:</b> ${esc(p.outcome)}</div>`:'')+`</div>`+
+          `<div class="pblock-grid"><div class="pcol what"><div class="pcol-h">WHAT — acceptance criteria</div>${acHtml}</div>`+
+            `<div class="pcol how"><div class="pcol-h">HOW — tasks</div>${taskHtml}</div></div>`+
+          fricHtml+`<div class="phase-gate">⏸ Phase boundary — your turn: go run it.</div></div>`;
+      }).join('');
+    }
+
+    function render(d){
+      const tasks = d.tasks||[], what = d.what||[];
+      const done = tasks.filter(t=>t.status==='done').length, total = tasks.length;
+      const pct = total?Math.round(done/total*100):0;
+      document.title = d.feature + ' — living spec';
+
+      const back = location.pathname.startsWith('/f/') ? `<a class="back" href="/">← Features</a>` : '';
+      document.getElementById('topbar').innerHTML = back +
+        `<span class="feat">${esc(d.feature)}</span><span class="tag">${esc(d.tagline)}</span>`+
+        `<span class="live"><i></i>live</span><span class="prog">${done}/${total}<span class="bar"><i style="width:${pct}%"></i></span></span>`;
+
+      const mk = d.mockup;
+      document.getElementById('mockup-sec').style.display = (mk&&mk.file)?'block':'none';
+      document.getElementById('mockup').innerHTML = (mk&&mk.file)?`<iframe class="mockup-frame" src="${esc(mk.file)}" title="${esc(mk.title||'mockup')}" loading="lazy"></iframe>`:'';
+
+      document.getElementById('phases').innerHTML = renderPhases(d);
+
+      const dec = d.decisions||[];
+      document.getElementById('dec-sec').style.display = dec.length?'block':'none';
+      document.getElementById('decisions').innerHTML = dec.map(c=>
+        `<div class="card"><span class="id">${esc(c.id)}</span><h3>${esc(c.title)}</h3>`+
+        `<div class="why">${esc(c.why)}</div>`+(c.links?`<div class="lk">↳ links to <b>${esc(c.links)}</b></div>`:'')+`</div>`).join('');
+
+      const xf = (d.frictions||[]).filter(f=>!f.relatesTo);
+      document.getElementById('xfric-sec').style.display = xf.length?'block':'none';
+      document.getElementById('xfric').innerHTML = xf.map(f=>`<div class="xfric"><div class="hd">⚠ ${esc(f.title)}</div><p>${esc(f.text)}</p></div>`).join('');
+
+      const acOk = what.filter(a=>a.done).length, acPct = what.length?Math.round(acOk/what.length*100):0;
+      const gaps = what.filter(a=>!tasks.some(t=>t.phase===a.phase&&(t.covers||[]).includes(a.id))).length;
+      document.getElementById('aside-top').innerHTML =
+        `<div class="panel"><h3>North Star</h3><div class="nsbox"><span class="star">★</span> ${esc(d.northStar)}</div></div>`+
+        `<div class="panel"><h3>Coverage</h3><div class="sum">Acceptance criteria done <b>${acOk}/${what.length}</b><div class="covbar"><i style="width:${acPct}%"></i></div>`+
+          (gaps?`<span class="gapwarn">⚠ ${gaps} AC with no task (gap)</span><br>`:`All AC covered by ≥1 task ✓<br>`)+
+          `<b>${total}</b> tasks · <b>${done}</b> done<br><b>${tasks.filter(t=>t.weight==='substantial').length}</b> substantial (where I stop)<br>Every <span style="color:var(--blue)">view diff</span> is real git.</div></div>`;
+
+      renderExploration(d);
+      bindDiffs(); bindHover();
+    }
+
+    function renderExploration(d){
+      const e = d.exploration, sec = document.getElementById('exploration-sec');
+      if(!e || (!e.question && !(e.capabilities||[]).length && !(e.constraints||[]).length && !(e.decisions||[]).length)){ if(sec) sec.style.display='none'; return; }
+      if(sec) sec.style.display='block';
+      const cap = (e.capabilities||[]).map(c=>`<li><span class="cap ${c.tested?'t':'a'}">${c.tested?'✓':'○'}</span>${esc(c.text)}</li>`).join('');
+      const con = (e.constraints||[]).map(c=>`<li>— ${esc(c)}</li>`).join('');
+      const dec = (e.decisions||[]).map(c=>`<li>→ ${esc(c.text)}</li>`).join('');
+      const oq  = (e.openQuestions||[]).map(c=>`<li>? ${esc(c)}</li>`).join('');
+      const src = (e.sources||[]).map(s=>`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s)}</a>`).join(' · ');
+      document.getElementById('exploration').innerHTML =
+        (e.question?`<div class="q">${esc(e.question)}</div>`:'')+
+        (cap?`<h4>Capabilities <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint)">(✓ tested · ○ assumed)</span></h4><ul>${cap}</ul>`:'')+
+        (con?`<h4>Constraints</h4><ul>${con}</ul>`:'')+
+        (dec?`<h4>Technology decisions</h4><ul>${dec}</ul>`:'')+
+        (oq?`<h4>Open questions</h4><ul>${oq}</ul>`:'')+
+        (src?`<h4>Sources</h4><div class="src">${src}</div>`:'');
+    }
+
+    function colorize(t){
+      if(!t||!t.trim()) return '<span class="dl meta">— no changes —</span>';
+      return t.split('\n').map(line=>{
+        const e = esc(line); let c='';
+        if(line.startsWith('+')&&!line.startsWith('+++')) c='add';
+        else if(line.startsWith('-')&&!line.startsWith('---')) c='del';
+        else if(line.startsWith('@@')) c='hunk';
+        else if(/^(diff |index |\+\+\+|---|new file|similarity)/.test(line)) c='meta';
+        return `<span class="dl ${c}">${e||' '}</span>`;
+      }).join('');
+    }
+    function bindDiffs(){
+      document.querySelectorAll('.viewdiff').forEach(el=>el.addEventListener('click', async ()=>{
+        const box = el.closest('.task').querySelector('.diffbox');
+        if(box.dataset.open==='1'){ box.style.display='none'; box.dataset.open='0'; el.textContent='view diff'; return; }
+        el.textContent='loading…';
+        try{ const r=await fetch('/diff?file='+encodeURIComponent(el.dataset.file)); box.innerHTML=colorize(await r.text()); }
+        catch(e){ box.innerHTML='<span class="dl del">error</span>'; }
+        box.style.display='block'; box.dataset.open='1'; el.textContent='hide diff';
+      }));
+    }
+    function clearHL(block){ block.classList.remove('dim'); block.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl')); }
+    function bindHover(){
+      document.querySelectorAll('.pblock').forEach(block=>{
+        block.querySelectorAll('.acnode').forEach(ac=>{
+          ac.addEventListener('mouseenter',()=>{
+            const id=ac.dataset.ac; block.classList.add('dim'); ac.classList.add('hl');
+            block.querySelectorAll('.task').forEach(t=>{ if((t.dataset.covers||'').split(' ').includes(id)) t.classList.add('hl'); });
+          });
+          ac.addEventListener('mouseleave',()=>clearHL(block));
+        });
+        block.querySelectorAll('.task').forEach(t=>{
+          t.addEventListener('mouseenter',()=>{
+            block.classList.add('dim'); t.classList.add('hl');
+            (t.dataset.covers||'').split(' ').filter(Boolean).forEach(id=>{ const a=block.querySelector(`.acnode[data-ac="${id}"]`); if(a)a.classList.add('hl'); });
+          });
+          t.addEventListener('mouseleave',()=>clearHL(block));
+        });
+      });
+    }
+
+    // Dual loader: baked (embedded #feature-data) OR served (fetch ./data.json).
+    (function(){
+      const node = document.getElementById('feature-data');
+      const raw = node ? node.textContent.trim() : '';
+      const boot = d => { render(d); try{ const es=new EventSource('/events'); es.onmessage=()=>location.reload(); }catch(e){} };
+      if(raw.length>2){ try{ boot(JSON.parse(raw)); }catch(e){ document.body.innerHTML='<div class="err">Bad embedded data: '+e+'</div>'; } }
+      else { fetch('./data.json').then(r=>r.json()).then(boot).catch(e=>{ document.body.innerHTML='<div class="err">Could not load data.json: '+e+'</div>'; }); }
+    })();
+  </script>
+</body>
+</html>
