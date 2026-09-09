@@ -27,10 +27,6 @@
   .card .name{font-weight:700;font-size:15.5px;flex:1}
   .badge{font-size:10px;font-weight:800;border-radius:5px;padding:2px 8px}
   .badge.done{background:var(--green);color:#0b1220} .badge.in-progress{background:var(--blue);color:#0b1220} .badge.draft{background:var(--panel2);color:var(--faint)}
-  .badge.arch{background:transparent;color:var(--faint);border:1px solid var(--line)}
-  .card.legacy{cursor:default} .card.legacy:hover{transform:none;border-color:var(--line)}
-  .card.draft{border-style:dashed;border-color:rgba(167,139,250,.45)} .card.draft:hover{border-color:rgba(167,139,250,.45)}
-  .grid.muted .card{opacity:.6}
   .dec-toggle{margin-top:30px}
   .card .tg{color:var(--mut);font-size:12.5px;margin:8px 0 12px;line-height:1.45}
   .phs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
@@ -58,9 +54,6 @@
   <div class="topbar"><span class="feat">Craft</span><span class="tag" id="tag">features</span><span class="live"><i></i>live</span></div>
   <div class="wrap">
     <section><h2>Active</h2><div class="grid" id="features"></div></section>
-    <section id="draft-sec"><h2>Draft</h2><div class="grid" id="draft"></div></section>
-    <section id="built-sec"><h2>Built (legacy)</h2><div class="grid muted" id="built"></div></section>
-    <section id="archived-sec"><details class="dec-toggle"><summary>Archived</summary><div class="grid muted" id="archived" style="margin-top:12px"></div></details></section>
     <section id="dec-sec"><details class="dec-toggle"><summary>Cross-cutting decisions</summary><div class="dec" id="dec"></div></details></section>
   </div>
 
@@ -92,15 +85,6 @@
       document.getElementById('dec').innerHTML = html;
       return true;
     }
-    function statusClass(s){ return s==='done'?'done':s==='in-progress'?'in-progress':s==='backlog'?'draft':'arch'; }
-    function legacyCard(r, kind){
-      return `<div class="card legacy ${kind}"><div class="hd"><span class="name">${esc(r.title)}</span>`+
-        `<span class="badge ${statusClass(r.status)}">${esc((r.status||'').replace('-',' ')).toUpperCase()}</span></div></div>`;
-    }
-    function fillBucket(id, list, kind){
-      const sec = document.getElementById(id+'-sec'); if(sec) sec.style.display = list.length ? 'block' : 'none';
-      const el = document.getElementById(id); if(el) el.innerHTML = list.map(r=>legacyCard(r,kind)).join('');
-    }
     function render(d){
       const known = {}; d.features.forEach(f=>known[f.slug]=f);
       const feats = d.features.slice().sort((a,b)=>(ORDER[a.status]??9)-(ORDER[b.status]??9));
@@ -108,16 +92,7 @@
         ? feats.map(f=>card(f,known)).join('')
         : '<div class="empty">No features with a data.json yet. Run <code>/spec &lt;feature&gt;</code>.</div>';
 
-      const activeSlugs = new Set(feats.map(f=>f.slug));
-      const rest = (d.registry||[]).filter(r=>!activeSlugs.has(r.name));
-      const draft = rest.filter(r=>r.status==='backlog');
-      const archived = rest.filter(r=>r.status==='archived');
-      const built = rest.filter(r=>!['backlog','archived'].includes(r.status));
-      fillBucket('draft', draft, 'draft');
-      fillBucket('built', built, 'built');
-      fillBucket('archived', archived, 'arch');
-
-      document.getElementById('tag').textContent = `${feats.length} active · ${built.length} built · ${draft.length} draft`;
+      document.getElementById('tag').textContent = `${feats.length} active`;
       document.getElementById('dec-sec').style.display = renderDecisions(d.decisions) ? 'block' : 'none';
     }
     fetch('/dashboard.json').then(r=>r.json()).then(d=>{

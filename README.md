@@ -13,10 +13,12 @@ Craft removes it. Everything a feature produces (how it works, how it looks, the
 
 ## You're always in, or you're not, never the messy middle
 
-Collaboration runs in one of two modes (`references/modes.md`):
+**What the thing is, is always yours.** `/shape` and `/spec` have no mode: the shape of the feature and each acceptance criterion are decided with you, one at a time, never handed over. The board fills as you talk, so you always know what you are looking at, because you decided it.
 
-- **`in the loop`** (default), you're in every decision at the smallest grain: the shape of the thing, each acceptance criterion, each task, each change. Nothing is produced for one-shot approval; the board fills as you talk. You always know what you're looking at, because you decided it.
-- **`above the loop`**, you say what you want and validate the result: present at the start and the end, not the middle. Opt-in, explicit, never silent.
+**How it gets built has two modes** (`references/modes.md`):
+
+- **`in the loop`** (default), you're in every task and every change, trivial ones included. Nothing is produced for one-shot approval.
+- **`above the loop`**, you say go and validate the result: present at the start and the end, not the middle. Opt-in, explicit, never silent.
 
 Either is fine. The messy middle, half-in, handed something you can't follow, is the one thing Craft refuses.
 
@@ -41,13 +43,13 @@ All four lifecycle skills write to the **same board** (`data.json`); the HTML is
 /close <feature>     → reconcile the board, graduate findings, propose commits
 ```
 
-`/evaluate` audits at any point; `/craft-serve` starts the live board.
+`/evaluate` audits at any point; `/board` opens the live board and `/board stop` closes it.
 
 ## File structure
 
 ```
+CONTEXT.md                  # The project glossary: each term with its _Avoid_ line (/shape writes it, /close grows it, /spec reads it)
 docs/craft/
-├── index.yaml              # Feature registry (status, priority, phases)
 ├── decisions.md            # Cross-cutting decisions (only /close writes; created on demand)
 └── <feature-slug>/
     ├── data.json           # The feature's single source of truth: exploration + WHAT + HOW + live status
@@ -55,21 +57,21 @@ docs/craft/
     └── look/               # Optional: screenshots or artboards of how it looks
 
 ~/code/craft/
-├── lib/                    # craft-serve.js (live board server) + doc/dashboard templates + schema.md
+├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md
 ├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md, inherited by all skills
-└── skills/                 # shape · spec · build · close · evaluate · craft-serve
+└── skills/                 # shape · spec · build · close · evaluate · board
 ```
 
 ## Skills
 
 | Skill | Purpose | Writes to |
 |-------|---------|-----------|
-| `/shape` | Interview to nothing blocking, prove assumptions, draw how it works | the board (`exploration`, `resolved`, `howItWorks`, `assumptions`) |
+| `/shape` | Interview to nothing blocking, prove assumptions, draw how it works | the board (`exploration`, `resolved`, `howItWorks`, `assumptions`) + `CONTEXT.md` |
 | `/spec` | Define the WHAT + acceptance criteria | the board (`what`, `phases`) |
 | `/build` | Decide the HOW + implement, in the loop | the board (`decisions`, `tasks`, status) + code |
-| `/close` | Reconcile, graduate findings, propose commits | the board + `CLAUDE.md` / registry |
+| `/close` | Reconcile, graduate findings, propose commits | the board + `CLAUDE.md` / `decisions.md` / `CONTEXT.md` |
 | `/evaluate` | Evidence-based audit of any output | verification findings |
-| `/craft-serve` | Start or confirm the live board server | nothing |
+| `/board` | Open the live board, or `stop` to close it | nothing |
 
 Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contract is `lib/schema.md`.
 
@@ -82,16 +84,14 @@ Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contrac
 /plugin install craft@craft
 ```
 
-### Manual symlinks
+### From a clone, without installing
 
 ```bash
 git clone https://github.com/juanwmedia/craft.git ~/code/craft
-mkdir -p ~/.claude/skills
-for skill in shape spec build close evaluate craft-serve; do
-  ln -s ~/code/craft/skills/$skill ~/.claude/skills/$skill
-done
-ln -s ~/code/craft/agents ~/.claude/agents
+claude --plugin-dir ~/code/craft
 ```
+
+Symlinking the skills into `~/.claude/skills/` does **not** work: they resolve `${CLAUDE_PLUGIN_ROOT}` to find the board server and the shared references, and a skill outside a plugin has no plugin root.
 
 ## License
 

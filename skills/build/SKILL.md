@@ -1,14 +1,14 @@
 ---
 name: build
-description: Design, plan, and implement a feature as a LIVING VISUAL DOC. Reads the feature's data.json, serves it as an interactive HTML board (craft-serve) the human watches in real time, decides the tasks conversationally with the user, then executes in the loop, updating the board live, pausing on every task and at gates. Use when the user wants to implement, code, or build a specified feature.
+description: Design, plan, and implement a feature as a LIVING VISUAL DOC. Reads the feature's data.json, serves it as an interactive HTML board the human watches in real time, decides the tasks conversationally with the user, then executes in the loop, updating the board live, pausing on every task and at gates. Use when the user wants to implement, code, or build a specified feature.
 disable-model-invocation: false
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, TaskCreate, TaskUpdate, TaskList, TaskGet
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, Skill, TaskCreate, TaskUpdate, TaskList, TaskGet
 ---
 
 Part of the **Craft** methodology (Shape → Spec → **Build** → Close).
 
-Build turns a spec into working code through a **living visual document the human stays inside**, not a markdown plan dumped for one-shot approval. The feature's truth is `docs/craft/<feature>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schema.md`). It renders as an interactive board via `${CLAUDE_PLUGIN_ROOT}/lib/craft-serve.js`, **live-reloading as you update the JSON**. The board is both the plan and, during execution, the live record.
+Build turns a spec into working code through a **living visual document the human stays inside**, not a markdown plan dumped for one-shot approval. The feature's truth is `docs/craft/<feature>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schema.md`). It renders as an interactive board, **live-reloading as you update the JSON**. The board is both the plan and, during execution, the live record.
 
 All `data.json` content is **English** (canonical), regardless of interaction language.
 
@@ -21,10 +21,10 @@ All `data.json` content is **English** (canonical), regardless of interaction la
 Read `docs/craft/<feature>/data.json` (the WHAT + decisions). Read CLAUDE.md (conventions) and `docs/craft/decisions.md` (cross-cutting decisions to respect, **read-only**; only `/close` writes there).
 
 ## 2. Ensure the board is live (it usually already is)
-The board is the feature's home for its **whole lifecycle**: normally already up from `/spec`. Run the **`craft-serve`** check-and-launch (idempotent: `curl`s the port, launches a **visible tracked** background process only if down, never a second one). Open `http://localhost:7331/f/<feature>/` if needed. From here you only **update `data.json`** and the board live-reloads; `build` fills the HOW (tasks) + live status on top of the WHAT `/spec` put there.
+The board is the feature's home for its **whole lifecycle**: normally already up from `/spec`. Run `/craft:board <feature>` if it is not. From here you only **update `data.json`** and the board live-reloads; `build` fills the HOW (tasks) + live status on top of the WHAT `/spec` put there.
 
 ## 3. Collaboration mode (default: `in the loop`)
-See `references/modes.md` (shared across all skills). Default **`in the loop`**: the human is in every task, trivial ones included.
+See `references/modes.md` (shared with `/close`). Default **`in the loop`**: the human is in every task, trivial ones included.
 - **`in the loop`** (DEFAULT): co-design the HOW, then execute task by task; pause on **every** task (trivial included), phase boundaries, and gotchas. Per task: make the change, then report file(s) / what / why and leave the diff one click away; wait for "next".
 - **`above the loop`**: the human states the goal and validates the result (start and end, not the middle); execute the agreed plan and report at the checkpoint they set (the end, or per phase).
 Switchable mid-run ("go ahead" / "stop, show me"). Never silently leave `in the loop`. The granularity dial is the human's, live ("stream the trivial ones" / "stop on everything").

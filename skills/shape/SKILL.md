@@ -29,7 +29,7 @@ Nothing else. Idea mode may produce none of it.
 In a repo, feature mode: slug required, kebab-case.
 No repo or no slug, idea mode: a throwaway prototype, no board until the idea survives.
 
-Feature mode: create `docs/craft/<slug>/`, write a minimal `data.json`, run `craft-serve`, open the board. Read `CONTEXT.md` and `docs/craft/decisions.md` (read-only).
+Feature mode: create `docs/craft/<slug>/`, write a minimal `data.json`, open the board with `/craft:board <slug>`. Read `CONTEXT.md` and `docs/craft/decisions.md` (read-only).
 
 ## 1. Interview until nothing blocking is open
 

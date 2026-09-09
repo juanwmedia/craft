@@ -1,7 +1,7 @@
 # Craft Visual: feature data schema (the contract)
 
 A feature's **truth** lives in `docs/craft/<feature>/data.json`. The shared template
-(`lib/doc-template.html`) renders it; `lib/craft-serve.js` serves it live with `/diff`
+(`lib/doc-template.html`) renders it; `lib/board-serve.js` serves it live with `/diff`
 and live-reload. This file is the contract every view depends on, **keep field names
 stable**, because multiple views (spec doc, dashboard, future templates) read them.
 
@@ -105,6 +105,6 @@ Conventions:
 ## Storage model (decision A)
 - `data.json` = the committed truth (small, diffs cleanly).
 - `lib/doc-template.html` = the shared view (CSS + renderer), evolved **once** for all features.
-- Served: `craft-serve` injects `data.json` into the template at request time (live-reload on data change).
+- Served: `board-serve` injects `data.json` into the template at request time (live-reload on data change).
 - Offline / GitHub / sharing: `craft bake <feature>` produces a single self-contained HTML with the data embedded.
 - The template supports both: if an embedded `#feature-data` block is present it uses it (baked); otherwise it fetches `./data.json` (served).

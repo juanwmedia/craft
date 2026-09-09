@@ -2,7 +2,7 @@
 
 ## Unreleased (towards 3.0.0)
 
-**Breaking.** A 2.1 board has to move from `docs/specs/<feature>/` to `docs/craft/<feature>/`, or `craft-serve` will not find it. Inside `data.json`, `mockup` (an object) becomes `howItLooks` (an array, one entry per screen). `/explore` and `/understand` are gone, `/shape` replaces both.
+**Breaking.** A 2.1 board has to move from `docs/specs/<feature>/` to `docs/craft/<feature>/`, or the board server will not find it. Inside `data.json`, `mockup` (an object) becomes `howItLooks` (an array, one entry per screen). `/explore` and `/understand` are gone, `/shape` replaces both. `/craft-serve` is gone, `/board` replaces it. `docs/craft/index.yaml` is no longer read or written: an existing one is ignored. `/spec` with no argument no longer opens the dashboard, `/board` does.
 
 - `/shape` is the first phase: it interviews until nothing blocking is open, proves what it assumed hands-on, and leaves the mechanism drawn at `how-it-works.svg`. If you cannot draw it, it is not shaped.
 - The board separates the two visuals a feature has. **How it works** is the mechanism, mandatory in shape. **How it looks** is the screens, optional, and either `/shape` or `/spec` may settle it. Whoever settles it first owns it; the other reads it and moves on. Leaving it undecided is fine, leaving it undecided in silence is an assumption on the board.
@@ -13,5 +13,10 @@
 - `/spec` no longer reopens what `/shape` settled. It reads `resolved[]` and the glossary and synthesises from them; a blocking fork with real branches routes back to `/shape`.
 - `/build` loads the `frontend-design` skill before the first component when the feature has a UI, with `howItLooks` as the brief.
 - Skills reference the plugin through `${CLAUDE_PLUGIN_ROOT}`, not an absolute path, so they work on any machine. Board paths moved from `docs/specs` to `docs/craft`.
+- Installing from a clone is `claude --plugin-dir ~/code/craft`. The old symlink recipe never worked after the move to `${CLAUDE_PLUGIN_ROOT}`: a skill outside a plugin has no plugin root, so every path stayed literal.
 - Plugin metadata lives in `plugin.json` alone: the marketplace entry is name and source, and inherits the rest. One version number, no drift.
+- `/board` is the one launcher: `/board <slug>` opens that feature's board, `/board` the dashboard, `/board stop` shuts the server down. The port lives in `lib/board-serve.js` and nowhere else, so no skill types a port or a URL: they run the script and read what it prints. Starting a second server on a held port now says so and leaves the first alone.
+- `/spec` has no collaboration mode. What the thing is and what counts as done are the human's, always; `above the loop` governs execution only (`/build`, and the reconciliation in `/close`).
+- `/close` reconciles the visuals too, a `howItWorks` or `howItLooks` that no longer matches what shipped is a finding, and it grows the glossary in `CONTEXT.md` with the terms the feature coined.
+- The dashboard derives every card from the boards it finds. The feature registry is gone.
 - Gone: the `ui-designer` agent (it needed an MCP that was never connected) and `lib/mockup-guide.md` (it duplicated the bundled `artifact-design` skill).
