@@ -22,14 +22,14 @@ Identify every discrete claim in the previous output. A "claim" is any:
 
 For EACH claim, you MUST:
 
-1. **Locate the primary source of truth**: the actual code, config file, documentation, API response, or dependency manifest. Do not rely on memory — open and read the file.
+1. **Locate the primary source of truth**: the actual code, config file, documentation, API response, or dependency manifest. Do not rely on memory. Open and read the file.
 2. **Verify or refute**: does the evidence support the claim exactly as stated?
 3. **Classify** using the following verdicts:
-   - `VERIFIED` — evidence directly supports the claim
-   - `PARTIALLY CORRECT` — the core idea holds but details are wrong or incomplete
-   - `UNVERIFIED` — no evidence found to confirm or deny (flag for manual review)
-   - `INCORRECT` — evidence directly contradicts the claim
-   - `OUTDATED` — was true at some point but current state differs
+   - `VERIFIED`: evidence directly supports the claim
+   - `PARTIALLY CORRECT`: the core idea holds but details are wrong or incomplete
+   - `UNVERIFIED`: no evidence found to confirm or deny (flag for manual review)
+   - `INCORRECT`: evidence directly contradicts the claim
+   - `OUTDATED`: was true at some point but current state differs
 
 ## Evidence rules
 
@@ -48,9 +48,9 @@ After evaluating all claims, produce a summary table:
 ```
 
 Then provide:
-- **Critical findings**: anything `INCORRECT` or `OUTDATED` — explain the discrepancy in detail
+- **Critical findings**: anything `INCORRECT` or `OUTDATED`. Explain the discrepancy in detail
 - **Risks**: anything `UNVERIFIED` that has high impact if wrong
-- **Score**: X/N claims verified — a simple reliability metric
+- **Score**: X/N claims verified, a simple reliability metric
 
 ## Multiple passes
 

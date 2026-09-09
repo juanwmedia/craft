@@ -1,5 +1,13 @@
 {
   "name": "craft",
-  "description": "A skill-based methodology for building features with AI coding agents: explore, spec, build, close, evaluate, understand",
-  "version": "2.1.0"
+  "version": "2.1.0",
+  "description": "A method for building a feature as one living visual board: shape how it works and how it looks, spec the WHAT, build in the loop, close the loose ends, evaluate the claims.",
+  "author": {
+    "name": "Juan Núñez",
+    "url": "https://github.com/juanwmedia"
+  },
+  "homepage": "https://github.com/juanwmedia/craft",
+  "repository": "https://github.com/juanwmedia/craft",
+  "license": "MIT",
+  "keywords": ["methodology", "skills", "specs", "planning", "agentic"]
 }

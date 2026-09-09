@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Craft — living spec</title>
+<title>Craft: living spec</title>
 <style>
   :root{
     --bg:#0d0f14;--panel:#161922;--panel2:#1c2029;--line:#272c37;
@@ -32,6 +32,18 @@
   .badge{font-size:10px;font-weight:800;border-radius:5px;padding:2px 7px;margin-left:9px;vertical-align:middle}
   .badge.done{background:var(--green);color:#0b1220} .badge.active{background:var(--blue);color:#0b1220} .badge.todo{background:var(--panel2);color:var(--faint)}
   .mockup-frame{width:100%;height:560px;border:1px solid var(--line);border-radius:12px;background:#0f1115;display:block}
+  .looks{display:flex;flex-direction:column;gap:14px}
+  .looks.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+  .look{display:flex;flex-direction:column;gap:8px;min-width:0}
+  a.look-media{cursor:zoom-in;text-decoration:none}
+  a.look-media:hover{outline:1px solid var(--blue);outline-offset:2px;border-radius:12px}
+  .looks.grid .look-media{height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#0f1115}
+  .looks.grid .look-media .looks-img{max-height:100%;width:auto;border:0;border-radius:0}
+  .looks.grid .look-media .looks-scale{border:0;border-radius:0;width:100%}
+  .look-t{font-size:12px;color:var(--faint)}
+  .looks-scale{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#0f1115}
+  .looks-scale iframe{border:0;display:block;transform-origin:top left}
+  .looks-img{width:100%;border:1px solid var(--line);border-radius:12px;background:#0f1115;display:block}
 
   /* phase block */
   .pblock{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px}
@@ -104,6 +116,9 @@
   .gapwarn{color:var(--red);font-weight:600}
   .err{color:var(--red);padding:40px;font:14px ui-monospace,Menlo,monospace}
   #exploration-sec{margin-top:8px}
+  .fold summary{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:600;cursor:pointer;list-style:none;padding:0 0 13px}
+  .fold summary::-webkit-details-marker{display:none}
+  .fold summary::before{content:'▸  '} .fold[open] summary::before{content:'▾  '}
   .explore-toggle summary{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:600;cursor:pointer;list-style:none;padding:8px 0}
   .explore-toggle summary::-webkit-details-marker{display:none}
   .explore-toggle summary::before{content:'▸  '} .explore-toggle[open] summary::before{content:'▾  '}
@@ -115,19 +130,37 @@
   .explore li .cap{margin-right:7px;font-weight:800}
   .explore li .cap.t{color:var(--green)} .explore li .cap.a{color:var(--faint)}
   .explore .src a{color:var(--blue);text-decoration:none;font-size:12px}
+  .shape-host{display:block}
+  .shape-img,.shape-host svg{width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:block;box-sizing:border-box}
+  .shape-host svg{color:var(--mut)}
+  .shape-cap{margin:9px 0 0;font-size:12.5px;color:var(--mut);line-height:1.5}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);text-decoration:none;font-size:12.5px}
+  .chip .k{color:var(--faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}
+  .chip:hover{border-color:var(--blue)}
+  .assum{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:11px 13px;margin-bottom:9px;font-size:13px}
+  .assum.block{border-left-color:var(--red)}
+  .assum.bad{border-left-color:var(--red);opacity:.8}
+  .assum .hd{color:var(--ink);font-weight:600;line-height:1.45}
+  .assum p{margin:6px 0 0;color:var(--mut);line-height:1.5}
+  .assum .meta{margin-top:7px;font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.05em}
+  .explore .gl b{color:var(--ink)} .explore .gl .av{color:var(--faint)}
+  .explore .rz{margin:7px 0 0} .explore .rz .a{color:var(--ink)} .explore .rz .w{color:var(--faint);font-size:12.5px}
 </style>
 </head>
 <body>
   <div class="topbar" id="topbar"></div>
   <div class="dash">
     <div class="main">
-      <section id="mockup-sec"><h2>What we're building</h2><div id="mockup"></div></section>
-      <section id="phases-sec"><h2>What ↔ How — by phase</h2><div id="phases"></div></section>
-      <section id="exploration-sec"><details class="explore-toggle"><summary>Exploration — how we chose the tools</summary><div class="explore" id="exploration"></div></details></section>
+      <section id="shape-sec"><details class="fold" id="shape-fold"><summary>How it works</summary><div id="shape"></div></details></section>
+      <section id="mockup-sec"><details class="fold" id="looks-fold"><summary>How it looks</summary><div id="mockup"></div></details></section>
+      <section id="phases-sec"><h2>What ↔ How, by phase</h2><div id="phases"></div></section>
+      <section id="exploration-sec"><details class="explore-toggle"><summary>Shaping: what we asked, proved and decided</summary><div class="explore" id="exploration"></div></details></section>
     </div>
     <aside class="aside">
       <div id="aside-top"></div>
-      <section id="dec-sec"><h2>Decisions — the why</h2><div class="cards" id="decisions"></div></section>
+      <section id="dec-sec"><h2>Decisions: the why</h2><div class="cards" id="decisions"></div></section>
+      <section id="assum-sec"><h2>Assumptions</h2><div id="assum"></div></section>
       <section id="xfric-sec"><h2>Cross-cutting frictions</h2><div id="xfric"></div></section>
     </aside>
   </div>
@@ -159,18 +192,18 @@
         const acHtml = acs.length ? acs.map(a=>{
           const covered = pts.some(t=>(t.covers||[]).includes(a.id));
           return `<div class="acnode ${a.done?'ok':''} ${covered?'':'gap'}" data-ac="${esc(a.id)}"><i class="dot"></i>`+
-            `<div class="tx"><span class="nid">${esc(a.id)}</span>${esc(a.text)}${covered?'':'<span class="warn">⚠ no task covers this — gap</span>'}</div></div>`;
-        }).join('') : '<div class="files">— no acceptance criteria —</div>';
-        const taskHtml = pts.length ? `<div class="board">${pts.map(taskRow).join('')}</div>` : '<div class="files">— no tasks —</div>';
+            `<div class="tx"><span class="nid">${esc(a.id)}</span>${esc(a.text)}${covered?'':'<span class="warn">⚠ no task covers this (gap)</span>'}</div></div>`;
+        }).join('') : '<div class="files">no acceptance criteria</div>';
+        const taskHtml = pts.length ? `<div class="board">${pts.map(taskRow).join('')}</div>` : '<div class="files">no tasks</div>';
         const pf = frics.filter(f=>f.relatesTo && (acs.some(a=>a.id===f.relatesTo)||pts.some(t=>t.id===f.relatesTo)));
         const fricHtml = pf.length ? `<div class="pblock-fric">${pf.map(f=>`<div class="pfric"><span class="ico">⚠ ${esc(f.title)}</span> <span class="rel">(→ ${esc(f.relatesTo)})</span><br>${esc(f.text)}</div>`).join('')}</div>` : '';
         const badge = `<span class="badge ${p.state}">${p.state==='done'?'DONE':p.state==='active'?'NOW':'TODO'}</span>`;
         return `<div class="pblock ${p.state}" data-phase="${esc(p.id)}">`+
           `<div class="pblock-hd"><span class="pblock-name">${esc(p.label)}</span>${badge}`+
             (p.outcome?`<div class="pblock-out">★ <b>Usable when done:</b> ${esc(p.outcome)}</div>`:'')+`</div>`+
-          `<div class="pblock-grid"><div class="pcol what"><div class="pcol-h">WHAT — acceptance criteria</div>${acHtml}</div>`+
-            `<div class="pcol how"><div class="pcol-h">HOW — tasks</div>${taskHtml}</div></div>`+
-          fricHtml+`<div class="phase-gate">⏸ Phase boundary — your turn: go run it.</div></div>`;
+          `<div class="pblock-grid"><div class="pcol what"><div class="pcol-h">WHAT: acceptance criteria</div>${acHtml}</div>`+
+            `<div class="pcol how"><div class="pcol-h">HOW: tasks</div>${taskHtml}</div></div>`+
+          fricHtml+`<div class="phase-gate">⏸ Phase boundary. Your turn: go run it.</div></div>`;
       }).join('');
     }
 
@@ -178,16 +211,27 @@
       const tasks = d.tasks||[], what = d.what||[];
       const done = tasks.filter(t=>t.status==='done').length, total = tasks.length;
       const pct = total?Math.round(done/total*100):0;
-      document.title = d.feature + ' — living spec';
+      document.title = d.feature + ' · living spec';
 
       const back = location.pathname.startsWith('/f/') ? `<a class="back" href="/">← Features</a>` : '';
       document.getElementById('topbar').innerHTML = back +
         `<span class="feat">${esc(d.feature)}</span><span class="tag">${esc(d.tagline)}</span>`+
         `<span class="live"><i></i>live</span><span class="prog">${done}/${total}<span class="bar"><i style="width:${pct}%"></i></span></span>`;
 
-      const mk = d.mockup;
-      document.getElementById('mockup-sec').style.display = (mk&&mk.file)?'block':'none';
-      document.getElementById('mockup').innerHTML = (mk&&mk.file)?`<iframe class="mockup-frame" src="${esc(mk.file)}" title="${esc(mk.title||'mockup')}" loading="lazy"></iframe>`:'';
+      const sh = d.howItWorks, chips = artifactChips(d);
+      const shapeHtml = (sh&&sh.file)
+        ? `<div class="shape-host"><img class="shape-img" src="${esc(sh.file)}" alt="${esc(sh.caption||'how it works')}"></div>`+(sh.caption?`<p class="shape-cap">${esc(sh.caption)}</p>`:'')
+        : '';
+      document.getElementById('shape-sec').style.display = (shapeHtml||chips)?'block':'none';
+      bindFold('shape-fold', d);
+      document.getElementById('shape').innerHTML = shapeHtml + chips;
+      if(sh&&sh.file) inlineShape(sh.file);
+
+      const mk = d.howItLooks, looksHtml = renderLooks(mk);
+      document.getElementById('mockup-sec').style.display = looksHtml?'block':'none';
+      document.getElementById('mockup').innerHTML = looksHtml;
+      bindFold('looks-fold', d);
+      fitLooks();
 
       document.getElementById('phases').innerHTML = renderPhases(d);
 
@@ -196,6 +240,16 @@
       document.getElementById('decisions').innerHTML = dec.map(c=>
         `<div class="card"><span class="id">${esc(c.id)}</span><h3>${esc(c.title)}</h3>`+
         `<div class="why">${esc(c.why)}</div>`+(c.links?`<div class="lk">↳ links to <b>${esc(c.links)}</b></div>`:'')+`</div>`).join('');
+
+      const as = (d.assumptions||[]).filter(a=>a.status!=='resolved');
+      document.getElementById('assum-sec').style.display = as.length?'block':'none';
+      document.getElementById('assum').innerHTML = as.map(a=>{
+        const st = a.status==='invalidated'?'bad':(a.blocking?'block':'');
+        const meta = [a.id, a.blocking?'BLOCKING':'', a.checkAt?'check at '+a.checkAt:'', a.relatesTo].filter(Boolean).map(esc).join(' · ');
+        return `<div class="assum ${st}"><div class="hd">${a.blocking?'⛔':'◆'} ${esc(a.text)}</div>`+
+          (a.ifWrong?`<p><b>If wrong:</b> ${esc(a.ifWrong)}</p>`:'')+
+          (meta?`<div class="meta">${meta}</div>`:'')+`</div>`;
+      }).join('');
 
       const xf = (d.frictions||[]).filter(f=>!f.relatesTo);
       document.getElementById('xfric-sec').style.display = xf.length?'block':'none';
@@ -213,26 +267,95 @@
       bindDiffs(); bindHover();
     }
 
+    // Inline the SVG so its currentColor inherits the board theme; the <img> stays as fallback.
+    function inlineShape(file){
+      fetch(file).then(r=>r.ok?r.text():null).then(svg=>{
+        const host = document.querySelector('.shape-host');
+        if(svg && host && svg.trim().startsWith('<svg')) host.innerHTML = svg;
+      }).catch(()=>{});
+    }
+
+    // The visuals fold away once the build starts, and the board live-reloads on every task
+    // change, so the human's own choice has to outlive the reload.
+    function bindFold(id, d){
+      const el = document.getElementById(id);
+      if(!el || el.dataset.bound) return;
+      const key = 'craft.fold.' + (d.feature||'') + '.' + id;
+      let saved = null;
+      try { saved = localStorage.getItem(key); } catch(e) {}
+      el.open = saved !== null ? saved === '1' : !(d.tasks||[]).length;
+      el.addEventListener('toggle', () => {
+        try { localStorage.setItem(key, el.open ? '1' : '0'); } catch(e) {}
+        if(el.open) fitLooks();
+      });
+      el.dataset.bound = '1';
+    }
+
+    // How it looks is a list: one entry per screen, from any of the three sources.
+    function renderLooks(list){
+      const items = (list||[]).filter(m => m && (m.file || m.url));
+      if(!items.length) return '';
+      return `<div class="looks${items.length>1?' grid':''}">` + items.map(lookCard).join('') + `</div>`;
+    }
+    function lookCard(m){
+      const f = m.file||'', isImg = /\.(png|jpe?g|webp|gif|svg)$/i.test(f);
+      const body = !f ? ''
+        : isImg ? `<img class="looks-img" src="${esc(f)}" alt="${esc(m.title||'how it looks')}">`
+        : `<div class="looks-scale" data-w="${Number(m.width)||1440}" data-h="${Number(m.height)||900}">`+
+          `<iframe src="${esc(f)}" title="${esc(m.title||'how it looks')}" loading="lazy"></iframe></div>`;
+      const cap = m.url
+        ? `<div><a class="chip" href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.title||'Open it')}<span class="k">${esc(m.source||'link')}</span></a></div>`
+        : (m.title ? `<div class="look-t">${esc(m.title)}</div>` : '');
+      const media = f
+        ? `<a class="look-media" href="${esc(f)}" target="_blank" rel="noopener" title="Open full size">${body}</a>`
+        : `<div class="look-media">${body}</div>`;
+      return `<div class="look">${media}${cap}</div>`;
+    }
+    // The artboard is authored at its own size; scale it into the column instead of scrolling it.
+    function fitLooks(){
+      document.querySelectorAll('.looks-scale').forEach(host=>{
+        const w = +host.dataset.w, h = +host.dataset.h, fr = host.querySelector('iframe');
+        if(!fr||!w||!h) return;
+        const s = Math.min(1, host.clientWidth / w);
+        fr.style.width = w+'px'; fr.style.height = h+'px'; fr.style.transform = `scale(${s})`;
+        host.style.height = Math.round(h*s)+'px';
+      });
+    }
+    addEventListener('resize', fitLooks);
+
+    function artifactChips(d){
+      const a = d.artifacts||[];
+      if(!a.length) return '';
+      return `<div class="chips">`+a.map(x=>
+        `<a class="chip" href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title||x.id||'artifact')}<span class="k">${esc(x.kind||'artifact')}</span></a>`
+      ).join('')+`</div>`;
+    }
+
     function renderExploration(d){
       const e = d.exploration, sec = document.getElementById('exploration-sec');
-      if(!e || (!e.question && !(e.capabilities||[]).length && !(e.constraints||[]).length && !(e.decisions||[]).length)){ if(sec) sec.style.display='none'; return; }
+      const any = e && (e.question || (e.capabilities||[]).length || (e.constraints||[]).length || (e.decisions||[]).length || (e.resolved||[]).length || (e.glossary||[]).length);
+      if(!any){ if(sec) sec.style.display='none'; return; }
       if(sec) sec.style.display='block';
       const cap = (e.capabilities||[]).map(c=>`<li><span class="cap ${c.tested?'t':'a'}">${c.tested?'✓':'○'}</span>${esc(c.text)}</li>`).join('');
-      const con = (e.constraints||[]).map(c=>`<li>— ${esc(c)}</li>`).join('');
+      const con = (e.constraints||[]).map(c=>`<li>· ${esc(c)}</li>`).join('');
       const dec = (e.decisions||[]).map(c=>`<li>→ ${esc(c.text)}</li>`).join('');
       const oq  = (e.openQuestions||[]).map(c=>`<li>? ${esc(c)}</li>`).join('');
+      const rz  = (e.resolved||[]).map(r=>`<li class="rz"><b>${esc(r.q)}</b><div class="a">${esc(r.a)}</div>`+(r.why?`<div class="w">${esc(r.why)}</div>`:'')+`</li>`).join('');
+      const gl  = (e.glossary||[]).map(g=>`<li class="gl"><b>${esc(g.term)}</b> ${esc(g.is)}`+((g.avoid||[]).length?`<span class="av"> Avoid: ${esc((g.avoid||[]).join(', '))}</span>`:'')+`</li>`).join('');
       const src = (e.sources||[]).map(s=>`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s)}</a>`).join(' · ');
       document.getElementById('exploration').innerHTML =
         (e.question?`<div class="q">${esc(e.question)}</div>`:'')+
+        (rz?`<h4>Resolved</h4><ul>${rz}</ul>`:'')+
         (cap?`<h4>Capabilities <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint)">(✓ tested · ○ assumed)</span></h4><ul>${cap}</ul>`:'')+
         (con?`<h4>Constraints</h4><ul>${con}</ul>`:'')+
         (dec?`<h4>Technology decisions</h4><ul>${dec}</ul>`:'')+
         (oq?`<h4>Open questions</h4><ul>${oq}</ul>`:'')+
+        (gl?`<h4>Glossary</h4><ul>${gl}</ul>`:'')+
         (src?`<h4>Sources</h4><div class="src">${src}</div>`:'');
     }
 
     function colorize(t){
-      if(!t||!t.trim()) return '<span class="dl meta">— no changes —</span>';
+      if(!t||!t.trim()) return '<span class="dl meta">no changes</span>';
       return t.split('\n').map(line=>{
         const e = esc(line); let c='';
         if(line.startsWith('+')&&!line.startsWith('+++')) c='add';
