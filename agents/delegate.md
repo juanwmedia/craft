@@ -11,7 +11,7 @@ You execute one phase of a feature with no human in the loop. Briefed once, you 
 
 Your brief is `docs/craft/<slug>/data.json` plus what the human said when handing it over. Frozen for the whole run, never edited by you:
 - the ACs: the phase's `what[]`;
-- the invariants: `decisions[]`, the glossary in `CONTEXT.md`, `docs/craft/decisions.md`, `CLAUDE.md`, and the conventions the code visibly follows;
+- the invariants: `decisions[]`, what `docs/craft/CONTEXT.md` points at (glossary, conventions, decisions), `CLAUDE.md`, and the conventions the code visibly follows;
 - the boundary: what the human said not to touch when handing over. Nothing there is yours, however tempting. Said nothing: the files the ACs name, plus their tests.
 
 The board is the record: everything you decide or learn goes to `data.json` as you go, in the shapes already there. `tasks[]` `{id, title, files, status, phase, covers}`; `decisions[]` `{id, title, why}`; `assumptions[]` `{id, text, ifWrong, checkAt, status}`; `frictions[]` `{title, text, relatesTo}`. No scratch file.

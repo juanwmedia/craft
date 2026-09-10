@@ -20,7 +20,7 @@ Board: `docs/craft/<slug>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schem
 - `assumptions[]`: what you are betting on, what breaks if it is wrong, when it gets checked.
 - `howItLooks`: the look, when it gets settled here rather than in `/spec`.
 - `artifacts[]`: published visuals, `url` plus local `file`, only when asked for.
-- Glossary terms, written straight into `CONTEXT.md`.
+- Glossary terms, written straight into `docs/craft/glossary.md`.
 
 Nothing else. Idea mode may produce none of it.
 
@@ -29,7 +29,7 @@ Nothing else. Idea mode may produce none of it.
 In a repo, feature mode: slug required, kebab-case.
 No repo or no slug, idea mode: a throwaway prototype, no board until the idea survives.
 
-Feature mode: create `docs/craft/<slug>/`, write a minimal `data.json`, open the board with `/craft:board <slug>`. Read `CONTEXT.md` and `docs/craft/decisions.md` (read-only).
+Feature mode: create `docs/craft/<slug>/`, write a minimal `data.json`, open the board with `/craft:board <slug>`. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only). No `CONTEXT.md` yet: create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md`, the project in three lines plus the pointers.
 
 ## 1. Interview until nothing blocking is open
 
@@ -61,7 +61,7 @@ Anything beyond these two visuals is on request only.
 
 ## 5. Leave
 
-- Glossary terms go to `CONTEXT.md` **now**, one `_Avoid_` line each. Spec reads them minutes later.
+- Glossary terms go to `docs/craft/glossary.md` **now**, one `_Avoid_` line each. Spec reads them minutes later.
 - Decision candidates stay in `exploration.decisions`. `/close` decides which become ADRs.
 - Then `/spec <slug>`.
 

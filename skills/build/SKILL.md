@@ -18,7 +18,7 @@ All `data.json` content is **English** (canonical), regardless of interaction la
 3. No data.json anywhere → "Run `/spec` first." Stop.
 
 ## 1. Prerequisites
-Read `docs/craft/<feature>/data.json` (the WHAT + decisions). Read CLAUDE.md (conventions) and `docs/craft/decisions.md` (cross-cutting decisions to respect, **read-only**; only `/close` writes there).
+Read `docs/craft/<feature>/data.json` (the WHAT + decisions) and `docs/craft/CONTEXT.md`, following its pointers (glossary, conventions, decisions; **read-only**, only `/close` writes there).
 
 ## 2. Ensure the board is live (it usually already is)
 The board is the feature's home for its **whole lifecycle**: normally already up from `/spec`. Run `/craft:board <feature>` if it is not. From here you only **update `data.json`** and the board live-reloads; `build` fills the HOW (tasks) + live status on top of the WHAT `/spec` put there.
@@ -60,7 +60,7 @@ Every AC (`what`) in the phase must be covered by ≥1 sketched task (its `cover
 - Do not modify other features' files. Log discoveries as cross-cutting frictions for /close.
 
 ## 7. Transition
-When all tasks are done and each phase's outcome is verified on screen, suggest `/close` to reconcile, capture findings (gotchas graduate to CLAUDE.md), and commit.
+When all tasks are done and each phase's outcome is verified on screen, suggest `/close` to reconcile, capture findings, and commit.
 
 ## Guardrails
 - The board is the contract and the live record. Keep it current at all times.

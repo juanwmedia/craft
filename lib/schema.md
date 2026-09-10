@@ -93,7 +93,7 @@ Conventions:
 `{ "question": "...", "capabilities": [ { "text": "...", "tested": true } ], "constraints": ["..."], "decisions": [ { "text": "we'll use X because Y" } ], "openQuestions": ["..."], "sources": ["url"] }`
 - `resolved`: `[ { "q": "...", "a": "...", "why": "..." } ]` the interview outcome from `/shape`. The `why` is what lets a later phase tell whether the answer still holds.
 - `openQuestions` is superseded by top-level `assumptions[]`, which carries an owner, a consequence and a check point instead of a bare string.
-- `glossary`: `[ { "term": "...", "is": "...", "avoid": ["..."] } ]` the terms settled while shaping. Also written straight into the project `CONTEXT.md`, which is what `/spec` reads.
+- `glossary`: `[ { "term": "...", "is": "...", "avoid": ["..."] } ]` the terms settled while shaping. Also written straight into `docs/craft/glossary.md`, which is what `/spec` reads.
 - Written by `/shape`. Optional: present only when a feature was shaped.
 - `capabilities[].tested`: `true` = verified hands-on (✓), `false` = assumed from docs (○).
 - `decisions` here are **technology** choices (what to build with), distinct from the top-level `decisions[]` (the feature's design/HOW decisions made in `/build`).

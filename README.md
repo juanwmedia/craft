@@ -54,8 +54,10 @@ All four lifecycle skills write to the **same board** (`data.json`); the HTML is
 ## File structure
 
 ```
-CONTEXT.md                  # The project glossary: each term with its _Avoid_ line (/shape writes it, /close grows it, /spec reads it)
 docs/craft/
+├── CONTEXT.md              # The door: the project in three lines and what to read for what. Every phase loads it first
+├── glossary.md             # Each term with its _Avoid_ line (/shape writes it, /close grows it)
+├── conventions.md          # Cross-cutting gotchas (only /close writes; created on demand)
 ├── decisions.md            # Cross-cutting decisions (only /close writes; created on demand)
 └── <feature-slug>/
     ├── data.json           # The feature's single source of truth: exploration + WHAT + HOW + live status
@@ -73,10 +75,10 @@ docs/craft/
 
 | Skill | Purpose | Writes to |
 |-------|---------|-----------|
-| `/shape` | Interview to nothing blocking, prove assumptions, draw how it works | the board (`exploration`, `resolved`, `howItWorks`, `assumptions`) + `CONTEXT.md` |
+| `/shape` | Interview to nothing blocking, prove assumptions, draw how it works | the board (`exploration`, `resolved`, `howItWorks`, `assumptions`) + `docs/craft/glossary.md` |
 | `/spec` | Define the WHAT + acceptance criteria | the board (`what`, `phases`) |
 | `/build` | Decide the HOW + implement, in the loop | the board (`decisions`, `tasks`, status) + code |
-| `/close` | Reconcile, graduate findings, propose commits | the board + `CLAUDE.md` / `decisions.md` / `CONTEXT.md` |
+| `/close` | Reconcile, graduate findings, propose commits | the board + `docs/craft/` (glossary, conventions, decisions). Never `CLAUDE.md` |
 | `/evaluate` | Evidence-based audit of any output | verification findings |
 | `/board` | Open the live board, or `stop` to close it | nothing |
 
