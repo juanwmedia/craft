@@ -26,7 +26,7 @@ Conventions:
 | `what` | array | always | Acceptance criteria. See below. |
 | `frictions` | array | conditional | Known traps / blind spots. See below. |
 | `assumptions` | array | conditional | What we are betting on while unresolved. Born in any phase, checked by `/close`. See below. |
-| `howItWorks` | object | conditional | `{ file, caption }` pointing at the feature's `how-it-works.svg`, hand-authored in `/shape`. The board inlines the SVG so its `currentColor` follows the theme, so author it in `currentColor`, not literal hues. `caption` is the one-line claim **below** the figure: do not repeat it as a subtitle inside the SVG. |
+| `howItWorks` | object | conditional | `{ file, caption }` pointing at the feature's `how-it-works.svg`, hand-authored in `/shape`. The SVG is text: `Read` it, and its labels and arrows are the mechanism. The board inlines the SVG so its `currentColor` follows the theme, so author it in `currentColor`, not literal hues. `caption` is the one-line claim **below** the figure: do not repeat it as a subtitle inside the SVG. |
 | `artifacts` | array | conditional | Published visuals with their live URL and their local source. See below. |
 | `howItLooks` | array | conditional (UI features) | The look, one entry per screen. See below. Filled in `/shape` or in `/spec`, whichever gets there first. Distinct from `howItWorks`, which is the mechanism. |
 | `dependsOn` | array | optional | Feature slugs this one depends on, rendered on the dashboard as chips (colored by the dep's status). |
@@ -81,6 +81,7 @@ Conventions:
 - **One entry per screen.** A feature with a list, an empty state and a mobile view has three.
 - `file` is what the board draws: an image (`.png .jpg .webp .gif .svg`), or an HTML or `.dc.html` file in an iframe scaled to the column by `width`/`height` (defaults 1440x900). `url` is where the entry links out.
 - Either may be absent. A Figma entry is a `url` alone; a screenshot is a `file` alone.
+- Reading one: a `file` is readable (`Read` shows an image, an artboard is HTML text). A `url` alone is readable only through its MCP (Figma, `claude-design`); without that MCP, say so and go by the `title`. Never describe a link you could not open.
 - One entry renders full width, several render as a grid. Screenshots live in `docs/craft/<slug>/look/`.
 - Durable URLs only: the `?file=` link to a Claude Design page, the Figma file. Never a preview link with a token in it.
 - How to get one: `${CLAUDE_PLUGIN_ROOT}/references/how-it-looks.md`.
