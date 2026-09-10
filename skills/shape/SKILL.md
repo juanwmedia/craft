@@ -1,6 +1,6 @@
 ---
 name: shape
-description: Give a feature (or project) its shape before anything is specified. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, proves technology hands-on, and leaves a visual artifact plus the decisions and the glossary on the feature board. Use before /spec, or with no repo to validate an idea with a throwaway prototype.
+description: Give what you are about to build its shape before anything is specified, a feature in a project, a project from nothing, or an idea with no repo yet. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, proves technology hands-on, and draws how it works on the feature board. Use before /spec.
 disable-model-invocation: true
 argument-hint: [feature-slug | context]
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch, AskUserQuestion, Agent, Skill, Artifact
@@ -26,8 +26,9 @@ Nothing else. Idea mode may produce none of it.
 
 ## 0. Route
 
-In a repo, feature mode: slug required, kebab-case.
-No repo or no slug, idea mode: a throwaway prototype, no board until the idea survives.
+Slug given, feature mode. Kebab-case.
+A repo with no code and no slug, a project to start: ask the three lines (what it is, for whom, built with what), write `docs/craft/CONTEXT.md` from them, ask for the first feature's slug, then feature mode. "Start it" or "only test the idea" is a closed fork: `AskUserQuestion`.
+No repo, idea mode: a throwaway prototype, no board until the idea survives.
 
 Feature mode: create `docs/craft/<slug>/`, write a minimal `data.json`, open the board with `/craft:board <slug>`. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only). No `CONTEXT.md` yet: create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md`, the project in three lines plus the pointers.
 
@@ -62,7 +63,7 @@ Anything beyond these two visuals is on request only.
 ## 5. Leave
 
 - Glossary terms go to `docs/craft/glossary.md` **now**, one `_Avoid_` line each. Spec reads them minutes later.
-- Decision candidates stay in `exploration.decisions`. `/close` decides which become ADRs.
+- Decision candidates stay in `exploration.decisions`. `/close` decides which reach `docs/craft/decisions.md`.
 - Then `/spec <slug>`.
 
 ## Guardrails
