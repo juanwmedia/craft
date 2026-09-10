@@ -28,10 +28,10 @@ Run `/craft:board <feature>` with `Skill`. As you fill `data.json`, the WHAT sho
 ## 3. Critical analysis, collaborative (the heart)
 **Spec never reopens what `/shape` settled.** Read `exploration.resolved` and the glossary (`CONTEXT.md`) first and synthesise from them: do not re-ask what is already answered there. What is genuinely unanswered, because `/shape` never ran or never reached it, is yours to ask. A blocking design question with real forks in it is worth routing back to `/shape <feature>`; one missing answer is not.
 
-Discussion proportional to complexity. Challenge assumptions (edge cases, implicit requirements, conflicts with existing specs). Detect gaps (error/empty states, permissions, boundaries). Propose simpler or reusable approaches. **Reject vague words** ("basic", "simple", "standard") until the behavior is concrete. Use `AskUserQuestion`, one focused round at a time, prioritized by impact.
+Discussion proportional to complexity. Challenge assumptions (edge cases, implicit requirements, conflicts with existing specs). Detect gaps (error/empty states, permissions, boundaries). Propose simpler or reusable approaches. **Reject vague words** ("basic", "simple", "standard") until the behavior is concrete. Ask in conversation, one focused round at a time, prioritized by impact; `AskUserQuestion` only for real forks, where the options are closed.
 
 ## 4. Agree the spine: northStar, then phases (before any ACs)
-Set `northStar` (the usable outcome of the whole feature: what "done" feels like). Then, **if the feature has more than one usable slice**, propose `phases[]` and get buy-in *before* deriving any acceptance criteria: the spine bounds the AC work that follows and keeps it from sprawling. Each phase is a **vertical slice that ships ONE usable, testable thing on screen** (its `outcome`); Phase 1 proves the core assumption. Scope discipline (`references/discipline.md`): ≤ ~4 phases, else split into features. A single-slice feature has no phasing step; go straight to step 5.
+Set `northStar` (the usable outcome of the whole feature: what "done" feels like). Then, **if the feature has more than one usable slice**, propose `phases[]` and get buy-in *before* deriving any acceptance criteria (two cuts are possible more often than not: that is a fork, `AskUserQuestion`): the spine bounds the AC work that follows and keeps it from sprawling. Each phase is a **vertical slice that ships ONE usable, testable thing on screen** (its `outcome`); Phase 1 proves the core assumption. Scope discipline (`references/discipline.md`): ≤ ~4 phases, else split into features. A single-slice feature has no phasing step; go straight to step 5.
 
 ## 5. Derive the WHAT, one AC at a time
 With the spine agreed, derive acceptance criteria **in minimal, indivisible units, one at a time** (or tiny batches, if they ask for it), each assigned to a phase, confirming each with the human and persisting to `data.json` as you go (the board updates live). **Never present a finished set of many ACs for one-shot approval**. That is the failure this guards against. Each: `{ "id": "AC-1", "text": "...", "done": false, "phase": "<phase id>" }`, concrete and testable. (UI feature? `howItLooks` comes in step 6.)
@@ -42,13 +42,13 @@ Read `howItLooks` first. `/shape` may have settled it already, in which case it 
 With the ACs written you can do the one thing `/shape` could not: **pin the look to them**. A numbered pin on the element, a panel mapping each number to its `AC-<n>`, the visual twin of `covers`. Worth it on a file you authored yourself. Not worth blocking on: a Figma link or a canvas gets no pins and that is fine.
 
 ## 7. Spec audit
-Self-evaluate the ACs against: multiplicity, lifecycle (CRUD), ownership, empty state, failure modes, boundaries, dependencies, temporal triggers. Surface gaps, resolve with the user, update `data.json`.
+Self-evaluate the ACs against: multiplicity, lifecycle (CRUD), ownership, empty state, failure modes, boundaries, dependencies, temporal triggers. Surface gaps, resolve with the user, update `data.json`. Then run `/craft:evaluate` on the cut (`phases[]` and `what[]`) with `Skill`: an AC that is not testable, two that contradict each other, or a claim about the code that is not true, comes back as a finding. Resolve each with the user before presenting.
 
 ## 8. Present
 Show the board for review; iterate until the user approves.
 
 ## 9. Transition
-Suggest `/build` (decisions + tasks + code on top of this WHAT) or `/evaluate` (audit). Leave the board running.
+Suggest `/build` (decisions + tasks + code on top of this WHAT). Leave the board running.
 
 ## Guardrails
 - **Never re-ask what `resolved[]` already answers.** What it does not cover is yours; a blocking fork with real branches routes back to `/shape`.

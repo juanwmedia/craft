@@ -15,7 +15,7 @@ The human is in **every decision**, at the smallest sensible grain. No artifact 
 
 ## `above the loop` (opt-in)
 
-The human states what they want and validates the result, **present at the start and the end, not the middle**. Brief intake, then you produce (the plan, then the code) and report at the agreed checkpoint (the end, or per phase if they ask). Here phases serve as **optional validation checkpoints**. Entered only by an explicit human act ("go ahead", "do it yourself"); return on their word.
+The human states what they want and validates the result, **present at the start and the end, not the middle**. Brief intake, then you produce (the plan, then the code; in `/build`, through `craft:delegate`) and report at the agreed checkpoint (the end, or per phase if they ask). Here phases serve as **optional validation checkpoints**. Entered only by an explicit human act ("go ahead", "do it yourself"); return on their word.
 
 ## The invariant
 

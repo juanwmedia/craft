@@ -3,7 +3,7 @@ name: close
 description: Reconcile the living board against what was actually built. Trues up data.json, graduates gotchas to CLAUDE.md and terms to the glossary, and proposes commits. The final step after /build. Use after completing implementation work, when the user says "done", "let's commit", "wrap up", or wants to close a feature.
 disable-model-invocation: true
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill, Agent
 ---
 
 Part of the **Craft** methodology (Shape → Spec → Build → **Close**).
@@ -29,13 +29,13 @@ The board's `frictions` are the staging area. Promote **almost nothing**.
 - **Cross-cutting decisions** → `docs/craft/decisions.md`, a **tribunal with presumption of guilt**. An entry must clear all four, cross-feature, impossible-to-infer, important, stable, or it doesn't go in. Passes → write it **telegraphically** (one line). `/close` is the only writer. **Create the file only when something genuinely passes**: if it doesn't exist, seed it with the tribunal header before the first entry, the mission + the four criteria + "telegraphic; only /close writes". Nothing qualifies → no file.
 - **Terms the feature coined** (a module, a boundary, a word you and the human ended up using) → the glossary in `CONTEXT.md`, one line each with its `_Avoid_`. A term born while building dies here unless someone writes it down.
 - Feature-specific frictions stay in the board.
-Default to NOT saving. When in doubt, the code and git are the record.
+Default to NOT saving. When in doubt, the code and git are the record. Before writing a line to `CLAUDE.md`, `decisions.md` or the glossary, run `/craft:evaluate` on the graduation list with `Skill`: a false claim that graduates here is permanent.
 
 ## 3. Settle the open assumptions
 Walk every `assumptions[]` entry still `open`. For each: did it hold? Set `resolved` or `invalidated`. An invalidated one is a finding, not a shrug: say what it costs now and whether it needs a follow-up. Anything still genuinely unknown stays `open` with its `checkAt` moved forward, never silently dropped.
 
-## 4. Propose commits
-Propose **atomic commits with WHY-focused messages**. Present them for approval, **never commit without it** (no proactive commits). **No AI / "Claude" attribution in commit messages** (project rule). No destructive git operations.
+## 4. Review, then propose commits
+Spawn the `craft:review` agent (`Agent`) with the frozen ACs and the full diff, in a fresh context: it grades the result, not the reasoning that produced it. Surface every `refuted` to the human before anything else. Then propose **atomic commits with WHY-focused messages**. Present them for approval, **never commit without it** (no proactive commits). **No AI / "Claude" attribution in commit messages** (project rule). No destructive git operations.
 
 ## Guardrails
 - **Be brief and pragmatic**: close is a truth-up, not a report. One sentence where one sentence does; don't ramble.

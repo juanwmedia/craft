@@ -63,7 +63,7 @@
 
     function card(f, known){
       const pct = f.acs.total ? Math.round(f.acs.done/f.acs.total*100) : 0;
-      const phs = f.phases.map(p=>`<span class="pchip ${p.state}">${esc(p.label.replace(/^Phase\s*/i,'P'))}</span>`).join('');
+      const phs = f.phases.map(p=>`<span class="pchip ${p.state}">${esc((p.label||p.id).replace(/^Phase\s*/i,'P'))}</span>`).join('');
       const deps = f.dependsOn.length
         ? `<div class="deps"><span class="lab">depends on</span>`+
           f.dependsOn.map(s=>{ const k=known[s]; const cls=k?(k.status==='done'?'done':'known'):''; return `<span class="dep ${cls}">${esc(s)}</span>`; }).join('')+`</div>`

@@ -24,10 +24,7 @@ Read `docs/craft/<feature>/data.json` (the WHAT + decisions). Read CLAUDE.md (co
 The board is the feature's home for its **whole lifecycle**: normally already up from `/spec`. Run `/craft:board <feature>` if it is not. From here you only **update `data.json`** and the board live-reloads; `build` fills the HOW (tasks) + live status on top of the WHAT `/spec` put there.
 
 ## 3. Collaboration mode (default: `in the loop`)
-See `references/modes.md` (shared with `/close`). Default **`in the loop`**: the human is in every task, trivial ones included.
-- **`in the loop`** (DEFAULT): co-design the HOW, then execute task by task; pause on **every** task (trivial included), phase boundaries, and gotchas. Per task: make the change, then report file(s) / what / why and leave the diff one click away; wait for "next".
-- **`above the loop`**: the human states the goal and validates the result (start and end, not the middle); execute the agreed plan and report at the checkpoint they set (the end, or per phase).
-Switchable mid-run ("go ahead" / "stop, show me"). Never silently leave `in the loop`. The granularity dial is the human's, live ("stream the trivial ones" / "stop on everything").
+`references/modes.md`, shared with `/close`. **`in the loop`**: the human is in every task, trivial ones included. **`above the loop`**: they state the goal and validate the result, present at the start and the end, not the middle. Entered only on their word ("go ahead"), left on their word ("stop, show me"). Never silently leave `in the loop`.
 
 ## 4. Decide the approach: decisions first, tasks only sketched
 Do NOT disappear and reappear with a finished plan. Co-design out loud:
@@ -38,16 +35,21 @@ Do NOT disappear and reappear with a finished plan. Co-design out loud:
 ## 5. Coverage check
 Every AC (`what`) in the phase must be covered by ≥1 sketched task (its `covers` includes the AC id). The board flags an uncovered AC red ("gap"). Close gaps in the sketch before building, then report "Coverage: N/N, 0 gaps." Re-check at the phase boundary, since tasks may have been added or reshaped while building.
 
-## 6. Build the phase: the interleaved loop (the gates)
-Go task by task, in order. For **each** task, in `in the loop` (default): decide its detail with the human if there's a real choice → make the change → ⏸ report **what file(s)**, **what** changed, **what it covers** (task/AC), and **why** that way; leave the diff one click away (editor / "view diff"). They request a change / edit it / discuss / say "next". Don't pre-announce; report once done so they validate a real diff. **Persist to `data.json` as you go** (it is the live truth): set `status:"done"`, and add or reshape tasks as the build teaches you.
-- **phase boundary** → ⏸ ALWAYS stop: re-check coverage, then "it's on screen, go run the outcome", and wait.
-- **gotcha / surprise / plan turned out wrong** → add a `friction` (with `relatesTo`) to `data.json` (a red card appears) and STOP to surface it. Never bury it.
+## 6. Build the phase
+
+**`in the loop`** (default). Task by task, in order. Decide the task's detail with the human when there is a real choice, make the change, then ⏸ report: which file(s), what changed, what it covers (task / AC), why that way, the diff one click away. Never pre-announce; they validate a real diff, then request a change, edit it, discuss, or say "next". Execution is inline: the model that decided with the human writes the code, no execution subagent, it would break the per-task gate. Noisy read-only recon (grep, file mapping) may go to the built-in Explore subagent, never the writing. The granularity dial is theirs, live: "stream the trivial ones" stops only on substantial or `gate` tasks and phase boundaries; "stop on everything" is the floor.
+
+**`above the loop`.** Hand the phase to the `craft:delegate` agent (`Agent`): the board is its brief, plus one line from the human on what it must not touch, the boundary it cannot infer. It runs the phase boundary itself and reports once with a proposed commit. Sonnet by default, Opus when the human says so. The human reads the report; nothing else reaches them.
+
+**Phase boundary** in `in the loop`, always, in this order:
+1. Coverage: every AC in the phase covered by a `done` task.
+2. `/craft:evaluate` on the phase's coverage claims, with `Skill`.
+3. `craft:review` (`Agent`) with the frozen ACs and the phase's diff.
+4. ⏸ Present the phase with what came back: each finding with its citation and the fix you propose. The human decides what gets fixed. Then "it's on screen, go run the outcome", and wait.
+
+**A gotcha, a surprise, a plan that turned out wrong**: a `friction` with `relatesTo` on the board (a red card appears) and ⏸ stop to surface it. Never bury it.
 
 **Writing UI?** Load the `frontend-design` skill before the first component: it is the aesthetic direction, and `howItLooks` on the board is the brief. Match what is already there before inventing anything.
-
-**Who executes.** In `in the loop`, execution is **inline**: the model that decided with the human writes the code (no execution subagent; it would break the per-task gate and the shared understanding). You may delegate noisy **read-only** recon (grep, file-mapping) to the built-in Explore subagent, never the writing. In `above the loop`, you may delegate execution of the agreed plan to a subagent that reports at the checkpoint (its model the human's choice: Opus for minimal-oversight quality, Sonnet as a cost lever).
-
-The granularity dial is the human's, live: "stream the trivial ones" loosens to stopping only on substantial/`gate` + phase boundaries; "stop on everything" is the floor.
 
 ## Persistence rule
 `data.json` is the single source of truth; the HTML is a generated view. Update the JSON: on every task status change, when adding a task / decision / friction, when a gotcha appears. Surgical edits (a status flip is a few characters). It is **less** bookkeeping than a markdown plan, not more: one place, mechanical, and the live board makes any staleness visible.

@@ -29,7 +29,13 @@ graph LR
     X["/shape"] -->|how it works| S["/spec"]
     S -->|the WHAT| B["/build"]
     B -->|decisions + tasks + code| C["/close"]
-    E["/evaluate"] -.->|audit| B
+    E["/evaluate"] -.->|audit| S
+    E -.->|audit| B
+    E -.->|audit| C
+    R["craft:review"] -.->|refute| B
+    R -.->|refute| C
+    D["craft:delegate"] -.->|above the loop| B
+    D -->|gate| R
 ```
 
 All four lifecycle skills write to the **same board** (`data.json`); the HTML is generated from it. Every task maps to an acceptance criterion (coverage is checked before code), and features ship in **phases**, each a vertical slice that puts something usable on screen, Phase 1 proving the core assumption.
@@ -43,7 +49,7 @@ All four lifecycle skills write to the **same board** (`data.json`); the HTML is
 /close <feature>     → reconcile the board, graduate findings, propose commits
 ```
 
-`/evaluate` audits at any point; `/board` opens the live board and `/board stop` closes it.
+`/evaluate` audits at any point, and `/spec`, `/build` and `/close` run it at their own gates; `/board` opens the live board and `/board stop` closes it.
 
 ## File structure
 
@@ -59,7 +65,8 @@ docs/craft/
 ~/code/craft/
 ├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md
 ├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md, inherited by all skills
-└── skills/                 # shape · spec · build · close · evaluate · board
+├── skills/                 # shape · spec · build · close · evaluate · board
+└── agents/                 # review · delegate
 ```
 
 ## Skills
@@ -72,6 +79,11 @@ docs/craft/
 | `/close` | Reconcile, graduate findings, propose commits | the board + `CLAUDE.md` / `decisions.md` / `CONTEXT.md` |
 | `/evaluate` | Evidence-based audit of any output | verification findings |
 | `/board` | Open the live board, or `stop` to close it | nothing |
+
+| Agent | What it does | Who calls it |
+|---|---|---|
+| `craft:review` | Refutes a diff against the frozen ACs in a fresh context, on Opus | `/build` at a phase boundary, `/close` before the commits, `delegate` at its gates |
+| `craft:delegate` | Executes a phase from the board without asking, gated by `review`, one report and a proposed commit | `/build` in `above the loop`, only when you hand it over |
 
 Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contract is `lib/schema.md`.
 
