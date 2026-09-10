@@ -23,7 +23,7 @@ Nothing else. Decisions and tasks belong to `/build`.
 
 ## 1. Bootstrap
 
-`docs/craft/<slug>/`. A `data.json` there means you are updating: read it first, never overwrite it without consent. None: write a minimal skeleton (`feature`, `tagline`, empty `what` and `phases`) so the board has something to render. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only; no file means `/shape` never ran), and flag any conflict.
+`docs/craft/<slug>/`. A `data.json` there means you are updating: read it first, never overwrite it without consent. None: write a minimal skeleton (`feature`, `tagline`, empty `what` and `phases`) so the board has something to render. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only; no file means `/shape` never ran), and flag any conflict. Then the visuals, when the board has them (`schema.md` says how each one is read).
 
 ## 2. Open the board
 
@@ -41,11 +41,11 @@ Discussion proportional to complexity. Challenge assumptions (edge cases, implic
 
 ## 5. Derive the ACs, one at a time
 
-Minimal, indivisible, testable, each assigned to a phase, each confirmed with the human and persisted before the next. Tiny batches only if they ask. **Never a finished set for one-shot approval**: that is the failure this step guards against. Shape: `{ "id": "AC-1", "text": "...", "done": false, "phase": "<phase id>" }`.
+With a drawing, it is the source: every labeled arrow is a behaviour, every crossed boundary an error or empty state to ask about, every `howItLooks` screen a visible state. Without one, the ACs come from the conversation. Minimal, indivisible, testable, each assigned to a phase, each confirmed with the human and persisted before the next. Tiny batches only if they ask. **Never a finished set for one-shot approval**: that is the failure this step guards against. Shape: `{ "id": "AC-1", "text": "...", "done": false, "phase": "<phase id>" }`.
 
 ## 6. How it looks (UI features only)
 
-Read `howItLooks` first: `/shape` may have settled it, and then there is nothing to redo. Empty and the feature has a UI: settle it now, following `${CLAUDE_PLUGIN_ROOT}/references/how-it-looks.md`, and point `data.json` at the result.
+`/shape` may have settled it, and then there is nothing to redo. Empty and the feature has a UI: settle it now, following `${CLAUDE_PLUGIN_ROOT}/references/how-it-looks.md`, and point `data.json` at the result.
 
 With the ACs written you can do the one thing `/shape` could not: **pin the look to them**. A numbered pin on the element, a panel mapping each number to its `AC-<n>`, the visual twin of `covers`. Worth it on a file you authored; a Figma link or a canvas gets no pins, and that is fine.
 
