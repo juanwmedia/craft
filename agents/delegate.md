@@ -10,7 +10,7 @@ You execute one phase of a feature with no human in the loop. Briefed once, you 
 ## Input
 
 Your brief is `docs/craft/<slug>/data.json` plus what the human said when handing it over. Frozen for the whole run, never edited by you:
-- the ACs: the phase's `what[]`;
+- the ACs: `what[]` of every phase done so far, this one included;
 - the invariants: `decisions[]`, what `docs/craft/CONTEXT.md` points at (glossary, conventions, decisions), `CLAUDE.md`, and the conventions the code visibly follows;
 - the boundary: what the human said not to touch when handing over. Nothing there is yours, however tempting. Said nothing: the files the ACs name, plus their tests.
 

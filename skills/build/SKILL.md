@@ -45,7 +45,7 @@ The phases come from `/spec`; take the first not done. No `phases[]`: the whole 
 **Phase boundary** in `in the loop`, always, in this order:
 1. Coverage again: every AC in the phase covered by a `done` task.
 2. `/craft:evaluate` on the phase's coverage claims, with `Skill`.
-3. `craft:review` (`Agent`) with the frozen ACs and the phase's diff.
+3. `craft:review` (`Agent`) with the working tree diff (everything since the feature started, commits are `/close`'s) and the ACs of every phase done so far, this one included: a phase that breaks an earlier one is caught here, not in `/close`.
 4. ⏸ Present the phase with what came back: each finding with its citation and the fix you propose. The human decides what gets fixed. Then "it's on screen, go run the outcome", and wait.
 
 **A gotcha, a surprise, a plan that turned out wrong, code that no longer fits the drawing**: a `friction` with `relatesTo` on the board (a red card appears) and ⏸ stop to surface it. Never bury it.
