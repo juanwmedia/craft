@@ -1,45 +1,50 @@
 ---
 name: close
-description: Reconcile the living board against what was actually built. Trues up data.json, graduates gotchas to the conventions and terms to the glossary, and proposes commits. The final step after /build. Use after completing implementation work, when the user says "done", "let's commit", "wrap up", or wants to close a feature.
+description: Reconcile the living board against what was actually built. Trues up data.json, settles the open assumptions, graduates the few durable findings to docs/craft, puts the diff to a fresh-context reviewer, and proposes commits. The final step after /build. Use when the user says "done", "let's commit", "wrap up", or wants to close a feature.
 disable-model-invocation: true
 argument-hint: feature-slug
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill, Agent
 ---
 
-Part of the **Craft** methodology (Shape → Spec → Build → **Close**).
+Craft: Shape to Spec to Build to **Close**.
 
-Close reconciles the **living board** (`docs/craft/<feature>/data.json`) against what was actually built, graduates the durable findings, and proposes commits. Because `/build` kept the board current as it worked (its persistence rule), close is mostly a **final truth-up + graduation + commit**, not a from-scratch reconstruction.
+Close answers **what actually shipped, and what of it must outlive the feature**. Because `/build` kept the board current, this is a truth-up, not a reconstruction: brief, one sentence where one does.
 
-**Collaboration mode** (`references/modes.md`), default **`in the loop`**: the reconciliation, what graduates to `docs/craft/`, and the commits are the human's calls, surfaced, never silent. (Close is `disable-model-invocation: true`: the human always invokes it.)
+Board: `docs/craft/<slug>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schema.md`). The reconciliation, what graduates and the commits are the human's calls, surfaced, never silent (`references/modes.md`, shared with `/build`).
 
-## 0. Resolve feature
-Arg given → that slug. No arg → the `in-progress` feature (its `data.json`); if several, ask. If none, reconcile the session's git changes without a feature.
+## 0. Resolve the feature
+
+Arg given: that slug. None: the `in-progress` feature; several, ask. None at all: reconcile the session's git changes without a board.
 
 ## 1. Reconcile the board against reality
-Open the board with `/craft:board <feature>` so the reconciliation is visible. Read `docs/craft/CONTEXT.md` and follow its pointers; none yet (`/shape` never ran): create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md` before anything graduates. Run `git diff` and `git status` to see what actually changed. Walk `data.json` against it:
-- Each **task** → `status` matches reality (`done` only if truly done). Note any deviation from the planned approach.
-- Each **AC** (`what`) → mark `done` where the built code satisfies it; flag any **partial or unbuilt** AC for a user decision; add an AC for behavior built beyond the original WHAT.
-- **Coverage holds**: every AC still covered by ≥1 task (no new gaps).
-- **The visuals**: `howItWorks` still draws the mechanism that got built, `howItLooks` still shows the screen that shipped. Drift is a finding, not a detail: redraw it, or say on the board that it is stale and why.
-The board IS the record; make it accurate. It should already be close (build persisted as it went); fix any drift.
 
-## 2. Graduate the durable findings: sparingly
-The board's `frictions` are the staging area. Promote **almost nothing**.
-- **Cross-cutting gotchas / conventions** → `docs/craft/conventions.md`, only if a frontier model couldn't infer it from the code. One line each. Craft never writes `CLAUDE.md`: a line that belongs there is said in the report, and the human copies it or not.
-- **Cross-cutting decisions** → `docs/craft/decisions.md`, a **tribunal with presumption of guilt**. An entry must clear all four, cross-feature, impossible-to-infer, important, stable, or it doesn't go in. Passes → write it **telegraphically** (one line). `/close` is the only writer. **Create the file only when something genuinely passes**: if it doesn't exist, seed it with the tribunal header before the first entry, the mission + the four criteria + "telegraphic; only /close writes". Nothing qualifies → no file.
-- **Terms the feature coined** (a module, a boundary, a word you and the human ended up using) → `docs/craft/glossary.md`, one line each with its `_Avoid_`. A term born while building dies here unless someone writes it down.
-- Feature-specific frictions stay in the board.
-Default to NOT saving. When in doubt, the code and git are the record. Before writing a line to any of the three, run `/craft:evaluate` on the graduation list with `Skill`: a false claim that graduates here is permanent.
+`/craft:board <slug>` with `Skill`, so the reconciliation is visible. Read `docs/craft/CONTEXT.md` and follow its pointers; none yet (`/shape` never ran): create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md` before anything graduates. Then `git diff` and `git status`, and walk `data.json` against them:
 
-## 3. Settle the open assumptions
-Walk every `assumptions[]` entry still `open`. For each: did it hold? Set `resolved` or `invalidated`. An invalidated one is a finding, not a shrug: say what it costs now and whether it needs a follow-up. Anything still genuinely unknown stays `open` with its `checkAt` moved forward, never silently dropped.
+- Each **task**: `status` matches reality, `done` only if truly done. Note any deviation from the planned approach.
+- Each **AC**: `done` where the code satisfies it; a partial or unbuilt one is the human's decision; behaviour built beyond the WHAT gets an AC.
+- **Coverage** still holds: every AC covered by at least one task.
+- **The visuals**: `howItWorks` still draws the mechanism that got built, `howItLooks` still shows the screen that shipped. Drift is a finding: redraw, or say on the board that it is stale and why.
+
+## 2. Settle the open assumptions
+
+Every `assumptions[]` entry still `open`: did it hold? `resolved` or `invalidated`. An invalidated one is a finding, not a shrug: say what it costs now and whether it needs a follow-up. Still unknown: stays `open` with `checkAt` moved forward, never dropped in silence.
+
+## 3. Graduate, sparingly
+
+The board's `frictions` and the invalidated assumptions are the staging area. Promote **almost nothing**: only what a frontier model could not infer from the code, and when in doubt, the code and git are the record.
+
+- **Cross-cutting gotchas and conventions**: `docs/craft/conventions.md`, one line each.
+- **Cross-cutting decisions**: `docs/craft/decisions.md`, a **tribunal with presumption of guilt**. An entry clears all four, cross-feature, impossible to infer, important, stable, or it does not go in. One telegraphic line. The file is created only when something passes, seeded with the tribunal header (the mission, the four criteria, "telegraphic; only /close writes").
+- **Terms the feature coined**: `docs/craft/glossary.md`, one line each with its `_Avoid_`. A term born while building dies here unless someone writes it down.
+- Feature-specific frictions stay on the board.
+
+Before writing a line to any of the three, `/craft:evaluate` on the graduation list with `Skill`: a false claim that graduates here is permanent. `/close` is the only writer of `conventions.md` and `decisions.md`; the glossary is `/shape`'s first, and `/close` grows it. Craft never writes `CLAUDE.md`: a line that belongs there is said in the report, and the human copies it or not.
 
 ## 4. Review, then propose commits
-Spawn the `craft:review` agent (`Agent`) with the frozen ACs and the full diff, in a fresh context: it grades the result, not the reasoning that produced it. Surface every `refuted` to the human before anything else. Then propose **atomic commits with WHY-focused messages**. Present them for approval, **never commit without it** (no proactive commits). **No AI / "Claude" attribution in commit messages** (project rule). No destructive git operations.
+
+`craft:review` (`Agent`) with the frozen ACs and the full diff: it grades the result, not the reasoning that produced it. Every `refuted` reaches the human before anything else. Then propose **atomic commits with WHY-focused messages** and wait for approval.
 
 ## Guardrails
-- **Be brief and pragmatic**: close is a truth-up, not a report. One sentence where one sentence does; don't ramble.
-- Save only what a frontier model couldn't infer from the code. When in doubt, don't save it.
-- Board↔reality reconciliation is mandatory, the board must match what was built.
-- Gotchas graduate to `docs/craft/conventions.md`; don't leave durable lessons buried in a feature doc. `CLAUDE.md` is the team's, read and never written.
-- No commits without explicit user approval. No AI attribution. No destructive git.
+
+- Never commit without explicit approval. No AI attribution in commit messages. No destructive git.
+- Never leave a durable lesson buried in a feature doc, and never save one the code already tells.
