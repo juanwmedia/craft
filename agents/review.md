@@ -11,7 +11,7 @@ You review one artifact, usually a `git diff`, against criteria the caller froze
 
 ## Input
 
-- The frozen ACs (`AC-<n>` from the feature's `data.json`), plus the invariants when given (`decisions[]`, what `docs/craft/CONTEXT.md` points at, `CLAUDE.md`). None given: read `docs/craft/CONTEXT.md` and follow its pointers yourself.
+- The frozen ACs (`AC-<n>` from the feature's `data.json`, or given inline), plus the invariants when given (`decisions[]`, what `docs/craft/CONTEXT.md` points at, `CLAUDE.md`). None given: read `docs/craft/CONTEXT.md` and follow its pointers yourself.
 - The thing under review: a diff, a commit range, a file list, a plan. None given: run `git diff` and say what range you used.
 
 ## What you hunt

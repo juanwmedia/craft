@@ -18,7 +18,7 @@ Arg given: that slug. None: the `data.json` under `docs/craft/*/` with unfinishe
 
 ## 1. Read
 
-`data.json` (the WHAT), and `docs/craft/CONTEXT.md` following its pointers (glossary, conventions, decisions; read-only, only `/close` writes there). Then the visuals, when the board has them (`schema.md` says how each one is read): the drawing is the map for the decisions and for every task.
+`data.json` (the WHAT), and `docs/craft/CONTEXT.md` following its pointers (glossary, conventions, decisions; read-only here). Then the visuals, when the board has them (`schema.md` says how each one is read): the drawing is the map for the decisions and for every task.
 
 ## 2. Open the board
 

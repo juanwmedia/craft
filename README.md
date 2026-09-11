@@ -35,6 +35,7 @@ graph LR
     R["craft:review"] -.->|refute| B
     R -.->|refute| C
     D["craft:delegate"] -.->|above the loop| B
+    R -.->|refute| T["/tweak"]
     D -->|gate| R
 ```
 
@@ -51,13 +52,15 @@ All four lifecycle skills write to the **same board** (`data.json`); the HTML is
 
 `/evaluate` audits at any point, and `/spec`, `/build` and `/close` run it at their own gates; `/board` opens the live board and `/board stop` closes it.
 
+Not everything is a feature. Copy, tracking events, a fourth panel like the other three: `/tweak <what>` finds the precedent in the code, agrees a short done-list with you, changes it step by step or all at once (your call, same session, no delegate), puts the diff to `craft:review` and proposes one commit. No board: the conversation is the spec and the commit is the record. A line with no precedent to point at is `/shape` or `/spec`.
+
 ## File structure
 
 ```
 docs/craft/
 ├── CONTEXT.md              # The door: the project in three lines and what to read for what. Every phase loads it first
 ├── glossary.md             # Each term with its _Avoid_ line (/shape writes it, /close grows it)
-├── conventions.md          # Cross-cutting gotchas (only /close writes; created on demand)
+├── conventions.md          # Cross-cutting gotchas (/close writes, /tweak may add a line; created on demand)
 ├── decisions.md            # Cross-cutting decisions (only /close writes; created on demand)
 └── <feature-slug>/
     ├── data.json           # The feature's single source of truth: exploration + WHAT + HOW + live status
@@ -67,7 +70,7 @@ docs/craft/
 ~/code/craft/
 ├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md
 ├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md, inherited by all skills
-├── skills/                 # shape · spec · build · close · evaluate · board
+├── skills/                 # shape · spec · build · close · tweak · evaluate · board
 └── agents/                 # review · delegate
 ```
 
@@ -81,10 +84,11 @@ docs/craft/
 | `/close` | Reconcile, graduate findings, propose commits | the board + `docs/craft/` (glossary, conventions, decisions). Never `CLAUDE.md` |
 | `/evaluate` | Evidence-based audit of any output | verification findings |
 | `/board` | Open the live board, or `stop` to close it | nothing |
+| `/tweak` | Change what already has a shape: precedent, done-list, step by step or all at once, review, one commit | code, and one line in `docs/craft/conventions.md` on your yes. Never the board |
 
 | Agent | What it does | Who calls it |
 |---|---|---|
-| `craft:review` | Refutes a diff against the frozen ACs in a fresh context, on Opus | `/build` at a phase boundary, `/close` before the commits, `delegate` at its gates |
+| `craft:review` | Refutes a diff against the frozen ACs in a fresh context, on Opus | `/build` at a phase boundary, `/close` and `/tweak` before the commits, `delegate` at its gates |
 | `craft:delegate` | Executes a phase from the board without asking, gated by `review`, one report and a proposed commit | `/build` in `above the loop`, only when you hand it over |
 
 Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contract is `lib/schema.md`.

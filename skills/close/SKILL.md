@@ -38,7 +38,7 @@ The board's `frictions` and the invalidated assumptions are the staging area. Pr
 - **Terms the feature coined**: `docs/craft/glossary.md`, one line each with its `_Avoid_`. A term born while building dies here unless someone writes it down.
 - Feature-specific frictions stay on the board.
 
-Before writing a line to any of the three, `/craft:evaluate` on the graduation list with `Skill`: a false claim that graduates here is permanent. `/close` is the only writer of `conventions.md` and `decisions.md`; the glossary is `/shape`'s first, and `/close` grows it. Craft never writes `CLAUDE.md`: a line that belongs there is said in the report, and the human copies it or not.
+Before writing a line to any of the three, `/craft:evaluate` on the graduation list with `Skill`: a false claim that graduates here is permanent. `/close` is the only writer of `decisions.md`; the glossary is `/shape`'s first, and `/close` grows it. Craft never writes `CLAUDE.md`: a line that belongs there is said in the report, and the human copies it or not.
 
 ## 4. Review, then propose commits
 
