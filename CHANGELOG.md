@@ -14,7 +14,7 @@
 - `/spec` no longer reopens what `/shape` settled. It reads `resolved[]` and the glossary and synthesises from them; a blocking fork with real branches routes back to `/shape`.
 - `/build` loads the `frontend-design` skill before the first component when the feature has a UI, with `howItLooks` as the brief.
 - Skills reference the plugin through `${CLAUDE_PLUGIN_ROOT}`, not an absolute path, so they work on any machine. Board paths moved from `docs/specs` to `docs/craft`.
-- Installing from a clone is `claude --plugin-dir ~/code/craft`. The old symlink recipe never worked after the move to `${CLAUDE_PLUGIN_ROOT}`: a skill outside a plugin has no plugin root, so every path stayed literal.
+- Install from the marketplace. The old symlink recipe never worked after the move to `${CLAUDE_PLUGIN_ROOT}`: a skill outside a plugin has no plugin root, so every path stayed literal.
 - Plugin metadata lives in `plugin.json` alone: the marketplace entry is name and source, and inherits the rest. One version number, no drift.
 - `/board` is the one launcher: `/board <slug>` opens that feature's board, `/board` the dashboard, `/board stop` shuts the server down. The port lives in `lib/board-serve.js` and nowhere else, so no skill types a port or a URL: they run the script and read what it prints. Starting a second server on a held port now says so and leaves the first alone.
 - `/spec` has no collaboration mode. What the thing is and what counts as done are the human's, always; `above the loop` governs execution only (`/build`, and the reconciliation in `/close`).
