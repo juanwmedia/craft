@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased (towards 3.0.0)
+## 3.0.0 (2026-09-11)
 
-**Breaking.** A 2.1 board has to move from `docs/specs/<feature>/` to `docs/craft/<feature>/`, or the board server will not find it. Inside `data.json`, `mockup` (an object) becomes `howItLooks` (an array, one entry per screen). `/explore` and `/understand` are gone, `/shape` replaces both. `/craft-serve` is gone, `/board` replaces it. `docs/craft/index.yaml` is no longer read or written: an existing one is ignored. `/spec` with no argument no longer opens the dashboard, `/board` does.
+**Breaking.** A 2.1 board has to move from `docs/specs/<feature>/` to `docs/craft/<feature>/`, or the board server will not find it. Inside `data.json`, `mockup` (an object) becomes `howItLooks` (an array, one entry per screen). `/explore` and `/understand` are gone, `/shape` replaces both. `/craft-serve` is gone, `/board` replaces it. `docs/specs/decisions.md` moves to `docs/craft/decisions.md`, where `/close` and the dashboard now look for it. `docs/craft/index.yaml` is no longer read or written: an existing one is ignored. `/spec` with no argument no longer opens the dashboard, `/board` does.
 
 - `/tweak`: Craft for what already has a shape, without the ceremony. Copy, tracking events, a fourth panel like the other three. It finds the precedent in the code, agrees a done-list, five lines at most, each pointing at what it copies, changes it step by step or all at once (your call once the list freezes, same session, no delegate), puts the diff to `craft:review` with that list as the ACs, and proposes one commit whose body is the list. A gotcha the code does not tell may land as one line in `conventions.md`, on your yes. The gate is the pointer, not the size: a line with no precedent, or a decision the precedent does not answer, is `/shape` or `/spec`. `craft:review` now accepts the ACs inline as well as from `data.json`.
 - `/shape` is the first phase: it interviews until nothing blocking is open, proves what it assumed hands-on, and leaves the mechanism drawn at `how-it-works.svg`. If you cannot draw it, it is not shaped.
