@@ -1,6 +1,6 @@
 # Craft
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin. An opinionated methodology for building software with AI agents and enjoying the process: one living board per feature, in a format built for human understanding, kept current as you build.
+A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin. An opinionated methodology for building software with AI agents and enjoy the process: one living board per feature, in a format built for human understanding, kept current as you build.
 
 > **The messy middle** is half in, half out. You traded control for speed and got neither. The work happened without you, and now it is yours to understand, review and repair. The worst of both worlds, and the one thing Craft refuses.
 
