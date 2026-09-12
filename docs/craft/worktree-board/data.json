@@ -1,0 +1,464 @@
+{
+  "feature": "Worktree board",
+  "tagline": "One dashboard, one port, every worktree of the repo: the board finds them through git and shows each feature where its branch owns it.",
+  "northStar": "Open one URL and see every feature of every repo, each on the tree that owns it. Start a feature and it gets its own worktree, prepared by the project's own hook, without you touching git; close it and the worktree is gone.",
+  "phases": [
+    {
+      "id": "P1",
+      "label": "Phase 1, one board for every tree",
+      "state": "active",
+      "outcome": "Open localhost:7331 and see every registered repo, its trees as chips, and each feature once, on the tree that owns it, with branch and worktree at the foot; a second repo or a new worktree shows up without a restart."
+    },
+    {
+      "id": "P2",
+      "label": "Phase 2, a feature opens its own tree",
+      "state": "todo",
+      "outcome": "Run /shape <slug> in a repo and the session is inside the feature's own worktree, prepared by the project's hook when it has one; /tweak on a busy tree asks; /build in the wrong tree offers the right one."
+    },
+    {
+      "id": "P3",
+      "label": "Phase 3, the tree goes away",
+      "state": "todo",
+      "outcome": "Approve /close's one-step close and the feature is merged, the worktree and branch gone, the session back where it started."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "title": "The registry is a JSON file next to the PID file, and /board presents a tree with --add",
+      "why": "Tested in the prototype: --add <tree> starts the server with that repo or, when one is up, registers it over HTTP (/register). --root and --repo go away; the tree's docs/craft is implied. Missing paths are pruned at each scan."
+    },
+    {
+      "id": "D2",
+      "title": "Trees and owners come from git at each scan, synchronously",
+      "why": "git worktree list --porcelain per repo; per linked tree, git diff --name-only <merge-base> -- docs/craft plus ls-files --others. Two commands per tree, proven correct on the probe repo, cheap at the scale of a handful of trees. No cache to invalidate."
+    },
+    {
+      "id": "D3",
+      "title": "Every tree is addressed by name: /t/<name>/, /t/<name>/f/<slug>/, and the templates use relative URLs",
+      "why": "The prefix says which tree serves data.json, assets and diff, so no request has to guess the owner. Name = basename of the tree path, deduped with -2, -3. The bare /f/<slug>/ route is gone; /board prints the current tree's URL and skills append f/<slug>/, as they do today."
+    },
+    {
+      "id": "D4",
+      "title": "The feature page learns its tree from ./meta.json",
+      "why": "One small route per tree ({repo, tree, branch, worktree}) keeps doc-template.html free of server-side templating; the header line reads it like it reads data.json."
+    },
+    {
+      "id": "D5",
+      "title": "The owner rule gets a test that builds a throwaway repo",
+      "why": "It is the one piece of logic that hurts silently if wrong (a stale board shown as live). node --test, no dependencies, the probe from /shape automated: branch edits b, main edits a afterwards, only b is owned; after merge nothing is."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Registry and --add in board-serve.js",
+      "phase": "P1",
+      "covers": [
+        "AC-1"
+      ],
+      "weight": "substantial",
+      "status": "todo",
+      "files": "lib/board-serve.js",
+      "diffFile": "lib/board-serve.js"
+    },
+    {
+      "id": "T2",
+      "title": "Scan every tree of every repo: worktree list, watchers per tree, /t/<name>/ routes, relative diff",
+      "phase": "P1",
+      "covers": [
+        "AC-2",
+        "AC-6",
+        "AC-7"
+      ],
+      "weight": "substantial",
+      "status": "todo",
+      "files": "lib/board-serve.js, lib/doc-template.html",
+      "diffFile": "lib/board-serve.js"
+    },
+    {
+      "id": "T3",
+      "title": "Owner rule: merge-base diff plus untracked, shadows dropped, conflicts kept",
+      "phase": "P1",
+      "covers": [
+        "AC-3",
+        "AC-4"
+      ],
+      "weight": "substantial",
+      "gate": true,
+      "status": "todo",
+      "files": "lib/board-serve.js",
+      "diffFile": "lib/board-serve.js"
+    },
+    {
+      "id": "T4",
+      "title": "Dashboard grouped by repo: header, tree chips, card foot with branch, worktree, last change",
+      "phase": "P1",
+      "covers": [
+        "AC-5"
+      ],
+      "weight": "substantial",
+      "status": "todo",
+      "files": "lib/dashboard-template.html",
+      "diffFile": "lib/dashboard-template.html"
+    },
+    {
+      "id": "T5",
+      "title": "Feature page header shows branch and worktree via ./meta.json",
+      "phase": "P1",
+      "covers": [
+        "AC-5"
+      ],
+      "weight": "trivial",
+      "status": "todo",
+      "files": "lib/doc-template.html, lib/board-serve.js",
+      "diffFile": "lib/doc-template.html"
+    },
+    {
+      "id": "T6",
+      "title": "/board presents the current tree and prints its URL; stop unchanged",
+      "phase": "P1",
+      "covers": [
+        "AC-1",
+        "AC-7"
+      ],
+      "weight": "trivial",
+      "status": "todo",
+      "files": "skills/board/SKILL.md",
+      "diffFile": "skills/board/SKILL.md"
+    },
+    {
+      "id": "T7",
+      "title": "Test for the owner rule on a throwaway repo (node --test)",
+      "phase": "P1",
+      "covers": [
+        "AC-3",
+        "AC-4"
+      ],
+      "weight": "substantial",
+      "status": "todo",
+      "files": "lib/board-serve.test.js",
+      "diffFile": "lib/board-serve.test.js"
+    }
+  ],
+  "what": [
+    {
+      "id": "AC-1",
+      "text": "Running /board in any tree of a repo registers that repo: the dashboard shows it from then on, and still shows it after the server is restarted. A registered path that no longer exists disappears on the next scan.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-2",
+      "text": "Every worktree of a registered repo appears as a chip in the repo's group with its branch, main tree first, and a worktree added or removed on disk shows or vanishes on the next scan, no restart.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-3",
+      "text": "A feature appears on one tree per repo: the linked tree whose branch changed its board since the merge-base or holds it untracked, otherwise the main tree. An unchanged copy in a linked tree never appears. Editing the same feature on main after the branch was cut does not move it to the branch. Two linked trees that both changed it is AC-4.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-4",
+      "text": "When two linked trees both changed the same feature's board, both cards appear, each with its own branch and worktree at the foot.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-5",
+      "text": "The dashboard groups features by repo, each group headed by the repo's name and path and its tree chips. Every card shows at its foot the branch, the worktree's path when the tree is linked, and when the board was last changed. The feature page repeats branch and worktree in its header.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-6",
+      "text": "Opening a card opens that feature's board from the tree that owns it, and \"view diff\" on a task shows the diff of that tree, not the main tree's. A tree chip opens that tree's own dashboard, every board in it, no owner rule.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-7",
+      "text": "A change to any board in any registered tree reloads the open page within a second, dashboard and feature page alike. /board stop still stops the one server.",
+      "done": false,
+      "phase": "P1"
+    },
+    {
+      "id": "AC-8",
+      "text": "/shape <slug> in a repo with no worktree for that slug moves the session into .claude/worktrees/<slug> on branch worktree-<slug>, cut from the branch the session was on, before anything is written, and the board records which branch that was. If that worktree already exists, the session enters it instead of creating another. /spec <slug> does the same when it is the first phase to run.",
+      "done": false,
+      "phase": "P2"
+    },
+    {
+      "id": "AC-9",
+      "text": "/craft:worktree reads the current repo and either says there is nothing to prepare (a static project: the bare worktree serves) or shows the WorktreeCreate and WorktreeRemove hook it proposes for this project, script and settings entry written out; on the human's yes it writes both, on no it writes nothing. Run again later it proposes the diff. /shape calls it before opening a worktree in a repo that has no hook.",
+      "done": false,
+      "phase": "P2"
+    },
+    {
+      "id": "AC-10",
+      "text": "/tweak on a tree with uncommitted changes outside docs/craft/ stops before the precedent lookup and asks: open a worktree for this tweak, or continue here. A clean tree is used as is, no question. A tweak that opened a worktree ends by merging, removing it and returning the session, right after the approved commit.",
+      "done": false,
+      "phase": "P2"
+    },
+    {
+      "id": "AC-11",
+      "text": "/build <slug> run outside that feature's worktree, when one exists, offers to enter it before touching code and never writes code in the wrong tree. A feature whose board predates this version and has no worktree builds where it is, no question.",
+      "done": false,
+      "phase": "P2"
+    },
+    {
+      "id": "AC-12",
+      "text": "After the approved commits, /close in a feature's worktree offers one closed fork: merge into the branch the worktree was cut from and remove the worktree and its branch, returning the session there; or leave the tree for a PR. Merge is never run without that yes. A merge that conflicts stops with the conflicting files listed and removes nothing.",
+      "done": false,
+      "phase": "P3"
+    }
+  ],
+  "exploration": {
+    "question": "Can one board server show every feature across every worktree of a repo, with no registration and no second port?",
+    "capabilities": [
+      {
+        "text": "git worktree list --porcelain lists every tree with path and branch, main first",
+        "tested": true
+      },
+      {
+        "text": "Ownership by merge-base: a branch owns only the boards it changed, even after main moves; a merged branch owns nothing again",
+        "tested": true
+      },
+      {
+        "text": "An untracked board folder in a worktree is owned by that worktree",
+        "tested": true
+      },
+      {
+        "text": "fs.watch recursive on two roots at once fires for both",
+        "tested": true
+      },
+      {
+        "text": "Claude Code's worktree tool creates an ordinary git worktree at .claude/worktrees/<name> on branch worktree-<name>, locked while the session is inside",
+        "tested": true
+      },
+      {
+        "text": "ExitWorktree remove deletes the worktree and its branch, refusing when there are uncommitted or unmerged changes unless told to discard",
+        "tested": true
+      },
+      {
+        "text": "A worktree under .claude/worktrees shows as '?? .claude/' in the main tree's git status unless excluded",
+        "tested": true
+      },
+      {
+        "text": "WorktreeCreate hook replaces git's default creation and a non-zero exit aborts it; WorktreeRemove runs at removal",
+        "tested": false
+      }
+    ],
+    "constraints": [
+      "One server per port; the port lives in lib/board-serve.js only.",
+      "The server dies with the session that started it; the registry survives it.",
+      "No skill mentions worktrees; /board is the only entry point."
+    ],
+    "decisions": [
+      {
+        "text": "Claude Code's own worktree tool opens and closes trees; Craft never runs git worktree add itself."
+      },
+      {
+        "text": "Ownership by merge-base in git, not by file comparison and not by branch naming."
+      },
+      {
+        "text": "The registry is a file next to the PID, explicit, pruned; no disk scan for repos."
+      },
+      {
+        "text": "Generic dependency setup shipped by Craft; a project WorktreeCreate hook takes precedence."
+      }
+    ],
+    "resolved": [
+      {
+        "q": "One server per worktree, per repo, or one global server?",
+        "a": "One global server on one port, a registry of repos, every worktree of each repo inside.",
+        "why": "The server lives in the plugin, outside every repo; binding it to one root at startup was the only reason the board could not see the rest. One tab for everything is the whole point."
+      },
+      {
+        "q": "How does a repo get on the board?",
+        "a": "Every /board presents the current tree; no server starts one with it, a running server adds it. The registry is a file next to the PID; paths that no longer exist are pruned at each scan. /board forget removes one.",
+        "why": "Explicit beats scanning the disk: only what you opened is there, and it stays after the session ends."
+      },
+      {
+        "q": "Which tree owns a feature that exists as a copy in several worktrees?",
+        "a": "A linked worktree owns the slugs its branch changed under docs/craft since it diverged from the main tree (git diff --name-only <merge-base> -- docs/craft, plus untracked). The main tree owns the rest. Unchanged copies are shadows and are not shown.",
+        "why": "Comparing files against the main copy fails when main moves; the merge-base does not. Two commands per tree, no naming convention, no human discipline."
+      },
+      {
+        "q": "Two branches changed the same feature?",
+        "a": "Both cards, each with its branch and worktree at the foot.",
+        "why": "That is a real conflict; hiding one by date would be lying."
+      },
+      {
+        "q": "URLs",
+        "a": "Every tree is a tree: /t/<name>/f/<slug>/, main or linked. data.json, assets and /diff become relative and inherit the prefix. /t/<name>/ is that tree's raw dashboard, no ownership rule.",
+        "why": "The prefix says where you are; no slug parameter on /diff, no ?branch=; and the raw view is the escape hatch if the rule ever confuses."
+      },
+      {
+        "q": "What the human sees",
+        "a": "One page grouped by repo (name, path, chips of its trees). Card foot: branch, worktree path when linked, last change. The feature page repeats that line in its header.",
+        "why": "Never edit a board without knowing which tree you are in; the last-change time shows where there is life without the server knowing about sessions."
+      },
+      {
+        "q": "Features in progress with nobody on them?",
+        "a": "Shown. The board shows the disk, not the sessions.",
+        "why": "An in-progress data.json is true whether or not a session is open."
+      },
+      {
+        "q": "Does Craft manage worktrees, or only watch them?",
+        "a": "Manages them: opens one per feature, prepares it, and undoes it when the branch is merged.",
+        "why": "Human's call after the first design said watch-only: half a solution leaves the human doing the risky part by hand."
+      },
+      {
+        "q": "When does a feature's worktree open?",
+        "a": "Always, at the first phase that runs (/shape, or /spec when entered there): the session moves to .claude/worktrees/<slug> on branch <slug> through Claude Code's own worktree tool. Everything after happens inside.",
+        "why": "Systematic beats discretionary: the board and the cleanup can rely on one feature per tree."
+      },
+      {
+        "q": "And /tweak?",
+        "a": "Asks only when the tree holds uncommitted work of another feature; a free tree is used as is. A tweak that opened a worktree also closes it: after the approved commit, merge, remove, return to main.",
+        "why": "A copy change should not pay a dependency install; but whatever opens a tree must undo it."
+      },
+      {
+        "q": "Dependencies in a new worktree",
+        "a": "A skill, /craft:worktree: it reads the project once, proposes the WorktreeCreate and WorktreeRemove hook for it (git worktree add from HEAD, then whatever the project needs: dependencies, .env, database, Herd), writes it on the human's yes, and says 'nothing to prepare' when there is nothing. The hook is the project's from then on; Craft runs no dependency list of its own.",
+        "why": "One place for the logic, run once per project, leaving a ten-line script the human can read and edit. A runtime detection list inside Craft would grow with every project."
+      },
+      {
+        "q": "Who merges?",
+        "a": "/close, after the approved commits, offers a one-step close: merge into the branch the worktree was cut from, remove the worktree and the branch, return the session. Choosing a PR instead leaves the tree alive, on the board.",
+        "why": "The only guaranteed cleanup is the one that runs where the merge happens."
+      },
+      {
+        "q": "Automatic collection",
+        "a": "None. /close removes the worktree when it merges. A branch merged outside (a PR) leaves its worktree, visible on the board; git worktree remove by hand, or a collector later if it hurts.",
+        "why": "The collector was the only piece with heuristics (squash by content, trees Craft did not open, deletes from a page load). Every local merge goes through /close, so the guarantee holds without it."
+      },
+      {
+        "q": "A session inside a collected worktree",
+        "a": "Cannot happen: the tool locks the worktree while a session is inside (git worktree list shows 'locked claude session <name> (pid ...)'), and the collector never removes a locked tree.",
+        "why": "Tested on the probe worktree. The lock is git's own, so the rule costs one line."
+      },
+      {
+        "q": "Names",
+        "a": "Directory .claude/worktrees/<slug>, branch worktree-<slug>: what Claude Code's worktree tool creates. Not renamed.",
+        "why": "Tested: EnterWorktree probe-wt made .claude/worktrees/probe-wt on branch worktree-probe-wt. Fighting the tool's naming buys nothing."
+      },
+      {
+        "q": "Where does the feature branch start from?",
+        "a": "From the branch the session is on. worktree.baseRef is a Claude Code setting, not git config, and Craft does not write settings; how the branch is cut from HEAD is /build's.",
+        "why": "Probe: the default setting branches from origin/<default branch>, which silently misses the branch the human stands on. The proposed hook's git worktree add <path> HEAD gets it right by construction."
+      },
+      {
+        "q": "The worktree directory in git status",
+        "a": "`.claude/worktrees/` shows as untracked in the main tree. Craft's setup adds it to .git/info/exclude once; never to .gitignore or CLAUDE.md.",
+        "why": "Tested: '?? .claude/' appeared with a worktree present. Left alone, /close in the main tree would read it as an unexplained change. info/exclude is local and uncommitted, so Craft writes nothing of the team's."
+      }
+    ],
+    "sources": [
+      "man git-worktree (git 2.51.1): the main worktree is listed first",
+      "EnterWorktree tool description: creates a new git worktree inside .claude/worktrees/",
+      "code.claude.com/docs/en/hooks.md: WorktreeCreate 'replaces default git behavior'; non-zero exit aborts creation"
+    ],
+    "glossary": [
+      {
+        "term": "tree",
+        "is": "Any working tree of a repo: the main checkout or a linked worktree. The board treats them alike.",
+        "avoid": [
+          "checkout",
+          "copy"
+        ]
+      },
+      {
+        "term": "owner",
+        "is": "The tree whose branch changed a board since it diverged from the main tree (or holds it untracked). The main tree owns what no linked tree does.",
+        "avoid": [
+          "active tree",
+          "live copy"
+        ]
+      },
+      {
+        "term": "shadow",
+        "is": "A board present in a linked tree that its branch never changed. Never shown.",
+        "avoid": [
+          "stale copy",
+          "duplicate"
+        ]
+      },
+      {
+        "term": "registry",
+        "is": "The file next to the PID listing the main tree of every repo that ever ran /board. Pruned of missing paths at each scan.",
+        "avoid": [
+          "config",
+          "cache"
+        ]
+      },
+      {
+        "term": "one-step close",
+        "is": "/close's last offer: merge into the main branch, remove the worktree and its branch, return the session to the main tree.",
+        "avoid": [
+          "auto-merge",
+          "finish"
+        ]
+      }
+    ]
+  },
+  "assumptions": [
+    {
+      "id": "AS1",
+      "text": "Worktrees created by Claude Code (.claude/worktrees/) are ordinary git worktrees and appear in git worktree list.",
+      "ifWrong": "Those trees never show on the board; the human runs git worktree add instead.",
+      "blocking": false,
+      "checkAt": "shape",
+      "status": "resolved"
+    },
+    {
+      "id": "AS2",
+      "text": "fs.watch recursive on several roots at once fires reloads for each.",
+      "ifWrong": "Live reload misses one tree; a manual refresh, not rework.",
+      "blocking": false,
+      "checkAt": "shape",
+      "status": "resolved"
+    },
+    {
+      "id": "AS4",
+      "text": "A project WorktreeCreate hook replaces git's default creation: the hook runs git worktree add itself and prints the path (docs, hooks.md).",
+      "ifWrong": "Craft's generic setup runs after the hook and may duplicate work; harmless but slow.",
+      "blocking": false,
+      "checkAt": "P2",
+      "status": "resolved"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "A1",
+      "title": "Worktree Board, the proposal",
+      "kind": "mockup",
+      "url": "https://claude.ai/code/artifact/f7e8fe68-70cb-40b6-b687-c53020afe06f",
+      "file": "artifacts/proposal.html",
+      "createdAt": "2026-09-12"
+    }
+  ],
+  "howItLooks": [
+    {
+      "title": "Dashboard: repos as groups, trees as chips, branch and worktree at the foot of every card",
+      "source": "authored",
+      "file": "artifacts/proposal.html",
+      "width": 1000,
+      "height": 900
+    }
+  ],
+  "howItWorks": {
+    "file": "how-it-works.svg",
+    "caption": "A feature lives in its own worktree from /shape to /close. One server outside every repo learns each repo from /board, reads all its trees through git, shows a board where its branch owns it, and removes a worktree only once it is merged, clean and unlocked; /close does the same on the spot when it merges."
+  },
+  "frictions": [
+    {
+      "title": "Merging from inside the worktree",
+      "text": "The branch /close merges into is checked out in the main tree, so the merge cannot run from the worktree; the one-step close leaves the worktree first, then merges and removes from the main tree.",
+      "relatesTo": "AC-12"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" fill="none" stroke="currentColor" stroke-width="1.3" font-family="ui-monospace, Menlo, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor" stroke="none"/></marker>
+  </defs>
+
+  <!-- repo boundary -->
+  <rect x="20" y="40" width="300" height="340" rx="8" stroke-dasharray="5 4"/>
+  <text x="34" y="30" fill="currentColor" stroke="none" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing=".08em">ONE REPO</text>
+
+  <!-- main tree -->
+  <rect x="60" y="60" width="220" height="60" rx="6"/>
+  <g fill="currentColor" stroke="none" text-anchor="middle">
+    <text x="170" y="85" font-weight="500">main tree</text>
+    <text x="170" y="103" opacity=".7">branch main</text>
+  </g>
+
+  <!-- worktree -->
+  <rect x="60" y="230" width="220" height="60" rx="6" stroke-width="1.8"/>
+  <g fill="currentColor" stroke="none" text-anchor="middle">
+    <text x="170" y="255" font-weight="500">.claude/worktrees/x</text>
+    <text x="170" y="273" opacity=".7">branch worktree-x · locked in session</text>
+  </g>
+
+  <!-- shape opens -->
+  <path d="M120 120 L120 230" marker-end="url(#arrow)"/>
+  <text x="112" y="180" fill="currentColor" stroke="none" text-anchor="end">/shape opens</text>
+
+  <!-- close merges -->
+  <path d="M220 230 L220 120" marker-end="url(#arrow)"/>
+  <text x="228" y="180" fill="currentColor" stroke="none">/close merges,</text>
+  <text x="228" y="195" fill="currentColor" stroke="none">removes</text>
+
+  <!-- server -->
+  <rect x="560" y="60" width="300" height="230" rx="6"/>
+  <text x="574" y="50" fill="currentColor" stroke="none" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing=".08em">BOARD SERVER, IN THE PLUGIN</text>
+  <g fill="currentColor" stroke="none">
+    <text x="580" y="90" font-weight="500">registry</text>
+    <text x="580" y="108" opacity=".7">repos that ran /board</text>
+    <text x="580" y="150" font-weight="500">owner rule</text>
+    <text x="580" y="168" opacity=".7">branch changed it since merge-base</text>
+    <text x="580" y="210" font-weight="500">collector</text>
+    <text x="580" y="228" opacity=".7">merged + clean + unlocked</text>
+  </g>
+  <path d="M580 124 L840 124" opacity=".3"/>
+  <path d="M580 184 L840 184" opacity=".3"/>
+
+  <!-- /board presents -->
+  <path d="M280 90 L560 90" marker-end="url(#arrow)"/>
+  <text x="420" y="82" fill="currentColor" stroke="none" text-anchor="middle">/board presents the tree</text>
+
+  <!-- server reads -->
+  <path d="M560 160 L320 160 L320 260 L280 260" marker-end="url(#arrow)"/>
+  <path d="M320 160 L280 110" marker-end="url(#arrow)"/>
+  <text x="420" y="152" fill="currentColor" stroke="none" text-anchor="middle">reads every tree via git</text>
+
+  <!-- collector removes -->
+  <path d="M560 220 L400 220 L400 300 L280 300" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="480" y="212" fill="currentColor" stroke="none" text-anchor="middle">removes</text>
+
+  <!-- page -->
+  <rect x="560" y="330" width="300" height="50" rx="6" stroke-width="1.8"/>
+  <g fill="currentColor" stroke="none" text-anchor="middle">
+    <text x="710" y="351" font-weight="500">one page, one port</text>
+    <text x="710" y="369" opacity=".7">every repo · every tree · owner at each card's foot</text>
+  </g>
+  <path d="M710 290 L710 330" marker-end="url(#arrow)"/>
+  <text x="718" y="314" fill="currentColor" stroke="none">renders</text>
+</svg>
