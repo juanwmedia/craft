@@ -77,7 +77,7 @@ docs/craft/
 
 ~/code/craft/
 ├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts
-├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md, inherited by all skills
+├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md · tools.md, inherited by all skills
 ├── skills/                 # shape · spec · build · close · tweak · evaluate · board · worktree
 └── agents/                 # review · delegate
 ```

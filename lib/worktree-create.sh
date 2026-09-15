@@ -18,6 +18,5 @@ if [ -f pnpm-lock.yaml ]; then pnpm install --frozen-lockfile >&2; echo "pnpm in
 if [ -f package-lock.json ]; then npm ci >&2; echo "npm ci" >&2; fi
 if [ -f yarn.lock ]; then yarn install --frozen-lockfile >&2; echo "yarn install" >&2; fi
 if [ -f package.json ] && [ ! -f package-lock.json ] && [ ! -f pnpm-lock.yaml ] && [ ! -f yarn.lock ]; then npm install >&2; echo "npm install" >&2; fi
-if command -v herd >/dev/null; then herd link "$name" >&2 && echo "herd link $name" >&2 || echo "herd link failed, tree kept" >&2; fi
 
 echo "$path"
