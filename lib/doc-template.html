@@ -17,6 +17,8 @@
   .topbar{display:flex;align-items:center;gap:22px;padding:16px 32px;border-bottom:1px solid var(--line);background:#12151d;position:sticky;top:0;z-index:10;flex-wrap:wrap}
   .topbar .feat{font-weight:700;font-size:16px}
   .topbar .tag{color:var(--mut);font-size:13.5px;flex:1;min-width:240px}
+  .tree-meta{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--mut)}
+  .tree-meta .br{color:var(--blue)}
   .back{color:var(--blue);text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap} .back:hover{text-decoration:underline}
   .live{font-size:11px;color:var(--green);display:inline-flex;align-items:center;gap:6px}
   .live i{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
@@ -171,6 +173,15 @@
   <script>
     const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+    function loadTreeMeta(){
+      fetch('./meta.json').then(r=>r.ok?r.json():null).then(m=>{
+        if(!m) return;
+        const el = document.getElementById('tree-meta');
+        if(!el) return;
+        el.innerHTML = `<span class="br">${esc(m.branch)}</span>`+(m.worktree?` · ${esc(m.worktree)}`:'');
+      }).catch(()=>{});
+    }
+
     function taskRow(t){
       const ic = t.status==='done'?'<span class="stat s-done">✓</span>':t.status==='doing'?'<span class="stat s-doing">◐</span>':'<span class="stat s-todo">○</span>';
       const wt = t.weight==='substantial'?'<span class="flagi">⚑</span>':'<span class="wt trivial"></span>';
@@ -213,10 +224,11 @@
       const pct = total?Math.round(done/total*100):0;
       document.title = d.feature + ' · living spec';
 
-      const back = location.pathname.startsWith('/f/') ? `<a class="back" href="/">← Features</a>` : '';
+      const back = location.pathname.includes('/f/') ? `<a class="back" href="/">← Features</a>` : '';
       document.getElementById('topbar').innerHTML = back +
-        `<span class="feat">${esc(d.feature)}</span><span class="tag">${esc(d.tagline)}</span>`+
+        `<span class="feat">${esc(d.feature)}</span><span class="tag">${esc(d.tagline)}</span><span class="tree-meta" id="tree-meta"></span>`+
         `<span class="live"><i></i>live</span><span class="prog">${done}/${total}<span class="bar"><i style="width:${pct}%"></i></span></span>`;
+      loadTreeMeta();
 
       const sh = d.howItWorks, chips = artifactChips(d);
       const shapeHtml = (sh&&sh.file)
@@ -370,7 +382,7 @@
         const box = el.closest('.task').querySelector('.diffbox');
         if(box.dataset.open==='1'){ box.style.display='none'; box.dataset.open='0'; el.textContent='view diff'; return; }
         el.textContent='loading…';
-        try{ const r=await fetch('/diff?file='+encodeURIComponent(el.dataset.file)); box.innerHTML=colorize(await r.text()); }
+        try{ const r=await fetch('diff?file='+encodeURIComponent(el.dataset.file)); box.innerHTML=colorize(await r.text()); }
         catch(e){ box.innerHTML='<span class="dl del">error</span>'; }
         box.style.display='block'; box.dataset.open='1'; el.textContent='hide diff';
       }));
