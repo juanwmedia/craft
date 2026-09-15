@@ -3,7 +3,7 @@ name: spec
 description: Define WHAT to build, as a living visual doc. Runs a collaborative Q&A and writes the feature's data.json (north star, acceptance criteria, phases with usable outcomes) so the WHAT appears on the board as you define it. Decisions and tasks come later in /build.
 disable-model-invocation: true
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, AskUserQuestion, Skill
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, AskUserQuestion, Skill, EnterWorktree
 ---
 
 Craft: Shape to **Spec** to Build to Close.
@@ -23,7 +23,7 @@ Nothing else. Decisions and tasks belong to `/build`.
 
 ## 1. Bootstrap
 
-`docs/craft/<slug>/`. A `data.json` there means you are updating: read it first, never overwrite it without consent. None: write a minimal skeleton (`feature`, `tagline`, empty `what` and `phases`) so the board has something to render. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only; no file means `/shape` never ran), and flag any conflict. Then the visuals, when the board has them (`schema.md` says how each one is read).
+A `docs/craft/<slug>/data.json` right here with no `tree`: a board from before trees, update it where it is and skip the next sentence. Otherwise the feature's tree first: Open (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`) enters the one that exists or creates one; a board opened by this version lives inside its tree and is not visible from the main tree, so this comes before looking. Then, inside the tree, `docs/craft/<slug>/`: a `data.json` there means you are updating (`/shape` wrote it): read it first, never overwrite it without consent. None: write a minimal skeleton (`tree`, `feature`, `tagline`, empty `what` and `phases`) so the board has something to render. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only; no file means `/shape` never ran), and flag any conflict. Then the visuals, when the board has them (`schema.md` says how each one is read).
 
 ## 2. Open the board
 

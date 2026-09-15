@@ -3,7 +3,7 @@ name: shape
 description: Give what you are about to build its shape before anything is specified, a feature in a project, a project from nothing, or an idea with no repo yet. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, proves technology hands-on, and draws how it works on the feature board. Use before /spec.
 disable-model-invocation: true
 argument-hint: [feature-slug | context]
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch, AskUserQuestion, Agent, Skill, Artifact
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch, AskUserQuestion, Agent, Skill, Artifact, EnterWorktree
 ---
 
 Craft: **Shape** to Spec to Build to Close.
@@ -27,10 +27,10 @@ Nothing else. Idea mode may produce none of it.
 ## 0. Route
 
 Slug given, feature mode. Kebab-case.
-A repo with no code and no slug, a project to start: ask the three lines (what it is, for whom, built with what), write `docs/craft/CONTEXT.md` from them, ask for the first feature's slug, then feature mode. "Start it" or "only test the idea" is a closed fork: `AskUserQuestion`.
+A repo with no code and no slug, a project to start: ask the three lines (what it is, for whom, built with what) and the first feature's slug, then feature mode; `docs/craft/CONTEXT.md` from the three lines is written inside the tree. "Start it" or "only test the idea" is a closed fork: `AskUserQuestion`.
 No repo, idea mode: a throwaway prototype, no board until the idea survives.
 
-Feature mode: create `docs/craft/<slug>/`, write a minimal `data.json`, open the board with `/craft:board <slug>`. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only). No `CONTEXT.md` yet: create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md`, the project in three lines plus the pointers.
+Feature mode: a `docs/craft/<slug>/data.json` right here with no `tree`, resume it where it is. Otherwise the feature's tree first, **before anything is written** (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`, Open). Then, inside it, `docs/craft/<slug>/`: a `data.json` already there means you are resuming, read it and never overwrite it; none: write a minimal `data.json` (`tree` first, as Open says). Open the board with `/craft:board <slug>`. Read `docs/craft/CONTEXT.md` and follow its pointers (read-only). No `CONTEXT.md` yet: create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md`, the project in three lines plus the pointers.
 
 ## 1. Interview until nothing blocking is open
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.1.0 (2026-09-15)
+
+One feature, one worktree, and one board for all of them.
+
+- The board is global. One server, one port, every repo that has ever run `/board`, each with every tree `git worktree list` finds for it. A feature shows up on the board of the tree whose branch owns it, so a feature built in another tree is no longer invisible. The server keeps its registry next to its pid file, so a second repo joins the board instead of fighting for the port.
+- `board-serve.js` takes `--add <tree>` where it used to take `--root` and `--repo`. With a board already up it registers the tree over HTTP and exits; with nothing up it becomes the server. `/board` runs it every time, not only the first time, because presenting the current tree is how that tree gets on the board at all.
+- `/shape` opens a worktree per feature before anything is written: `.claude/worktrees/<slug>` on `worktree-<slug>`, cut from the branch the session was on. `/spec`, `/build` and `/close` enter the tree the board names. `/tweak` asks only when the tree it is standing in is busy: its own tree, `tweak-<what changes>`, merged and removed when the commit is made, or carry on here.
+- `/worktree` prepares a project for worktrees once. It proposes a `WorktreeCreate` hook that copies the project's env and database, installs its dependencies and links its domain, plus the `WorktreeRemove` hook that undoes it, and writes both only on your yes. Without a hook a tree is still opened, bare, and the skill says so.
+- `/close` merges the feature's worktree and removes it in one step, then deletes the branch and returns the session to the tree it came from. It refuses to start on a tree that still holds uncommitted work, the board included, because the removal may be a project hook that forces it. A conflicting merge removes nothing and reports the files. Choosing a PR instead skips the whole procedure and leaves the tree where it is.
+- The procedures the skills share (open, enter, busy, close) live in `references/worktree.md`, one copy instead of four that drift.
+- Tools that live on the machine and not in the repo (Herd today) are sections of `references/tools.md`: how to detect one, the lines it adds to each hook, and what bit us. The shipped scripts and the skill name no tool. Herd's remove lines unlink only a site whose link resolves to the tree being removed, because a feature slug that matches an existing site used to take that site down.
+- The dashboard groups features by repo and tree, and the page reloads when a board changes in a tree that has no `docs/craft/` yet.
+
 ## 3.0.0 (2026-09-11)
 
 **Breaking.** A 2.1 board has to move from `docs/specs/<feature>/` to `docs/craft/<feature>/`, or the board server will not find it. Inside `data.json`, `mockup` (an object) becomes `howItLooks` (an array, one entry per screen). `/explore` and `/understand` are gone, `/shape` replaces both. `/craft-serve` is gone, `/board` replaces it. `docs/specs/decisions.md` moves to `docs/craft/decisions.md`, where `/close` and the dashboard now look for it. `docs/craft/index.yaml` is no longer read or written: an existing one is ignored. `/spec` with no argument no longer opens the dashboard, `/board` does.

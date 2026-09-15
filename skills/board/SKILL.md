@@ -10,15 +10,17 @@ The one launcher for the Craft board. `/shape`, `/spec`, `/build` and `/close` a
 
 `SERVE` below is `node "${CLAUDE_PLUGIN_ROOT}/lib/board-serve.js"`.
 
+The board is global: one server, one port, every repo that has ever run `/board`, each with every tree `git worktree list` finds for it. Presenting the current tree is how it gets on the board at all, so `--add` runs every time, not only the first time.
+
 ## `stop`
 
 Run `SERVE --stop` and say what it printed. When it reports a port held by something it did not start, **that is the answer**: say it, with the pid, and stop. That process may not be yours to kill.
 
 ## Anything else
 
-1. **`SERVE --url`.** It prints the dashboard URL and exits 0 when a board is already up, exits 1 when nothing is there. Whoever started it, leave it alone.
-2. **Exit 1? Start it**: `SERVE --root docs/craft --repo .` with the **background mechanism** (`run_in_background`), never `cmd &`, which runs untracked and invisible. It prints the URL on its first line. A server started this way dies with the session; the same command in the user's own terminal outlives it.
-3. **Say the URL, one line.** That URL plus `f/<slug>/` for a feature, the URL bare for the dashboard. A slug with no `docs/craft/<slug>/data.json`: say so and list the slugs that do have one.
+1. **`SERVE --url`.** It prints the dashboard URL and exits 0 when a board is already up, exits 1 when nothing is there.
+2. **`SERVE --add .`, either way.** Up: it registers the current tree over HTTP and exits, so run it synchronously. Down: it becomes the server, so run it with the **background mechanism** (`run_in_background`), never `cmd &`, which runs untracked and invisible. A server started this way dies with the session; the same command in the user's own terminal outlives it. Either way it prints two lines: `Craft <dashboard URL>` and, when the current tree resolved, `Tree <tree URL>`.
+3. **Say the URL, one line.** No slug: the bare `Craft` URL. A feature: the `Tree` URL plus `f/<slug>/`. A slug with no `docs/craft/<slug>/data.json`: say so and list the slugs that do have one.
 
 ## Guardrails
 

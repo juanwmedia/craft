@@ -3,7 +3,7 @@ name: tweak
 description: Change something that already has a shape, without the ceremony. Copy, tracking events, expand UI and such. Looks the precedent up in the code, agrees a short done-list with you, changes it step by step or all at once, puts the diff to craft:review and proposes one commit. Use for updates and extensions with a precedent; a change with none is /shape or /spec.
 disable-model-invocation: true
 argument-hint: what to change
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, Skill, EnterWorktree, ExitWorktree
 ---
 
 Craft for what already has a shape: the lifecycle in one skill, without the ceremony.
@@ -13,6 +13,8 @@ Tweak answers **what changes, against what it copies**. No board, no drawing, no
 ## Input
 
 The argument is what to change, in the human's words. Read `docs/craft/CONTEXT.md` and follow its pointers first; none: go on without and say so. `CLAUDE.md` and the code's conventions are the invariants.
+
+Then Busy (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`). A busy tree is one closed fork (`AskUserQuestion`): open a tree named `tweak-<the argument, kebab-case, cut so the name stays within 64 characters>`, merged and removed at the end (Open, same file), or continue here. A clean tree is used as is, no question.
 
 ## 1. Find the precedent
 
@@ -30,11 +32,11 @@ The list frozen, one closed fork (`AskUserQuestion`), unless the human already s
 
 ## 4. Review, then propose the commit
 
-`craft:review` (`Agent`) with the done-list as the ACs and `git diff`. Its findings reach the human with their citations; the human decides what gets fixed. Then propose one commit, its body the done-list, and wait for approval.
+`craft:review` (`Agent`) with the done-list as the ACs and `git diff`. Its findings reach the human with their citations; the human decides what gets fixed. A gotcha worth keeping goes into `conventions.md` on the human's explicit yes and before the commit is proposed, never after, so it rides in it and does not leave the tree dirty. Then propose one commit, its body the done-list, and wait for approval. Commit made, a tweak that opened a tree runs Close (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`): merged, removed, session back where it started.
 
 ## Output
 
-The changed files, enumerated. The done-list, each line evidenced or not. The review's verdict and its open leads. A gotcha the code does not tell, if one surfaced: one line proposed for `docs/craft/conventions.md`. The proposed commit, not run.
+The changed files, enumerated. The done-list, each line evidenced or not. The review's verdict and its open leads. A gotcha the code does not tell, if one surfaced: the one line that went into `docs/craft/conventions.md`, or the one you declined. The proposed commit, not run; on the tree path, the commit made, where it was merged, and that the tree is gone.
 
 ## Guardrails
 

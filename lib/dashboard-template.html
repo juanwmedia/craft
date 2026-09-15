@@ -20,14 +20,24 @@
   .wrap{max-width:1200px;margin:0 auto;padding:26px 32px 80px}
   h2{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);margin:30px 0 14px;font-weight:600}
 
+  .repo{margin-bottom:36px}
+  .repo .rh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:14px}
+  .repo .rh b{font-size:16px}
+  .repo .rh .path{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--mut)}
+  .repo .rh .trees{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  .tree{font-family:ui-monospace,Menlo,monospace;font-size:11px;padding:2px 8px;border-radius:4px;border:1px solid var(--line);color:var(--mut);text-decoration:none}
+  .tree:hover{border-color:var(--blue)}
+  .tree.main{border-color:var(--blue);color:var(--blue)} .tree.wt{border-color:var(--amber);color:var(--amber)}
+
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
   .card{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:17px 18px;transition:border-color .15s,transform .1s}
   .card:hover{border-color:var(--blue);transform:translateY(-2px)}
+  .card.wt{border-color:rgba(251,191,36,.35)}
   .card .hd{display:flex;align-items:center;gap:10px}
   .card .name{font-weight:700;font-size:15.5px;flex:1}
   .badge{font-size:10px;font-weight:800;border-radius:5px;padding:2px 8px}
   .badge.done{background:var(--green);color:#0b1220} .badge.in-progress{background:var(--blue);color:#0b1220} .badge.draft{background:var(--panel2);color:var(--faint)}
-  .dec-toggle{margin-top:30px}
+  .dec-toggle{margin-top:16px}
   .card .tg{color:var(--mut);font-size:12.5px;margin:8px 0 12px;line-height:1.45}
   .phs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
   .pchip{font-size:11px;border-radius:5px;padding:2px 8px;border:1px solid var(--line);color:var(--mut)}
@@ -38,6 +48,8 @@
   .deps .lab{font-size:11px;color:var(--faint)}
   .dep{font-size:10.5px;border-radius:5px;padding:2px 7px;background:var(--panel2);color:var(--mut)}
   .dep.done{color:var(--green)} .dep.known{color:var(--blue)}
+  .foot{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--mut);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;margin-top:12px}
+  .foot .br{color:var(--blue)} .card.wt .foot .br{color:var(--amber)}
 
   .dec{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;font-size:13.5px;color:var(--mut);line-height:1.6}
   .dec h3{color:var(--ink);font-size:14px;margin:14px 0 6px} .dec h3:first-child{margin-top:0}
@@ -46,15 +58,14 @@
   .dec-toggle summary::-webkit-details-marker{display:none}
   .dec-toggle summary::before{content:'▸  '} .dec-toggle[open] summary::before{content:'▾  '}
   .dec-toggle .dec{margin-top:10px}
-  .empty{color:var(--faint);font-size:13px;padding:30px;text-align:center}
+  .empty{color:var(--faint);font-size:13px;padding:30px 0}
   .err{color:var(--red);padding:40px;font:14px ui-monospace,Menlo,monospace}
 </style>
 </head>
 <body>
   <div class="topbar"><span class="feat">Craft</span><span class="tag" id="tag">features</span><span class="live"><i></i>live</span></div>
-  <div class="wrap">
-    <section><h2>Active</h2><div class="grid" id="features"></div></section>
-    <section id="dec-sec"><details class="dec-toggle"><summary>Cross-cutting decisions</summary><div class="dec" id="dec"></div></details></section>
+  <div class="wrap" id="wrap">
+    <div id="repos"></div>
   </div>
 
   <script>
@@ -62,40 +73,52 @@
     const ORDER = { 'in-progress':0, 'draft':1, 'done':2 };
 
     function card(f, known){
+      const wt = !!f.worktree;
       const pct = f.acs.total ? Math.round(f.acs.done/f.acs.total*100) : 0;
       const phs = f.phases.map(p=>`<span class="pchip ${p.state}">${esc((p.label||p.id).replace(/^Phase\s*/i,'P'))}</span>`).join('');
       const deps = f.dependsOn.length
         ? `<div class="deps"><span class="lab">depends on</span>`+
           f.dependsOn.map(s=>{ const k=known[s]; const cls=k?(k.status==='done'?'done':'known'):''; return `<span class="dep ${cls}">${esc(s)}</span>`; }).join('')+`</div>`
         : '';
-      return `<a class="card" href="/f/${encodeURIComponent(f.slug)}/">`+
+      const branchLine = esc(f.branch) + (wt ? ' · ' + esc(f.worktree) : '');
+      return `<a class="card${wt?' wt':''}" href="/t/${encodeURIComponent(f.tree)}/f/${encodeURIComponent(f.slug)}/">`+
         `<div class="hd"><span class="name">${esc(f.feature||f.slug)}</span><span class="badge ${f.status}">${f.status==='in-progress'?'IN PROGRESS':f.status.toUpperCase()}</span></div>`+
         `<div class="tg">${esc(f.tagline||'')}</div>`+
         (phs?`<div class="phs">${phs}</div>`:'')+
         `<div class="meta"><span>AC ${f.acs.done}/${f.acs.total}</span><span class="covbar"><i style="width:${pct}%"></i></span><span>${f.tasks.done}/${f.tasks.total} tasks</span></div>`+
-        deps+`</a>`;
+        deps+
+        `<div class="foot"><span class="br">${branchLine}</span><span>${esc(f.touched)}</span></div></a>`;
     }
     function renderDecisions(md){
-      if(!md || !md.trim()) return false;
+      if(!md || !md.trim()) return '';
       const html = md.split('\n').map(l=>{
         if(/^#{1,3}\s/.test(l)) return `<h3>${esc(l.replace(/^#{1,3}\s/,''))}</h3>`;
         if(/^\s*[-*]\s/.test(l)) return `<li>${esc(l.replace(/^\s*[-*]\s/,''))}</li>`;
         return l.trim()?`<div>${esc(l)}</div>`:'';
       }).join('');
-      document.getElementById('dec').innerHTML = html;
-      return true;
+      return `<details class="dec-toggle"><summary>Cross-cutting decisions</summary><div class="dec">${html}</div></details>`;
+    }
+    function repoGroup(r, known){
+      const chips = (r.trees||[]).map(t=>`<a class="tree ${t.main?'main':'wt'}" href="/t/${encodeURIComponent(t.name)}/">${esc(t.branch)}</a>`).join('');
+      const scope = (r.trees||[]).length ? 'repo' : 'tree';
+      const cards = (r.features||[]).length
+        ? `<div class="grid">${r.features.map(f=>card(f,known)).join('')}</div>`
+        : `<div class="empty">No boards under docs/craft in this ${scope}.</div>`;
+      return `<div class="repo"><div class="rh"><b>${esc(r.name)}</b><span class="path">${esc(r.path)}</span>`+
+        (chips?`<div class="trees">${chips}</div>`:'')+`</div>`+cards+renderDecisions(r.decisions)+`</div>`;
     }
     function render(d){
-      const known = {}; d.features.forEach(f=>known[f.slug]=f);
-      const feats = d.features.slice().sort((a,b)=>(ORDER[a.status]??9)-(ORDER[b.status]??9));
-      document.getElementById('features').innerHTML = feats.length
-        ? feats.map(f=>card(f,known)).join('')
-        : '<div class="empty">No features with a data.json yet. Run <code>/spec &lt;feature&gt;</code>.</div>';
+      const repos = d.repos||[];
+      const known = {}; repos.forEach(r=>(r.features||[]).forEach(f=>known[f.slug]=f));
+      document.getElementById('repos').innerHTML = repos.length
+        ? repos.map(r=>repoGroup(r,known)).join('')
+        : '<div class="empty">No repos registered yet. Run <code>/board</code> in a repo.</div>';
 
-      document.getElementById('tag').textContent = `${feats.length} active`;
-      document.getElementById('dec-sec').style.display = renderDecisions(d.decisions) ? 'block' : 'none';
+      const prog = repos.reduce((n,r)=>n+(r.features||[]).filter(f=>f.status==='in-progress').length,0);
+      const wts = repos.reduce((n,r)=>n+(r.trees||[]).filter(t=>!t.main).length,0);
+      document.getElementById('tag').textContent = `${repos.length} repos · ${prog} in progress · ${wts} worktrees`;
     }
-    fetch('/dashboard.json').then(r=>r.json()).then(d=>{
+    fetch('dashboard.json').then(r=>r.json()).then(d=>{
       render(d);
       try{ const es=new EventSource('/events'); es.onmessage=()=>location.reload(); }catch(e){}
     }).catch(e=>{ document.body.innerHTML='<div class="err">Could not load dashboard.json: '+e+'</div>'; });
