@@ -13,7 +13,7 @@ The repo the session is in. Nothing else.
 
 ## 1. Read what a new tree would lack
 
-Look, never guess: `package.json` and its lockfile when there is one (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`), `composer.json`, a `.env` next to a `.env.example`, `database/*.sqlite`, and every tool `${CLAUDE_PLUGIN_ROOT}/references/tools.md` says how to detect. Existing hook files under `.claude/hooks/` and a `hooks.WorktreeCreate` entry in `.claude/settings.json`, `.claude/settings.local.json` or `~/.claude/settings.json`; one found outside the project file is reported and nothing is proposed, two hooks would both run.
+Look, never guess: `package.json` and its lockfile when there is one (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`), `composer.json`, a `.env` next to a `.env.example`, `database/*.sqlite`, and every tool `${CLAUDE_PLUGIN_ROOT}/references/tools.md` says how to detect. Existing hook files under `.claude/hooks/` and a `hooks.WorktreeCreate` entry in `.claude/settings.json`, `.claude/settings.local.json` or !`echo "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"`; one found outside the project file is reported and nothing is proposed, two hooks would both run.
 
 ## 2. Nothing found
 
