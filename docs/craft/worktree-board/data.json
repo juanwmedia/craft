@@ -833,6 +833,11 @@
       "title": "delegate keeps a private memory file, which the human's CLAUDE.md forbids",
       "text": "agents/delegate.md carries `memory: local` in its frontmatter and its step 7 appends to it. The human's global CLAUDE.md forbids creating or updating memory files without explicit consent, and the board plus conventions.md are already the durable record, audited and committed. A private file nobody reviews is a second record that can drift from the first. Not touched here: it belongs to the same tweak as the missing evaluate gate.",
       "relatesTo": "-"
+    },
+    {
+      "title": "The remove hook unlinked a Herd site it never created",
+      "text": "Field test L, on the shipped script: closing a feature whose slug matched the repo directory name printed 'The [clean] symbolic link has been removed'. The project had a WorktreeRemove hook and no WorktreeCreate hook, so nothing in that flow ever linked anything; the script derived the name with basename and unlinked whatever carried it. Verified against the old logic in a sandbox: it fires on a link pointing anywhere. It now unlinks only when the link resolves to the very tree being removed, with a test that keeps a foreign link of the same name alive. Juan's own sites were never at risk, they are parked directories, not links, but the next person's would have been.",
+      "relatesTo": "AC-9"
     }
   ]
 }
