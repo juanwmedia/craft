@@ -6,7 +6,7 @@ Each section says how to tell the tool is in use, the lines for the create hook 
 
 ## Herd
 
-Serves a directory as `<name>.test`. A tree under `.claude/worktrees/` is not a direct child of a parked directory, so it has no domain until it is linked. In use when `command -v herd` finds it and `herd links` lists this repo.
+Serves a directory as `<name>.test`. A tree under `.claude/worktrees/` is not a direct child of a parked directory, so it has no domain until it is linked. In use when `command -v herd` finds it and `herd links` or `herd parked` lists this repo (a parked project never shows in `herd links`).
 
 Create:
 
