@@ -29,7 +29,7 @@ The board is the record: everything you decide or learn goes to `data.json` as y
 
 ## Output
 
-One report. Every file changed, enumerated. `X/N` ACs evidenced, each with `file:line` or command output, `UNVERIFIED` otherwise: never fabricate a green. The `delegate:` decisions, assumptions first. Scope drift, residuals, the tier with its trigger and the `review` count. The proposed commit, written out and not run. Final line, alone: `DELEGATE COMPLETE (ground-truth verified)`, `DELEGATE COMPLETE (gates only)`, `DELEGATE BLOCKED: <reason>` or `DELEGATE HALTED (budget): <done, remaining, why>`.
+One report. Every file changed, enumerated. `X/N` ACs evidenced, each with `file:line` or command output, `UNVERIFIED` otherwise: never fabricate a green. The `delegate:` decisions, assumptions first. Scope drift, residuals, the phase's tasks against its ACs when they double it, the tier with its trigger and the `review` count. The proposed commit, written out and not run. Final line, alone: `DELEGATE COMPLETE (ground-truth verified)`, `DELEGATE COMPLETE (gates only)`, `DELEGATE BLOCKED: <reason>` or `DELEGATE HALTED (budget): <done, remaining, why>`.
 
 ## Guardrails
 

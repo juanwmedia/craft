@@ -45,7 +45,7 @@ The phases come from `/spec`; take the first not done. No `phases[]`: the whole 
 **`above the loop`.** Hand the phase to the `craft:delegate` agent (`Agent`): the board is its brief, plus one line from the human on what it must not touch, the boundary it cannot infer. It runs the phase boundary itself and reports once with a proposed commit. Sonnet by default, Opus when the human says so. The human reads the report; nothing else reaches them.
 
 **Phase boundary** in `in the loop`, always, in this order:
-1. Coverage again: every AC in the phase covered by a `done` task.
+1. Coverage again: every AC in the phase covered by a `done` task, and the cost: the phase's tasks against its ACs. Double its ACs or more is a `friction` and ⏸: the phase carried more than `/spec` cut for it, and whether what remains becomes its own feature is the human's call.
 2. `/craft:evaluate` on the phase's coverage claims, with `Skill`.
 3. `craft:review` (`Agent`) with the working tree diff (everything since the feature started, commits are `/close`'s) and the ACs of every phase done so far, this one included: a phase that breaks an earlier one is caught here, not in `/close`.
 4. ⏸ Present the phase with what came back: each finding with its citation and the fix you propose. The human decides what gets fixed. Then "it's on screen, go run the outcome", and wait.

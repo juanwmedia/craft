@@ -37,7 +37,7 @@ Discussion proportional to complexity. Challenge assumptions (edge cases, implic
 
 ## 4. Agree the spine
 
-`northStar`: the usable outcome of the whole feature, what "done" feels like. Then, only if the feature has more than one usable slice, `phases[]` with buy-in before any AC: the spine bounds the AC work and keeps it from sprawling. Two cuts are usually possible, and that is a fork: `AskUserQuestion`. Each phase ships **one usable, testable thing on screen** (its `outcome`); phase 1 proves the core assumption. At most about 4, else split into features (`references/discipline.md`).
+`northStar`: the usable outcome of the whole feature, what "done" feels like. Then, only if the feature has more than one usable slice, `phases[]` with buy-in before any AC: the spine bounds the AC work and keeps it from sprawling. Two cuts are usually possible, and that is a fork: `AskUserQuestion`. Each phase ships **one usable, testable thing on screen** (its `outcome`); phase 1 proves the core assumption (`references/discipline.md`).
 
 ## 5. Derive the ACs, one at a time
 

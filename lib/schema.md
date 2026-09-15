@@ -36,7 +36,7 @@ Conventions:
 ## `phases[]`  (delivery increments)
 `{ "id": "2a", "label": "Phase 2a, clickable slice", "state": "done|active|todo",
    "outcome": "Open /en/spot-the-slop, type a diagnosis, SlopMentat replies." }`
-- A phase = a vertical increment that ships **one usable, testable thing on screen** (its `outcome`), not a skeleton. Max ~4 per feature; more = split into features.
+- A phase = a vertical increment that ships **one usable, testable thing on screen** (its `outcome`), not a skeleton.
 - The board groups tasks (via each task's `phase` field) under their phase header, and the **phase-boundary gate** (`⏸ your turn, go test it`) falls at the end of each phase.
 - Tasks with no matching `phase` render ungrouped at the end.
 
