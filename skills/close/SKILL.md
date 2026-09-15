@@ -3,7 +3,7 @@ name: close
 description: Reconcile the living board against what was actually built. Trues up data.json, settles the open assumptions, graduates the few durable findings to docs/craft, puts the diff to a fresh-context reviewer, and proposes commits. The final step after /build. Use when the user says "done", "let's commit", "wrap up", or wants to close a feature.
 disable-model-invocation: true
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill, Agent
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill, Agent, AskUserQuestion, ExitWorktree
 ---
 
 Craft: Shape to Spec to Build to **Close**.
@@ -21,7 +21,7 @@ Arg given: that slug. None: the `in-progress` feature; several, ask. None at all
 `/craft:board <slug>` with `Skill`, so the reconciliation is visible. Read `docs/craft/CONTEXT.md` and follow its pointers; none yet (`/shape` never ran): create it from `${CLAUDE_PLUGIN_ROOT}/references/context-template.md` before anything graduates. Then `git diff` and `git status`, and walk `data.json` against them:
 
 - Each **task**: `status` matches reality, `done` only if truly done. Note any deviation from the planned approach.
-- Each **AC**: `done` where the code satisfies it; a partial or unbuilt one is the human's decision; behaviour built beyond the WHAT gets an AC.
+- Each **AC**: `done` where the code satisfies it; a partial or unbuilt one is the human's decision; behaviour built beyond the WHAT gets an AC. A `done` one gets `evidence`: what was run to satisfy it, and which of its clauses nothing ran against. An AC whose evidence would be empty was reasoned about, not exercised, and the human decides whether that is enough.
 - **Coverage** still holds: every AC covered by at least one task.
 - **The visuals**: `howItWorks` still draws the mechanism that got built, `howItLooks` still shows the screen that shipped. Drift is a finding: redraw, or say on the board that it is stale and why.
 
@@ -44,7 +44,17 @@ Before writing a line to any of the three, `/craft:evaluate` on the graduation l
 
 `craft:review` (`Agent`) with the frozen ACs and the full diff: it grades the result, not the reasoning that produced it. Every `refuted` reaches the human before anything else. Then propose **atomic commits with WHY-focused messages** and wait for approval.
 
+## 5. Close the tree
+
+The board has a `tree`, and that worktree still exists: look for `branch refs/heads/<tree.branch>` in `git worktree list --porcelain`, never for a path you built yourself, because git prints paths with every symlink resolved and a repo under one would read as closed while its tree is full of work. The field alone proves nothing: it stays on the board after the close, so a feature closed once must not be offered a second one. One closed fork (`AskUserQuestion`), and nothing runs before the answer.
+
+- **Close it in one step**: Close in `${CLAUDE_PLUGIN_ROOT}/references/worktree.md`, whose step 0 refuses on a worktree that still holds uncommitted work, approved commits or not, because the removal can be a project hook that forces it. Say what is uncommitted and stop there; the other option is still open. It merges `tree.branch` into `tree.from`, removes the worktree and its branch, and returns the session to the tree the feature started from, unless this session was launched inside the worktree, in which case it says so: the tree still goes, and the next session opens in the main tree. A merge that refuses or conflicts stops right there and removes nothing: the files are reported, the tree stays, and the board still shows it.
+- **Leave it for a PR**: nothing is merged and nothing is removed, so this one is offered whatever state the tree is in. The worktree stays where it is, on the board, until the human removes it. Say that the branch is `tree.branch` and where it is checked out.
+
+No `tree` on the board (the feature was built where it stands, or a tree was never opened), or a `tree` whose worktree is already gone (closed before): there is nothing to close, say which of the two and stop.
+
 ## Guardrails
 
 - Never commit without explicit approval. No AI attribution in commit messages. No destructive git.
+- The merge and the removal wait for the yes the fork asked for. A worktree is never removed to tidy up, and never while its merge failed.
 - Never leave a durable lesson buried in a feature doc, and never save one the code already tells.
