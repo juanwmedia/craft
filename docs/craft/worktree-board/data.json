@@ -6,19 +6,19 @@
     {
       "id": "P1",
       "label": "Phase 1, one board for every tree",
-      "state": "active",
+      "state": "done",
       "outcome": "Open localhost:7331 and see every registered repo, its trees as chips, and each feature once, on the tree that owns it, with branch and worktree at the foot; a second repo or a new worktree shows up without a restart."
     },
     {
       "id": "P2",
       "label": "Phase 2, a feature opens its own tree",
-      "state": "todo",
+      "state": "done",
       "outcome": "Run /shape <slug> in a repo and the session is inside the feature's own worktree, prepared by the project's hook when it has one; /tweak on a busy tree asks; /build in the wrong tree offers the right one."
     },
     {
       "id": "P3",
       "label": "Phase 3, the tree goes away",
-      "state": "todo",
+      "state": "done",
       "outcome": "Approve /close's one-step close and the feature is merged, the worktree and branch gone, the session back where it started."
     }
   ],
@@ -47,6 +47,101 @@
       "id": "D5",
       "title": "The owner rule gets a test that builds a throwaway repo",
       "why": "It is the one piece of logic that hurts silently if wrong (a stale board shown as live). node --test, no dependencies, the probe from /shape automated: branch edits b, main edits a afterwards, only b is owned; after merge nothing is."
+    },
+    {
+      "id": "D6",
+      "title": "delegate: --add always prints both the dashboard URL and the tree URL, and /register replies with the tree URL",
+      "why": "D3 says the URL /board prints is what skills append f/<slug>/ to; skills outside the boundary keep doing that. The name assigned to a tree only exists after the dedup pass, which is server-side, so /register (the HTTP path used when a server is already up) resolves and returns it instead of the bare main path the prototype returned."
+    },
+    {
+      "id": "D7",
+      "title": "delegate: meta.json and diff stay nested under /t/<name>/f/<slug>/, not hoisted a level",
+      "why": "The brief is explicit that the page reads ./meta.json and diff?file= relatively from the feature page itself. The prototype nests both the same way; the slug is unused by either handler; only the /t/<name>/ prefix carries the tree."
+    },
+    {
+      "id": "D8",
+      "title": "delegate: SKILL.md runs --add on every /board call, not only when the server is down",
+      "why": "Presenting the current tree is what registers it (AC-1). --add is idempotent either way: against a running server it registers over HTTP and exits; against none it becomes the server. Confirmed no other skill invokes board-serve.js directly, so removing --root/--repo is safe."
+    },
+    {
+      "id": "D9",
+      "title": "delegate: fs.watch errors are caught per tree and stale watchers are pruned every scan",
+      "why": "A worktree removed on disk (git worktree remove, or Craft P3 later) leaves a watcher on a deleted directory; an unhandled watcher error is an uncaught exception that would kill the server. Verified live: removing a watched worktree and hitting /dashboard.json afterwards no longer crashes it."
+    },
+    {
+      "id": "D10",
+      "title": "delegate: every tree path is realpath-resolved before comparison",
+      "why": "On macOS os.tmpdir() and other paths often live under symlinks (/var vs /private/var) that git's own worktree list output resolves through realpath. Comparing raw argv paths against git output would silently fail to match; fs.realpathSync is applied wherever a tree path is registered or looked up."
+    },
+    {
+      "id": "D11",
+      "title": "delegate: decisions.md aggregation is kept but scoped per repo, not global",
+      "why": "The pre-existing dashboard rendered one global cross-cutting-decisions block from a single docs/craft/decisions.md. Grouping by repo makes a single global block ambiguous (whose decisions.md?); each repo group now reads and renders its own main tree's decisions.md, preserving the feature without inventing new scope."
+    },
+    {
+      "id": "D12",
+      "title": "delegate: the raw /t/<name>/ view headers with the tree's own name and path, not the repo's",
+      "why": "AC-6 calls it the tree's own dashboard, no owner rule, the escape hatch. Labeling it with the repo's main-tree path would be misleading when the tree being viewed is a linked worktree elsewhere on disk."
+    },
+    {
+      "id": "D13",
+      "title": "delegate: the feature-page route resolves slug and asset paths against the docs/craft boundary, not against the slug-tainted path",
+      "why": "review found: decodeURIComponent(slug) joined straight into a path let a crafted slug segment (e.g. ..%2F..) escape docs/craft/<slug>/ entirely, serving arbitrary files (.git/HEAD, /etc/hosts) because the containment check compared against the already-escaped root. Fixed by resolving both the feature root and the asset path against the fixed docs/craft directory and checking containment against that fixed boundary."
+    },
+    {
+      "id": "D14",
+      "title": "delegate: the whole request handler is wrapped in try/catch",
+      "why": "review found: a malformed percent-encoding in any route segment (decodeURIComponent throwing URIError) was an uncaught exception in the request listener, killing the server on one bad URL. A tree chip on the dashboard links straight to /t/<name>/, so this was reachable by a normal click, not just an attack. The whole handler now catches and answers 400."
+    },
+    {
+      "id": "D15",
+      "title": "delegate: --add resolves to the tree root via git rev-parse --show-toplevel before registering or printing a Tree URL",
+      "why": "review found: --add from a subdirectory of a tree registered the repo correctly but printed no Tree line, because the tree-lookup compared the argument path against tree roots. Sessions run at the tree root today so no AC broke, but it silently degraded D6's contract. Also fixed: --add against a running server now reports failure (nonzero exit, stderr) instead of silently printing the bare dashboard URL when registration failed."
+    },
+    {
+      "id": "D16",
+      "title": "One reference, references/worktree.md, holds the open, enter and close procedures; every skill points at it",
+      "why": "Five skills need the same three moves. One file, read by all, is the discipline.md rule; no skill carries its own copy."
+    },
+    {
+      "id": "D17",
+      "title": "Open: with a project hook, EnterWorktree <slug>; without, git worktree add from HEAD then EnterWorktree path",
+      "why": "The tool alone cuts from origin/<default>. A hook (from /craft:worktree) runs git worktree add HEAD itself; with no hook the two-step keeps the outcome of AC-8 without writing any settings. Both land at .claude/worktrees/<slug> on worktree-<slug>."
+    },
+    {
+      "id": "D18",
+      "title": "The board records its tree: top-level tree { branch, from }, written right after entering; schema.md gains the field",
+      "why": "Git does not record where a worktree branch was cut from (evaluate finding); /close merges into tree.from without asking."
+    },
+    {
+      "id": "D19",
+      "title": "/craft:worktree ships one universal hook script (lib/worktree-create.sh) and copies it in, trimmed to what it detects",
+      "why": "A generator that writes bespoke bash per project is the patchwork risk; one readable script with guarded lines (npm ci if package.json, composer if composer.json, .env and sqlite copied if present, herd link if herd exists) covers the same ground and the human edits a file, not a template. Nothing detected: say so, write nothing (AC-9)."
+    },
+    {
+      "id": "D20",
+      "title": "Tweak's busy check is git status --porcelain -uall minus docs/craft/ and .claude/worktrees/ lines; its worktree is tweak-<kebab of the argument>; its end runs the close procedure from the reference",
+      "why": "Uncommitted work outside docs/craft/ is the only signal the tree belongs to someone else. The close procedure is P3's too, written once here and exercised by tweak first."
+    },
+    {
+      "id": "D21",
+      "title": "Build's check: <repo>/.claude/worktrees/<slug> exists and cwd is not under it, then one closed fork: enter or stay",
+      "why": "The board lives inside the tree, so from the main tree it cannot be read: the directory is the only signal. No such tree: the feature is pre-3.1 or was closed, and it builds where it is."
+    },
+    {
+      "id": "D22",
+      "title": "The universal hook scripts parse their stdin with node, not jq",
+      "why": "Craft already requires node for the board server; jq is not on every machine. Everything but the path goes to stderr, because Claude Code reads stdout as the path."
+    },
+    {
+      "id": "D23",
+      "title": "Close leaves the tree first; with a project hook the hook removes the tree, without one git does",
+      "why": "The merge must run from the main tree, so the session exits with keep. ExitWorktree remove cannot run from outside and never removes a path-entered tree; the WorktreeRemove hook already runs git worktree remove, so Close runs it by hand and does not remove twice."
+    },
+    {
+      "id": "D24",
+      "title": "The hook scripts read exactly what Claude Code sends: name on create, worktree_path on remove",
+      "why": "Sixth review: the scripts and their tests had agreed on an invented {name, path} payload, six green tests never touched the real contract. The tests now send the real payload and derive the tree path from the script's stdout."
     }
   ],
   "tasks": [
@@ -58,7 +153,7 @@
         "AC-1"
       ],
       "weight": "substantial",
-      "status": "todo",
+      "status": "done",
       "files": "lib/board-serve.js",
       "diffFile": "lib/board-serve.js"
     },
@@ -72,7 +167,7 @@
         "AC-7"
       ],
       "weight": "substantial",
-      "status": "todo",
+      "status": "done",
       "files": "lib/board-serve.js, lib/doc-template.html",
       "diffFile": "lib/board-serve.js"
     },
@@ -86,7 +181,7 @@
       ],
       "weight": "substantial",
       "gate": true,
-      "status": "todo",
+      "status": "done",
       "files": "lib/board-serve.js",
       "diffFile": "lib/board-serve.js"
     },
@@ -98,7 +193,7 @@
         "AC-5"
       ],
       "weight": "substantial",
-      "status": "todo",
+      "status": "done",
       "files": "lib/dashboard-template.html",
       "diffFile": "lib/dashboard-template.html"
     },
@@ -110,7 +205,7 @@
         "AC-5"
       ],
       "weight": "trivial",
-      "status": "todo",
+      "status": "done",
       "files": "lib/doc-template.html, lib/board-serve.js",
       "diffFile": "lib/doc-template.html"
     },
@@ -123,7 +218,7 @@
         "AC-7"
       ],
       "weight": "trivial",
-      "status": "todo",
+      "status": "done",
       "files": "skills/board/SKILL.md",
       "diffFile": "skills/board/SKILL.md"
     },
@@ -136,83 +231,202 @@
         "AC-4"
       ],
       "weight": "substantial",
-      "status": "todo",
+      "status": "done",
       "files": "lib/board-serve.test.js",
       "diffFile": "lib/board-serve.test.js"
+    },
+    {
+      "id": "T8",
+      "title": "references/worktree.md: open, enter and close procedures",
+      "phase": "P2",
+      "covers": [
+        "AC-8",
+        "AC-10",
+        "AC-11"
+      ],
+      "weight": "substantial",
+      "status": "done",
+      "files": "references/worktree.md",
+      "diffFile": "references/worktree.md"
+    },
+    {
+      "id": "T9",
+      "title": "shape and spec open the tree first and record it on the board; allowed-tools gain the worktree tools",
+      "phase": "P2",
+      "covers": [
+        "AC-8"
+      ],
+      "weight": "substantial",
+      "status": "done",
+      "files": "skills/shape/SKILL.md, skills/spec/SKILL.md",
+      "diffFile": "skills/shape/SKILL.md"
+    },
+    {
+      "id": "T10",
+      "title": "schema.md: the tree field",
+      "phase": "P2",
+      "covers": [
+        "AC-8"
+      ],
+      "weight": "trivial",
+      "status": "done",
+      "files": "lib/schema.md",
+      "diffFile": "lib/schema.md"
+    },
+    {
+      "id": "T11",
+      "title": "/craft:worktree skill and the universal hook script, with a test that runs the script on a throwaway repo",
+      "phase": "P2",
+      "covers": [
+        "AC-9"
+      ],
+      "weight": "substantial",
+      "gate": true,
+      "status": "done",
+      "files": "skills/worktree/SKILL.md, lib/worktree-create.sh, lib/worktree-remove.sh, lib/worktree-hook.test.js",
+      "diffFile": "skills/worktree/SKILL.md"
+    },
+    {
+      "id": "T12",
+      "title": "tweak: busy check, optional worktree, close at the end",
+      "phase": "P2",
+      "covers": [
+        "AC-10"
+      ],
+      "weight": "substantial",
+      "status": "done",
+      "files": "skills/tweak/SKILL.md",
+      "diffFile": "skills/tweak/SKILL.md"
+    },
+    {
+      "id": "T13",
+      "title": "build: offer the feature's tree when outside it",
+      "phase": "P2",
+      "covers": [
+        "AC-11"
+      ],
+      "weight": "trivial",
+      "status": "done",
+      "files": "skills/build/SKILL.md",
+      "diffFile": "skills/build/SKILL.md"
+    },
+    {
+      "id": "T14",
+      "title": "README: the worktree skill row, the references line, one line on trees",
+      "phase": "P2",
+      "covers": [
+        "AC-9"
+      ],
+      "weight": "trivial",
+      "status": "done",
+      "files": "README.md",
+      "diffFile": "README.md"
+    },
+    {
+      "id": "T15",
+      "title": "Field test in scratch repos: the skill, the hook, shape, the close commands",
+      "phase": "P2",
+      "covers": [
+        "AC-8",
+        "AC-9"
+      ],
+      "weight": "substantial",
+      "status": "done",
+      "gate": true,
+      "files": "references/worktree.md, skills/worktree/SKILL.md",
+      "notes": "Two scratch repos driven by real claude sessions with the repo plugin loaded. /craft:worktree wrote and trimmed the hook; EnterWorktree ran it and prepared the tree; /craft:shape opened the tree before writing and put the board inside it; the whole Close command sequence ran inside a worktree with nothing refused. Three findings, all fixed in text."
+    },
+    {
+      "id": "T16",
+      "title": "/close closes the tree in one step",
+      "phase": "P3",
+      "covers": [
+        "AC-12"
+      ],
+      "weight": "substantial",
+      "status": "done",
+      "files": "skills/close/SKILL.md, references/worktree.md, lib/schema.md",
+      "diffFile": "skills/close/SKILL.md",
+      "notes": "A fifth step after the approved commits: the tree must still exist and be clean, then one closed fork, the one-step close pointing at Close in references/worktree.md, or leave the tree for a PR. ExitWorktree and AskUserQuestion added to allowed-tools, and a guardrail that never removes a tree whose merge failed. The Close procedure itself grew step 0 (the clean check), the resumed-session case and the report of where the session ends up, so AC-12's mechanics live in references/worktree.md and this task covers both files. Four review rounds and one evaluate on about fifteen lines of procedure: twelve real bugs, two of them grave (a force-remove of uncommitted work, and a session left in a directory the close had just deleted)."
     }
   ],
   "what": [
     {
       "id": "AC-1",
       "text": "Running /board in any tree of a repo registers that repo: the dashboard shows it from then on, and still shows it after the server is restarted. A registered path that no longer exists disappears on the next scan.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-2",
       "text": "Every worktree of a registered repo appears as a chip in the repo's group with its branch, main tree first, and a worktree added or removed on disk shows or vanishes on the next scan, no restart.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-3",
       "text": "A feature appears on one tree per repo: the linked tree whose branch changed its board since the merge-base or holds it untracked, otherwise the main tree. An unchanged copy in a linked tree never appears. Editing the same feature on main after the branch was cut does not move it to the branch. Two linked trees that both changed it is AC-4.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-4",
       "text": "When two linked trees both changed the same feature's board, both cards appear, each with its own branch and worktree at the foot.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-5",
       "text": "The dashboard groups features by repo, each group headed by the repo's name and path and its tree chips. Every card shows at its foot the branch, the worktree's path when the tree is linked, and when the board was last changed. The feature page repeats branch and worktree in its header.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-6",
       "text": "Opening a card opens that feature's board from the tree that owns it, and \"view diff\" on a task shows the diff of that tree, not the main tree's. A tree chip opens that tree's own dashboard, every board in it, no owner rule.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-7",
       "text": "A change to any board in any registered tree reloads the open page within a second, dashboard and feature page alike. /board stop still stops the one server.",
-      "done": false,
+      "done": true,
       "phase": "P1"
     },
     {
       "id": "AC-8",
       "text": "/shape <slug> in a repo with no worktree for that slug moves the session into .claude/worktrees/<slug> on branch worktree-<slug>, cut from the branch the session was on, before anything is written, and the board records which branch that was. If that worktree already exists, the session enters it instead of creating another. /spec <slug> does the same when it is the first phase to run.",
-      "done": false,
-      "phase": "P2"
+      "done": true,
+      "phase": "P2",
+      "evidence": "Field test C: /craft:shape gamma in a scratch repo opened .claude/worktrees/gamma on worktree-gamma from main and wrote docs/craft/gamma/data.json and CONTEXT.md inside it; the main tree showed only the untracked tree directory. The board's tree field read {branch: worktree-gamma, from: main}. The skill that ran was verified to be this repo's, not the cached 3.0.0. Not exercised: entering a worktree that already exists instead of creating a second one, and the same route through /spec (test C came in through /craft:shape)."
     },
     {
       "id": "AC-9",
       "text": "/craft:worktree reads the current repo and either says there is nothing to prepare (a static project: the bare worktree serves) or shows the WorktreeCreate and WorktreeRemove hook it proposes for this project, script and settings entry written out; on the human's yes it writes both, on no it writes nothing. Run again later it proposes the diff. /shape calls it before opening a worktree in a repo that has no hook.",
-      "done": false,
-      "phase": "P2"
+      "done": true,
+      "phase": "P2",
+      "evidence": "Field test A: /craft:worktree in a node repo with env and sqlite wrote the two scripts and the settings entry, trimmed to what it found (composer, pnpm, yarn, bare npm install and herd all dropped), and chmod +x. Field test B: EnterWorktree ran that hook and the tree came up with .env and the sqlite copied and npm ci run (confirmed in npm's own log). One bug found and fixed: it wrote absolute paths instead of ${CLAUDE_PROJECT_DIR}. Not exercised: the \"nothing to prepare\" branch on a static project, a no answer writing nothing, and the diff proposed on a second run."
     },
     {
       "id": "AC-10",
       "text": "/tweak on a tree with uncommitted changes outside docs/craft/ stops before the precedent lookup and asks: open a worktree for this tweak, or continue here. A clean tree is used as is, no question. A tweak that opened a worktree ends by merging, removing it and returning the session, right after the approved commit.",
-      "done": false,
-      "phase": "P2"
+      "done": true,
+      "phase": "P2",
+      "evidence": "Field test G: /craft:tweak on a tree with an uncommitted src/index.js stopped before the precedent lookup, offered the two options and wrote nothing (the file was byte-identical afterwards). It also derived, unprompted, that a tree cut from HEAD would miss the uncommitted change and the close would be refused. Not exercised: a clean tree used as is with no question, and the merge, removal and return that close a tweak that did open a tree."
     },
     {
       "id": "AC-11",
-      "text": "/build <slug> run outside that feature's worktree, when one exists, offers to enter it before touching code and never writes code in the wrong tree. A feature whose board predates this version and has no worktree builds where it is, no question.",
-      "done": false,
-      "phase": "P2"
+      "text": "/build <slug> run outside that feature's worktree, when one exists, offers to enter it before touching code and never writes code in the wrong tree unasked. A feature whose board predates this version and has no worktree builds where it is, no question.",
+      "done": true,
+      "phase": "P2",
+      "evidence": "Field test H: /craft:build gamma from the main tree, with the gamma worktree existing, offered the closed fork before reading the board and wrote nothing; git status was byte-identical before and after. Not exercised: a board that predates this version, with no tree, building where it stands without a question."
     },
     {
       "id": "AC-12",
       "text": "After the approved commits, /close in a feature's worktree offers one closed fork: merge into the branch the worktree was cut from and remove the worktree and its branch, returning the session there; or leave the tree for a PR. Merge is never run without that yes. A merge that conflicts stops with the conflicting files listed and removes nothing.",
-      "done": false,
-      "phase": "P3"
+      "done": true,
+      "phase": "P3",
+      "evidence": "Three field tests. K and L were run against the text as it ships. L, the clean path: a worktree whose merge goes through, with the project's WorktreeRemove hook installed through ${CLAUDE_PROJECT_DIR}. The close merged worktree-clean into main (fast-forward to 0877d89), the worktree directory is gone, the branch is gone, and only the main tree is left. K, the conflict path: a worktree and its main tree that both moved the same line of app.js. The close named the conflicting file, ran git merge --abort and removed nothing; main stayed put with no MERGE_HEAD, and both the tree and the branch worktree-conf survived. I, the first run, did the same as L but against the text before four review rounds rewrote it. Still not exercised: the fork's refusal path (a no answer), and the merge refused before starting by overlapping uncommitted work in the tree you return to."
     }
   ],
   "exploration": {
@@ -247,18 +461,22 @@
         "tested": true
       },
       {
-        "text": "WorktreeCreate hook replaces git's default creation and a non-zero exit aborts it; WorktreeRemove runs at removal",
+        "text": "WorktreeCreate hook replaces git's default creation and a non-zero exit aborts it. Field-tested: the hook created and prepared the tree (tests A, B, C, F), and a hook made to fail left the tool reporting an error carrying its stderr (test J).",
+        "tested": true
+      },
+      {
+        "text": "WorktreeRemove fires when the platform removes a worktree. Not tested, and this design never finds out: /close runs the script itself with the payload Claude Code would send (D23), which is what field test L exercised, and the hook test invokes it directly. Nothing here waits on the event.",
         "tested": false
       }
     ],
     "constraints": [
       "One server per port; the port lives in lib/board-serve.js only.",
       "The server dies with the session that started it; the registry survives it.",
-      "No skill mentions worktrees; /board is the only entry point."
+      "Skills reach worktrees through one reference, references/worktree.md; /board is the only entry to the server."
     ],
     "decisions": [
       {
-        "text": "Claude Code's own worktree tool opens and closes trees; Craft never runs git worktree add itself."
+        "text": "Claude Code's worktree tool opens trees when a project hook exists; without one, git worktree add from HEAD and the tool enters by path (D17)."
       },
       {
         "text": "Ownership by merge-base in git, not by file comparison and not by branch naming."
@@ -267,7 +485,7 @@
         "text": "The registry is a file next to the PID, explicit, pruned; no disk scan for repos."
       },
       {
-        "text": "Generic dependency setup shipped by Craft; a project WorktreeCreate hook takes precedence."
+        "text": "No dependency setup of Craft's own: without a project hook a new tree is bare, and /craft:worktree is what turns the shipped scripts into that project's hook."
       }
     ],
     "resolved": [
@@ -278,7 +496,7 @@
       },
       {
         "q": "How does a repo get on the board?",
-        "a": "Every /board presents the current tree; no server starts one with it, a running server adds it. The registry is a file next to the PID; paths that no longer exist are pruned at each scan. /board forget removes one.",
+        "a": "Every /board presents the current tree; no server starts one with it, a running server adds it. The registry is a file next to the PID; paths that no longer exist are pruned at each scan. Shipped without a forget command: pruning covers the case that actually happens, a tree that was deleted.",
         "why": "Explicit beats scanning the disk: only what you opened is there, and it stays after the session ends."
       },
       {
@@ -313,7 +531,7 @@
       },
       {
         "q": "When does a feature's worktree open?",
-        "a": "Always, at the first phase that runs (/shape, or /spec when entered there): the session moves to .claude/worktrees/<slug> on branch <slug> through Claude Code's own worktree tool. Everything after happens inside.",
+        "a": "Always, at the first phase that runs (/shape, or /spec when entered there): the session moves to .claude/worktrees/<slug> on branch worktree-<slug> through Claude Code's own worktree tool. Everything after happens inside.",
         "why": "Systematic beats discretionary: the board and the cleanup can rely on one feature per tree."
       },
       {
@@ -333,13 +551,13 @@
       },
       {
         "q": "Automatic collection",
-        "a": "None. /close removes the worktree when it merges. A branch merged outside (a PR) leaves its worktree, visible on the board; git worktree remove by hand, or a collector later if it hurts.",
+        "a": "None, and none was built. /close removes the worktree when it merges. A branch merged outside (a PR) leaves its worktree, visible on the board; git worktree remove by hand, or a collector later if it hurts.",
         "why": "The collector was the only piece with heuristics (squash by content, trees Craft did not open, deletes from a page load). Every local merge goes through /close, so the guarantee holds without it."
       },
       {
-        "q": "A session inside a collected worktree",
-        "a": "Cannot happen: the tool locks the worktree while a session is inside (git worktree list shows 'locked claude session <name> (pid ...)'), and the collector never removes a locked tree.",
-        "why": "Tested on the probe worktree. The lock is git's own, so the rule costs one line."
+        "q": "A session inside a worktree someone tries to remove",
+        "a": "The tool locks the worktree while a session is inside (git worktree list shows 'locked claude session <name> (pid ...)'), so a plain git worktree remove refuses. Note that the shipped WorktreeRemove hook removes with --force, which is why /close checks the tree is clean before it runs anything.",
+        "why": "Tested on the probe worktree. The lock is git's own, so the rule costs one line. Rewritten at close: the original answer leaned on the collector, which was never built."
       },
       {
         "q": "Names",
@@ -353,8 +571,8 @@
       },
       {
         "q": "The worktree directory in git status",
-        "a": "`.claude/worktrees/` shows as untracked in the main tree. Craft's setup adds it to .git/info/exclude once; never to .gitignore or CLAUDE.md.",
-        "why": "Tested: '?? .claude/' appeared with a worktree present. Left alone, /close in the main tree would read it as an unexplained change. info/exclude is local and uncommitted, so Craft writes nothing of the team's."
+        "a": "`.claude/worktrees/` shows as untracked in the main tree. Craft does not hide it: no .gitignore, no .git/info/exclude, no CLAUDE.md. The Busy check drops those lines instead, so an untracked tree never reads as someone else's work.",
+        "why": "Tested: '?? .claude/' appeared with a worktree present, and with -uall it lists each tree. The plan was a .git/info/exclude line; what shipped drops the lines in the Busy check instead, so Craft writes nothing outside its own files, not even a local one."
       }
     ],
     "sources": [
@@ -397,7 +615,7 @@
       },
       {
         "term": "one-step close",
-        "is": "/close's last offer: merge into the main branch, remove the worktree and its branch, return the session to the main tree.",
+        "is": "/close's last offer: merge into the branch the tree was cut from, remove the worktree and its branch, return the session there.",
         "avoid": [
           "auto-merge",
           "finish"
@@ -424,10 +642,27 @@
     },
     {
       "id": "AS4",
-      "text": "A project WorktreeCreate hook replaces git's default creation: the hook runs git worktree add itself and prints the path (docs, hooks.md).",
+      "text": "A project WorktreeCreate hook replaces git's default creation: Claude Code sends it {name} on stdin (plus session_id, transcript_path, cwd), the hook creates the tree where it chooses and prints the absolute path; WorktreeRemove gets {worktree_path}. Read from the 2.1.269 binary's input schemas; the docs page summary that named a path field on create was wrong.",
       "ifWrong": "Craft's generic setup runs after the hook and may duplicate work; harmless but slow.",
       "blocking": false,
       "checkAt": "P2",
+      "status": "resolved"
+    },
+    {
+      "id": "AS5",
+      "text": "The literal command `node --test lib/` (T7's wording) discovers and runs lib/board-serve.test.js.",
+      "ifWrong": "Confirmed false on Node v24.20.0: a bare directory with no glob wildcard is parsed as a literal glob(7) pattern matching only itself, so node tries to import lib/ as a module and fails with MODULE_NOT_FOUND (reproduced even in an unrelated /tmp sandbox, and consistent with Node's own test-runner docs describing positional args as glob patterns). `node --test` with no arguments (default recursive discovery) and `node --test 'lib/**/*.test.js'` both correctly find and pass the test.",
+      "blocking": false,
+      "checkAt": "close",
+      "relatesTo": "T7",
+      "status": "invalidated"
+    },
+    {
+      "id": "AS6",
+      "text": "On the hook path the hook chooses the tree's location, not EnterWorktree: the shipped script resolves the main tree from git worktree list, so a tree opened from inside another tree lands under the main tree (tested).",
+      "ifWrong": "Shaping B from inside A's tree nests B under A when a hook exists; the no-hook path is absolute and safe.",
+      "blocking": false,
+      "checkAt": "close",
       "status": "resolved"
     }
   ],
@@ -452,13 +687,152 @@
   ],
   "howItWorks": {
     "file": "how-it-works.svg",
-    "caption": "A feature lives in its own worktree from /shape to /close. One server outside every repo learns each repo from /board, reads all its trees through git, shows a board where its branch owns it, and removes a worktree only once it is merged, clean and unlocked; /close does the same on the spot when it merges."
+    "caption": "A feature lives in its own worktree from /shape to /close. One server outside every repo learns each repo from /board, reads all its trees through git, and shows each feature on the board of the tree whose branch owns it, reloading every open page when any board changes. Nothing collects worktrees on its own: /close removes the tree it merges, and a tree left behind by a PR stays until someone removes it."
   },
   "frictions": [
     {
       "title": "Merging from inside the worktree",
-      "text": "The branch /close merges into is checked out in the main tree, so the merge cannot run from the worktree; the one-step close leaves the worktree first, then merges and removes from the main tree.",
+      "text": "The branch /close merges into is checked out in the main tree, so the merge cannot run from the worktree; the one-step close leaves the worktree first, then merges and removes from the main tree. A session launched inside the tree never entered it, so there is nothing to leave: it merges with git -C, removes the tree last, and says the directory it stands in is gone.",
       "relatesTo": "AC-12"
+    },
+    {
+      "title": "node --test lib/ does not run the test on this machine's Node",
+      "text": "Verified empirically (see AS5): the exact invocation named for T7 fails with MODULE_NOT_FOUND on Node v24.20.0. The test itself is correct and green; only that one spelling of the command is unreliable. Use bare `node --test` from the repo root, or `node --test 'lib/**/*.test.js'`.",
+      "relatesTo": "T7"
+    },
+    {
+      "title": "T7 said AC-4 too; the original test only exercised the AC-3 shape",
+      "text": "review found the first version of lib/board-serve.test.js covered only one linked worktree (the AC-3 scenario named in D5's own why). AC-4 (two linked trees changing the same slug) had been verified live by hand but had no regression test. Added a second test case: two worktrees both edit the same slug, both are asserted owned.",
+      "relatesTo": "T7"
+    },
+    {
+      "title": "The request-handler catch (D14) was silently swallowing non-URIError exceptions",
+      "text": "second review found: the broad try/catch answers 400 for any throw, not just the malformed-percent-encoding case D14 names, and logged nothing, so a real server bug (e.g. a directory where decisions.md is expected) became an unlogged 400 misattributed to the client. Fixed with a console.error(e) in the catch. Left the response as 400 rather than distinguishing error types: this is a dev server, not a case that justified more logic for a GREEN-tier fix.",
+      "relatesTo": "D14"
+    },
+    {
+      "title": "delegate skips the evaluate gate",
+      "text": "skills/build/SKILL.md runs /craft:evaluate at every phase boundary in the loop; agents/delegate.md gates with craft:review only, so an above-the-loop phase never gets the coverage audit. Seen in P1's report. One line in delegate, outside this feature's scope."
+    },
+    {
+      "title": "A docs summary invented a hook field",
+      "text": "The hooks page fetched through a summarising model reported a path field on WorktreeCreate input. The binary's schema has name only. Six tests passed against the invented contract. Verify a contract in the source or by running it, never through a summary.",
+      "relatesTo": "AC-9"
+    },
+    {
+      "title": "The skill wrote absolute hook paths, not ${CLAUDE_PROJECT_DIR}",
+      "text": "Field test in a scratch repo: /craft:worktree trimmed the scripts correctly but pointed settings.json at /Users/.../.claude/hooks/, which only works on the machine that wrote it and .claude/settings.json is committed. The instruction was there and was not followed, so it now says the command is exactly that string and why. A second repo with ${CLAUDE_PROJECT_DIR} proved Claude Code expands it, in the main tree and inside a worktree.",
+      "relatesTo": "AC-9"
+    },
+    {
+      "title": "What the hook prints never reaches the session",
+      "text": "Open said to repeat the hook's stderr as the preparation report. Field test: the EnterWorktree result carries only 'Created worktree at <path>'. The report is now what the post-check finds in the tree, which needed no change to the scripts.",
+      "relatesTo": "AC-8"
+    },
+    {
+      "title": "A hook reaches a worktree only once it is committed",
+      "text": "In the first test repo the three files were untracked, so a tree opened from inside another tree was created bare: the hook is not in that checkout. In the second repo, committed, a tree opened from inside a worktree ran the hook and landed under the main tree. /craft:worktree now says so; it still never commits.",
+      "relatesTo": "AC-9"
+    },
+    {
+      "title": "Evaluate is invoked in the way its own guardrail argues against",
+      "text": "build step 5 says to run /craft:evaluate at the phase boundary `with Skill` (skills/build/SKILL.md:49), which runs it inside the author's own context. The skill's last guardrail says the opposite for high-stakes audits: a fresh conversation that sees only the artifact, because an evaluator sharing the author's context inherits its rationalizations. In this phase it was run as a subagent, which is the fresh-context form, so the two readings were in open conflict. Craft has to pick one: evaluate becomes an agent like review, or build says when each form applies.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "Close assumed the session had entered the tree",
+      "text": "Field test: a session launched with its cwd already inside the worktree never called EnterWorktree, so ExitWorktree is a no-op and there is no tree to return to. That is the likely real path (cd into the tree, then claude). Close step 1 now covers it: run the rest with git -C against the tree holding `from`, and say the session stays where it is.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "The board keeps a tree field for a tree that no longer exists",
+      "text": "After a successful one-step close the board still carries `tree`. Clearing it would dirty the tree right after the merge, for no gain: nothing reads the field to decide a tree exists (build gates on the directory). schema.md now says the field stays as the record of where the feature was built.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "The one-step close would have force-removed uncommitted work",
+      "text": "Review caught it before any user saw it: section 5 inferred the worktree was clean from 'the approved commits are made', and checked nothing. Approve two of three proposed commits, or leave a scratch file, and the tree is dirty; the shipped WorktreeRemove hook then runs `git worktree remove --force` and the work is gone with no prompt. Close now has a step 0, a plain `git status --porcelain` with nothing dropped (Busy would drop the `docs/craft/` lines, and the board this close just reconciled lives there), and stops on any line. Same family as the create trap bug of P2: the dangerous text is the text that runs --force or -D.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "A failing hook does return its output, a succeeding one does not",
+      "text": "The two paths differ and the reference had claimed one rule for both. Field test: on success the tool result is only 'Created worktree at <path>'; on failure it is an error carrying the hook's own stderr. Also, the shipped script's ERR trap does not run when a script ends with a plain `exit` (verified: an explicit exit skips the trap, a failing command fires it), so a foreign hook can leave a half-made tree behind. Open step 4 now says both.",
+      "relatesTo": "AC-8"
+    },
+    {
+      "title": "The close left the session in a directory it had just deleted",
+      "text": "Evaluate caught it in the text written minutes earlier. The resumed-session case said the session stays where it is, and two steps later the tree under it is removed: verified, git -C <main> worktree remove exits 0 from inside and every later command fails on a missing cwd. Removing the tree is not negotiable (a merged tree always goes), so the removal is now the last act and the report says the directory is gone and the next session opens in the main tree.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "A closed feature would have been offered a second close",
+      "text": "The tree field stays on the board after the close, and section 5 keyed off the field alone, so /close on an already closed feature would take the one-step branch on a tree that no longer exists. It now checks git worktree list first, the same directory-over-board rule /build already follows, and schema.md says the field is a record, not proof.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "The safety check took away the option that was already safe",
+      "text": "Round two of review: the clean-tree check was hoisted above the fork, so a tree with one scratch file offered neither branch, and the PR branch merges nothing and removes nothing, so it was always safe. The gate now hangs on the merge answer alone; the PR answer is offered whatever state the tree is in, and Close says the PR skips the procedure, step 0 included.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "Step 0 would have read the wrong tree",
+      "text": "It said `git status --porcelain` in the worktree, with no path. A session closing from outside the tree (the board comes back through a merged PR, its tree field still set) would have read its own clean tree and force-removed one it never looked at. It now runs `git -C <the tree's path>`, and the path was already in Close's Input line.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "A tweak that graduated a gotcha would block its own close",
+      "text": "tweak writes one line to conventions.md, and the skill described that write after the commit. Step 0 counts every line, docs/craft included, on purpose. So the tweak would end stopped on its own uncommitted file. The write now goes before the commit is proposed, so it rides in it.",
+      "relatesTo": "AC-10"
+    },
+    {
+      "title": "Comparing a built path against git output, the trap D10 already named",
+      "text": "Round three of review: section 5 checked the tree exists by looking for `<repo>/.claude/worktrees/<slug>` in `git worktree list`. Git prints paths with symlinks resolved, so on macOS (/tmp, /var, a home behind a link) a live tree would read as already closed and be stranded with no way to close it through Craft. It now looks for `branch refs/heads/<tree.branch>`, which needs no path and no realpath. The board server paid for this same lesson in P1 (D10).",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "The branch could not be deleted before the tree, so the order had to be named",
+      "text": "The resumed-session path said to remove the tree as the final command, but step 4 ends with `git branch -d`, and git refuses to delete a branch a worktree still holds (verified: `cannot delete branch used by worktree`). So the close now names two final commands in order, remove then delete, both with git -C, after the report is written while the directory still exists.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "Nothing told the model which case it was in",
+      "text": "The resumed-session path turned on a fact about history (this session never called EnterWorktree) that a model resuming work does not have. It now calls ExitWorktree and compares the cwd before and after: moved means the ordinary path, unmoved means the resumed one. The safe branch is the default, since guessing resumed when the session could have exited destroys a working directory for nothing.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "Unmoved meant two different things",
+      "text": "Round four, the last one: the resumed-session discriminator compared the cwd before and after ExitWorktree, and a session standing outside the tree it is closing also reads unmoved. Harmless but it would have told the human their directory was about to disappear when it was not. The comparison now also asks whether the cwd is under the tree's path, which step 0 already had in hand.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "The drawing still showed the collector we decided not to build",
+      "text": "Caught reconciling at close: how-it-works.svg had a third box in the server, `collector / merged + clean + unlocked`, with a dashed arrow removing trees, and the caption said the server removes a worktree once it is merged, clean and unlocked. The collector was dropped during shape (exploration.resolved, 'Automatic collection: None'), and nothing in lib/ ever had one. The box now shows the watchers, which did get built (AC-7), the dashed arrow is gone, and the caption says plainly that nothing collects on its own.",
+      "relatesTo": "AC-7"
+    },
+    {
+      "title": "The exploration kept answers the build had overtaken",
+      "text": "Close review: the drawing had been reconciled but exploration.resolved still promised a /board forget command that was never built, a collector that was dropped, a .git/info/exclude line Craft never writes, and a branch named <slug> where everything else says worktree-<slug>. All four rewritten to what shipped. The lesson is that reconciling the visuals is not reconciling the board: the prose answers drift in the same way and nothing renders them, so nobody notices.",
+      "relatesTo": "AC-8"
+    },
+    {
+      "title": "Reconciling the board dirties the tree the close is about to check",
+      "text": "Seen in field test K: /close section 1 edits data.json, and Close step 0 refuses on a worktree with uncommitted work. In the normal order this is fine, the reconciliation rides in the commits of step 4. It only bites when the human says everything is already committed and the reconciliation still wants to change something: then the close needs one more commit before it can run. The test session spotted the tension on its own and left the board untouched rather than stranding itself.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "Nothing in Craft notices that a feature has outgrown its spec",
+      "text": "This started as one question (can the board read several boards at once) and shipped as a multi-repo board, the whole worktree lifecycle, a skill that writes project hooks, and a one-step close. That is three features wearing one slug. /spec cuts the phases at the start, when the least is known, and discipline.md caps them at about four; nothing revisits that cap once /build discovers that phase 2 is twice what it looked like. The board would have shown it: P2 ended with eight tasks and nine review rounds against P1's seven and two. A phase boundary that compares what the phase cost against what /spec assumed would have caught it, and the honest answer would have been to split.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "Review rounds spent on text that no longer existed",
+      "text": "Three of the four rounds on P3 judged files that were being edited while they read them, because an evaluate ran in parallel on the same files and its findings were applied immediately. Every verdict then arrived mixing findings already fixed with findings still live, and separating them was manual. Cheap rule for next time: one auditor at a time on a given file, or freeze the file until the verdict lands.",
+      "relatesTo": "AC-12"
+    },
+    {
+      "title": "delegate keeps a private memory file, which the human's CLAUDE.md forbids",
+      "text": "agents/delegate.md carries `memory: local` in its frontmatter and its step 7 appends to it. The human's global CLAUDE.md forbids creating or updating memory files without explicit consent, and the board plus conventions.md are already the durable record, audited and committed. A private file nobody reviews is a second record that can drift from the first. Not touched here: it belongs to the same tweak as the missing evaluate gate.",
+      "relatesTo": "-"
     }
   ]
 }
