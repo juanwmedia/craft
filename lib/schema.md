@@ -30,6 +30,7 @@ Conventions:
 | `artifacts` | array | conditional | Published visuals with their live URL and their local source. See below. |
 | `howItLooks` | array | conditional (UI features) | The look, one entry per screen. See below. Filled in `/shape` or in `/spec`, whichever gets there first. Distinct from `howItWorks`, which is the mechanism. |
 | `dependsOn` | array | optional | Feature slugs this one depends on, rendered on the dashboard as chips (colored by the dep's status). |
+| `tree` | object | conditional (a tree was opened) | `{ "branch": "worktree-<slug>", "from": "<branch the session was on>" }`. Written first, before any other field, by whoever opened the feature's tree (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`); `/close` merges into `from`. The field stays after the close, the record of where the feature was built, so whoever reads it checks `git worktree list` before believing the tree is still there. Absent: the feature builds where it is. |
 | `exploration` | object | conditional (if `/shape` ran) | The capabilities map: question, capabilities (tested/assumed), constraints, tech decisions, open questions. Renders in a collapsed section at the foot of the board. See below. |
 
 ## `phases[]`  (delivery increments)
@@ -54,8 +55,10 @@ Conventions:
    "why": "..." }`                          // optional
 
 ## `what[]`  (acceptance criteria, the WHAT)
-`{ "id": "AC-1", "text": "...", "done": true|false, "phase": "2a" }`
-- `phase` groups the AC under its phase block. Every AC must be **covered by ≥1 task** (a task's `covers` includes this AC's id); an AC with no covering task renders as a **gap** (red).
+`{ "id": "AC-1", "text": "...", "done": true|false, "phase": "2a", "evidence": "..." }`
+- `phase` groups the AC under its phase block.
+- `evidence` is optional and written at `/close`: what was run to satisfy this AC, and what of it was not run. No template renders it; it is there so the next reader can tell a criterion that was exercised from one that was reasoned about.
+- Every AC must be **covered by ≥1 task** (a task's `covers` includes this AC's id); an AC with no covering task renders as a **gap** (red).
 
 ## `assumptions[]`  (what we are betting on)
 `{ "id": "AS1", "text": "Tracking events will exist by phase 3.",

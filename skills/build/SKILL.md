@@ -3,7 +3,7 @@ name: build
 description: Decide the HOW and implement it, task by task, on the feature's living board. Reads data.json, agrees the design decisions and sketches the tasks with the human, then executes in the loop, updating the board live and pausing on every task and at every phase boundary. Use when the user wants to implement, code, or build a specified feature.
 disable-model-invocation: false
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, Skill
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, Skill, EnterWorktree
 ---
 
 Craft: Shape to Spec to **Build** to Close.
@@ -15,6 +15,8 @@ Board: `docs/craft/<slug>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schem
 ## 0. Resolve the feature
 
 Arg given: that slug. None: the `data.json` under `docs/craft/*/` with unfinished tasks; several, ask. None anywhere: "Run `/spec` first", and stop.
+
+`<repo>/.claude/worktrees/<slug>` exists (`<repo>` is the main tree, as `${CLAUDE_PLUGIN_ROOT}/references/worktree.md` defines it) and the session is outside it: the board lives in there, so before reading anything, one closed fork (`AskUserQuestion`), enter it (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`, Enter) or stay; no code is written before the answer. No such tree: build where you are.
 
 ## 1. Read
 

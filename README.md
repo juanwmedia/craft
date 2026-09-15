@@ -43,6 +43,8 @@ graph LR
     D -->|gate| R
 ```
 
+One feature, one tree: `/shape` opens a worktree per feature (`.claude/worktrees/<slug>`), `/close` merges it and removes it, and the board is one page for every tree of every repo. `/worktree` prepares a project's hook once, so a new tree comes with its dependencies.
+
 All four lifecycle skills write to the **same board** (`data.json`); the HTML is generated from it. Every task maps to an acceptance criterion (coverage is checked before code), and features ship in **phases**, each a vertical slice that puts something usable on screen, Phase 1 proving the core assumption.
 
 ## Quick start
@@ -74,9 +76,9 @@ docs/craft/
     └── look/               # Optional: screenshots or artboards of how it looks
 
 ~/code/craft/
-├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md
-├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md, inherited by all skills
-├── skills/                 # shape · spec · build · close · tweak · evaluate · board
+├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts
+├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md, inherited by all skills
+├── skills/                 # shape · spec · build · close · tweak · evaluate · board · worktree
 └── agents/                 # review · delegate
 ```
 
@@ -91,6 +93,7 @@ docs/craft/
 | `/tweak` | ⚡ Change what already has a shape: precedent, done-list, step by step or all at once, review, one commit | code, and one line in `docs/craft/conventions.md` on your yes. Never the board |
 | `/evaluate` | Evidence-based audit of any output | verification findings |
 | `/board` | Open the live board, or `stop` to close it | nothing |
+| `/worktree` | Prepare a project for worktrees, once: proposes the hook that gives every new tree its dependencies, env, database and domain | `.claude/hooks/` and the `hooks` entry of `.claude/settings.json`, on your yes |
 
 | Agent | What it does | Who calls it |
 |---|---|---|
