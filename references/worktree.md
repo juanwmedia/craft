@@ -1,14 +1,26 @@
 # Worktrees
 
-One feature, one tree. A feature lives in `.claude/worktrees/<slug>` on branch `worktree-<slug>` from the moment it is shaped until `/close` merges it; the main tree stays clean, and the board shows every tree. Uncommitted work that is not a board means the tree is taken, and whoever wants to write there asks first.
+One feature, one tree, on the human's yes. `/shape` and `/spec` offer the worktree once, at the feature's birth; accepted, the feature lives in `.claude/worktrees/<slug>` on branch `worktree-<slug>` until `/close` merges it, the main tree stays clean, and the board shows every tree. Declined, the feature builds in the tree it was born in, its board carries no `tree`, and the Busy rule below treats its work like anyone's. Uncommitted work that is not a board means the tree is taken, and whoever wants to write there asks first.
 
 The names are what Claude Code's worktree tool produces on its own. Craft never renames them and never runs `git worktree` where the tool can do the job.
+
+## Offer
+
+Input: a feature slug and the tree the session stands in, before anything is written. The fork is only for a feature that has nothing yet; anything that already exists made the choice, so first:
+
+- `<repo>/.claude/worktrees/<slug>` exists (`<repo>` is the main tree, the first entry of `git worktree list --porcelain`, as Open defines it): Enter it (below) and resume the board inside; no fork. This comes before looking for a board, because a board opened inside a tree is not visible from the main tree.
+- Only the branch `worktree-<slug>` exists (its tree was removed by hand): Open step 1 recovers it, prune and re-add; no fork.
+- `docs/craft/<slug>/data.json` right here holds a `tree`, and neither the worktree nor the branch `worktree-<slug>` exists: the feature was closed; update the board where it is, no fork and no new tree.
+- `docs/craft/<slug>/data.json` right here with no `tree`: the human already declined; work where the board is, no fork.
+- A repo with no commit yet: no fork, Open step 0 governs.
+
+None of those: run Busy below, then one closed fork (`AskUserQuestion`): open the feature's worktree (recommended; Open below), or build here in this tree. A busy tree puts the uncommitted work in the question, named, because "here" means writing next to it; what happens to that work (commit, stash, leave it) is the human's, outside this fork, and the worktree option needs nothing done to it, the new tree cuts clean from HEAD. On "here": the board carries no `tree`, the feature stays where it starts, and the skill says so.
 
 ## Open
 
 Input: the slug, and a session standing in any tree of the repo. `<repo>` below is the main tree, the first entry of `git worktree list --porcelain`; every path is absolute from it, never relative to the tree you happen to be in. Run **before writing anything** for the feature: untracked files do not travel into a new tree.
 
-0. No commit yet (`git rev-parse --verify HEAD` fails): there is nothing to branch from. Work in the main tree and say so; the first `/close` commits, and the next feature gets a tree.
+0. No commit yet (`git rev-parse --verify HEAD` fails): there is nothing to branch from. Work in the main tree and say so; the first `/close` commits, and the next feature gets the Offer.
 1. `<repo>/.claude/worktrees/<slug>` already exists: Enter it (below) and stop here; `tree.from` is on its board, or, when the tree has no board yet, the branch checked out in the tree you are standing in. Only the branch `worktree-<slug>` exists (its tree was removed by hand): `git worktree prune` first, because git still has the deleted tree registered and refuses to add it back until that record is cleared, then `git worktree add <repo>/.claude/worktrees/<slug> worktree-<slug>`, then Enter; no hook runs on that path, so say the tree is bare.
 2. Note the branch the session is on: `git branch --show-current`. It is `tree.from` on the board. Empty (detached HEAD): stop, a feature needs a branch to come back to.
 3. Does the project have a `WorktreeCreate` hook? Look for `hooks.WorktreeCreate` in `.claude/settings.json`, `.claude/settings.local.json` and the user settings (`~/.claude/settings.json`, or `settings.json` under `CLAUDE_CONFIG_DIR` when that variable is set). None: run `/craft:worktree` with `Skill` first; it either writes the hook or says there is nothing to prepare.

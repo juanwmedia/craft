@@ -43,7 +43,7 @@ graph LR
     D -->|gate| R
 ```
 
-One feature, one tree: `/shape` opens a worktree per feature (`.claude/worktrees/<slug>`), `/close` merges it and removes it, and the board is one page for every tree of every repo. `/worktree` prepares a project's hook once, so a new tree comes with its dependencies.
+One feature, one tree, if you say yes: `/shape` and `/spec` offer a worktree per feature (`.claude/worktrees/<slug>`), `/close` merges it and removes it, and the board is one page for every tree of every repo. `/worktree` prepares a project's hook once, so a new tree comes with its dependencies.
 
 All four lifecycle skills write to the **same board** (`data.json`); the HTML is generated from it. Every task maps to an acceptance criterion (coverage is checked before code), and features ship in **phases**, each a vertical slice that puts something usable on screen, Phase 1 proving the core assumption.
 
