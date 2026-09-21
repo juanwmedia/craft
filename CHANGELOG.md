@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.4.0 (2026-09-21)
+
+- `/wtf`: the escape hatch for an answer that did not land. It names, in one line, the context the answer assumed you had, says it again in plain language (what it means for you first, numbered, five items per list at most, no term you have not used yourself), and ends with where the work stands plus exactly one next action. It never advances the work, never defends the original wording, and never introduces a decision the answer did not contain.
+- `/evaluate` returns as a thin slash, reversing part of 3.2.0 on purpose: it hands what you name to the `craft:evaluate` agent and brings the verdicts back untouched. The no-argument case (audit the previous output) returns with it, without the problem that removed it: the output travels quoted inline in the agent's brief, so the audit still runs in a fresh context, never inside the author's. Internal callers keep spawning the agent directly.
+
 ## 3.3.0 (2026-09-21)
 
 - The worktree is an offer, not a rule. One Offer section in `references/worktree.md`, shared by `/shape` and `/spec`, asks once at the feature's birth: open the feature's worktree (the recommended default) or build in the tree the session stands in. The Offer runs Busy first, so uncommitted work in the tree is named in the question; what happens to that work stays the human's, and the worktree option needs nothing done to it, the new tree cuts clean from HEAD. Declined, the board carries no `tree`, every phase already handles that (spec updates in place, build builds where it is, close has nothing to close), and the feature stays where it started; there is no mid-feature migration. The same gate closes a silent bug: re-running `/spec` or `/shape` on a closed feature now updates its board in place instead of opening a new tree. The accepted cost: a feature built in the main tree keeps it busy, so `/tweak` asks its busy-tree question for as long as that feature is in flight.
