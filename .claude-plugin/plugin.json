@@ -1,6 +1,6 @@
 {
   "name": "craft",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "A method for building a feature as one living visual board: shape how it works and how it looks, spec the WHAT, build in the loop, close the loose ends, tweak what already has a shape, evaluate the claims.",
   "author": {
     "name": "Juan Núñez",

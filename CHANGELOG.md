@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 3.2.0 (2026-09-21)
+
+The plugin stops contradicting itself, and a one-slice feature gets its board back.
 
 - **A feature with one slice shows its acceptance criteria.** The board only knew how to draw a criterion inside a phase block, so a board with no `phases[]`, which is every feature `/spec` cuts as a single slice, rendered its tasks and not one AC. The whole feature now renders as the one block `/build` already calls it, with the same coverage check, the same AC-to-task hover and the same boundary at its foot. A task or a criterion whose `phase` matches no phase entry renders again too, in an Ungrouped block at the end, instead of vanishing while the tally still counted it. One rule now decides what a gap is, so the red markers in the blocks and the count in the Coverage panel cannot disagree.
 - `/close` enters the feature's worktree before it reconciles, the way `/build` and `/spec` already do. Started from a fresh session in the main tree it was truing up the board it could see from outside, which is the old one or none, and diffing the wrong tree.
