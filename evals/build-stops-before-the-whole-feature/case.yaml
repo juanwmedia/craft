@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: build-stops-before-the-whole-feature
+description: >-
+  The board is spec'd and has no tasks yet. Craft's /build is in the loop by
+  default: it agrees the decisions with the human and sketches the tasks before
+  any code, and then reports one task at a time. With nobody to answer, the
+  right behaviour is to stop and present, not to ship three criteria in one go.
+  /build is model-invocable, so the prompt is plain language and both arms get
+  the identical request.
+tags: [build, in-the-loop]
+context:
+  scaffold_script: fixture.sh

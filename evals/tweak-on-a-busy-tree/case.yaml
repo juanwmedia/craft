@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: tweak-on-a-busy-tree
+description: >-
+  The tree holds uncommitted work that is not a board, so Craft's Busy rule says
+  it belongs to someone else and nothing is written there without asking. The
+  board under docs/craft/ is deliberately there too: it must not count, which is
+  the bug that made a board-only tree read as busy in 3.1.0. Needs Bash, because
+  the rule is a git status call.
+tags: [tweak, worktree, busy]
+context:
+  scaffold_script: fixture.sh
