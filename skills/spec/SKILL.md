@@ -3,7 +3,7 @@ name: spec
 description: Define WHAT to build, as a living visual doc. Runs a collaborative Q&A and writes the feature's data.json (north star, acceptance criteria, phases with usable outcomes) so the WHAT appears on the board as you define it. Decisions and tasks come later in /build.
 disable-model-invocation: true
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, AskUserQuestion, Skill, EnterWorktree
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Agent, AskUserQuestion, Skill, EnterWorktree
 ---
 
 Craft: Shape to **Spec** to Build to Close.
@@ -51,7 +51,7 @@ With the ACs written you can do the one thing `/shape` could not: **pin the look
 
 ## 7. Audit
 
-Walk the ACs against: multiplicity, lifecycle (CRUD), ownership, empty state, failure modes, boundaries, dependencies, temporal triggers. Resolve every gap with the human, update `data.json`. Then `/craft:evaluate` on the cut (`phases[]` and `what[]`) with `Skill`: an AC that is not testable, two that contradict each other, a claim about the code that is not true, each comes back as a finding. Resolve each with the human before presenting.
+Walk the ACs against: multiplicity, lifecycle (CRUD), ownership, empty state, failure modes, boundaries, dependencies, temporal triggers. Resolve every gap with the human, update `data.json`. Then `craft:evaluate` (`Agent`) on the cut: the board's path, `phases[]` and `what[]`. An AC that is not testable, two that contradict each other, a claim about the code that is not true, each comes back as a finding. Resolve each with the human before presenting.
 
 ## 8. Leave
 

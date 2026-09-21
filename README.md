@@ -33,7 +33,7 @@ graph LR
     X["/shape"] -->|how it works| S["/spec"]
     S -->|the WHAT| B["/build"]
     B -->|decisions + tasks + code| C["/close"]
-    E["/evaluate"] -.->|audit| S
+    E["craft:evaluate"] -.->|audit| S
     E -.->|audit| B
     E -.->|audit| C
     R["craft:review"] -.->|refute| B
@@ -58,7 +58,7 @@ All four lifecycle skills write to the **same board** (`data.json`); the HTML is
 /tweak <what>        → not a feature: precedent, done-list, change, review, one commit. Fast, no ceremony.
 ```
 
-`/evaluate` audits at any point, and `/spec`, `/build` and `/close` run it at their own gates; `/board` opens the live board and `/board stop` closes it.
+`craft:evaluate` audits whatever you name, and `/spec`, `/build` and `/close` run it at their own gates; `/board` opens the live board and `/board stop` closes it.
 
 Not everything is a feature. Copy, tracking events, a fourth panel like the other three: that is `/tweak`, the conversation is the spec and the commit is the record. A line with no precedent in the code to point at is `/shape` or `/spec`.
 
@@ -78,8 +78,8 @@ docs/craft/
 ~/code/craft/
 ├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts
 ├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md · tools.md, inherited by all skills
-├── skills/                 # shape · spec · build · close · tweak · evaluate · board · worktree
-└── agents/                 # review · delegate
+├── skills/                 # shape · spec · build · close · tweak · board · worktree
+└── agents/                 # review · evaluate · delegate
 ```
 
 ## Skills
@@ -91,13 +91,13 @@ docs/craft/
 | `/build` | Decide the HOW + implement, in the loop or above it | the board (`decisions`, `tasks`, status) + code |
 | `/close` | Reconcile, graduate findings, propose commits | the board + `docs/craft/` (glossary, conventions, decisions). Never `CLAUDE.md` |
 | `/tweak` | ⚡ Change what already has a shape: precedent, done-list, step by step or all at once, review, one commit | code, and one line in `docs/craft/conventions.md` on your yes. Never the board |
-| `/evaluate` | Evidence-based audit of any output | verification findings |
 | `/board` | Open the live board, or `stop` to close it | nothing |
 | `/worktree` | Prepare a project for worktrees, once: proposes the hook that gives every new tree its dependencies, env, database and domain | `.claude/hooks/` and the `hooks` entry of `.claude/settings.json`, on your yes |
 
 | Agent | What it does | Who calls it |
 |---|---|---|
 | `craft:review` | Refutes a diff against the frozen ACs in a fresh context. | `/build` at a phase boundary, `/close` and `/tweak` before the commits, `delegate` at its gates |
+| `craft:evaluate` | Verifies every claim in a named artifact against the sources in a fresh context, and ends with what each finding demands | `/spec` on the cut, `/build` on the phase's coverage, `/close` on the graduation list, or you, on anything |
 | `craft:delegate` | Executes a phase from the board without asking, gated by `review`, one report and a proposed commit | `/build` in `above the loop`, only when you hand it over |
 
 Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contract is `lib/schema.md`.

@@ -12,6 +12,6 @@ Human-facing artifacts are HTML built for legibility (colors, shapes, arrows, li
 `data.json` is the single source of truth; the HTML is generated from it. Edit the JSON, the view live-reloads.
 
 ## Lenses vs producers
-The lifecycle skills (`/shape` → `/spec` → `/build` → `/close`) **produce** the feature; their output lives on the board. `/evaluate` (audit) is a **lens**: it reviews, it does not own board content. "One feature, one place" governs producers; lenses are exempt (but still default `in the loop`).
+The lifecycle skills (`/shape` → `/spec` → `/build` → `/close`) **produce** the feature; their output lives on the board. `craft:evaluate` and `craft:review` are **lenses**: they audit, they do not own board content, and they run in a fresh context so they never inherit the author's reasoning. "One feature, one place" governs producers; lenses are exempt.
 
 Explaining is not a lens of its own. `/shape` teaches while it interviews (explain before asking, never from memory), so understanding is a move inside a producer, not a skill beside it.

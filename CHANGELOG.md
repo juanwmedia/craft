@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- `/evaluate` is gone; `craft:evaluate` is an agent, like `review`. It always runs in a fresh context on Sonnet, which is what its own guardrail asked for and what `/build` was not giving it, and it audits only what the caller names (a file, a board's fields, inline text), never "the previous output". Its report ends with what each finding demands (fix, drop, or keep with the risk written down) so a verdict never lands without a next step; the caller decides. `/spec`, `/build` and `/close` spawn it with `Agent` at their gates, and `/close` now says what happens with what comes back.
+- The hook detection follows `CLAUDE_CONFIG_DIR` for the user settings file, and a project parked in Herd counts as served by it.
+- A phase boundary counts the phase's tasks against its ACs; double or more stops the build and asks whether what remains is its own feature. The phase cap is gone.
+
 ## 3.1.0 (2026-09-15)
 
 One feature, one worktree, and one board for all of them.
