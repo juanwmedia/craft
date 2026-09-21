@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.1 (2026-09-21)
+
+- Opening a worktree whose directory was removed by hand runs `git worktree prune` first: git keeps the deleted tree registered and refuses to add the same path back until the stale record is cleared, so Open step 1 failed exactly in the case it exists for.
+- `lib/worktree-procedure.test.js` pins the git behaviours the worktree procedure depends on, and `lib/test-util.js` gives the three test files one shared git helper.
+- `evals/` measures what Craft actually changes: five cases, each run with the plugin and against a no-plugin baseline. Measured numbers are held back until a run matches the graders as committed.
+
 ## 3.2.0 (2026-09-21)
 
 The plugin stops contradicting itself, and a one-slice feature gets its board back.
