@@ -50,7 +50,9 @@ Only for technology you cannot settle by reading. They touch it, you guide: inst
 
 ## 3. Draw how it works
 
-Hand-author `docs/craft/<slug>/how-it-works.svg`: the mechanism, labeled arrows, the boundary the decision turns on. Reference it from `data.json` as `howItWorks`, with the caption there and not inside the drawing. Stroke and fill in `currentColor`: the board inlines the file so it follows the theme.
+Load the `artifact-diagramming` skill (`Skill`) and draw the mechanism by its rules: what earns a diagram, labeled arrows, the boundary the decision turns on, `viewBox`, markers, theming. Never hand-author the SVG without it.
+
+Two things that skill cannot know. The drawing is a standalone file, `docs/craft/<slug>/how-it-works.svg`, not a figure inside a page: no `<figure>`, no `<figcaption>`, the SVG element is the whole file. And the caption is the `caption` field of `howItWorks` in `data.json`, never a line inside the drawing. Reference the file from `data.json` as `howItWorks`; the board inlines it, which is what makes `currentColor` load-bearing here.
 
 **If you cannot draw it, it is not shaped.** One exception: nothing here has a mechanism (no flow, no boundary crossed, no state change). Then write the sentence instead, record it as a finding, and say the thing may be too small to be a feature.
 

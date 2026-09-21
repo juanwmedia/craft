@@ -29,7 +29,9 @@
 
   .dash{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;padding:24px 32px 90px;align-items:start}
   @media(max-width:1100px){.dash{grid-template-columns:1fr}}
-  .main{display:flex;flex-direction:column;gap:26px;min-width:0}
+  .main{display:flex;flex-direction:column;gap:26px;min-width:0;container-type:inline-size}
+  .visuals{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:26px;align-items:start}
+  @container(max-width:900px){.visuals{grid-auto-flow:row}}
   h2{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);margin:0 0 13px;font-weight:600}
   .badge{font-size:10px;font-weight:800;border-radius:5px;padding:2px 7px;margin-left:9px;vertical-align:middle}
   .badge.done{background:var(--green);color:#0b1220} .badge.active{background:var(--blue);color:#0b1220} .badge.todo{background:var(--panel2);color:var(--faint)}
@@ -82,8 +84,6 @@
   .covers{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
   .covers .lab{font-size:11px;color:var(--faint)}
   .covchip{font-size:10.5px;font-weight:700;color:var(--blue);background:rgba(96,165,250,.13);border-radius:5px;padding:1px 6px}
-  .gate{margin-top:7px;display:inline-block;font-size:11px;font-weight:700;color:var(--amber);background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);border-radius:6px;padding:2px 8px}
-  .stream{margin-top:7px;display:inline-block;font-size:11px;color:var(--faint);font-style:italic}
   .viewdiff{color:var(--blue);font-size:11.5px;cursor:pointer;user-select:none;white-space:nowrap}
   .viewdiff:hover{text-decoration:underline}
   .diffbox{grid-column:1/-1;display:none;margin-top:10px;background:#0a0c10;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font:11.5px/1.55 ui-monospace,Menlo,monospace;overflow-x:auto}
@@ -154,8 +154,10 @@
   <div class="topbar" id="topbar"></div>
   <div class="dash">
     <div class="main">
-      <section id="shape-sec"><details class="fold" id="shape-fold"><summary>How it works</summary><div id="shape"></div></details></section>
-      <section id="mockup-sec"><details class="fold" id="looks-fold"><summary>How it looks</summary><div id="mockup"></div></details></section>
+      <div class="visuals" id="visuals">
+        <section id="shape-sec"><details class="fold" id="shape-fold"><summary>How it works</summary><div id="shape"></div></details></section>
+        <section id="mockup-sec"><details class="fold" id="looks-fold"><summary>How it looks</summary><div id="mockup"></div></details></section>
+      </div>
       <section id="phases-sec"><h2>What ↔ How, by phase</h2><div id="phases"></div></section>
       <section id="exploration-sec"><details class="explore-toggle"><summary>Shaping: what we asked, proved and decided</summary><div class="explore" id="exploration"></div></details></section>
     </div>
@@ -182,15 +184,16 @@
       }).catch(()=>{});
     }
 
+    const stops = t => !!(t.gate || t.weight==='substantial');
+
     function taskRow(t){
       const ic = t.status==='done'?'<span class="stat s-done">✓</span>':t.status==='doing'?'<span class="stat s-doing">◐</span>':'<span class="stat s-todo">○</span>';
-      const wt = t.weight==='substantial'?'<span class="flagi">⚑</span>':'<span class="wt trivial"></span>';
-      const tag = (t.gate||t.weight==='substantial')?`<span class="gate">⏸ I stop here</span>`:`<span class="stream">trivial</span>`;
+      const wt = stops(t)?'<span class="flagi">⚑</span>':'<span class="wt trivial"></span>';
       const vd = t.diffFile?`<span class="viewdiff" data-file="${esc(t.diffFile)}">view diff</span>`:'';
       const cov = (t.covers&&t.covers.length)?`<div class="covers"><span class="lab">covers</span>${t.covers.map(a=>`<span class="covchip">${esc(a)}</span>`).join('')}</div>`:'';
       return `<div class="task" data-task="${esc(t.id)}" data-covers="${(t.covers||[]).join(' ')}">${ic}<div class="wtcell">${wt}</div>`+
         `<div><div class="nm">${esc(t.title)}${t.weight==='substantial'?'<span class="flag">substantial</span>':''}</div>`+
-        `<div class="files">${esc(t.files)}</div>`+(t.why?`<div class="why2">${esc(t.why)}</div>`:'')+cov+tag+
+        `<div class="files">${esc(t.files)}</div>`+(t.why?`<div class="why2">${esc(t.why)}</div>`:'')+cov+
         `<pre class="diffbox" data-open="0"></pre></div><div>${vd}</div></div>`;
     }
 
@@ -241,6 +244,7 @@
 
       const mk = d.howItLooks, looksHtml = renderLooks(mk);
       document.getElementById('mockup-sec').style.display = looksHtml?'block':'none';
+      document.getElementById('visuals').style.display = (shapeHtml||chips||looksHtml)?'':'none';
       document.getElementById('mockup').innerHTML = looksHtml;
       bindFold('looks-fold', d);
       fitLooks();
@@ -273,7 +277,7 @@
         `<div class="panel"><h3>North Star</h3><div class="nsbox"><span class="star">★</span> ${esc(d.northStar)}</div></div>`+
         `<div class="panel"><h3>Coverage</h3><div class="sum">Acceptance criteria done <b>${acOk}/${what.length}</b><div class="covbar"><i style="width:${acPct}%"></i></div>`+
           (gaps?`<span class="gapwarn">⚠ ${gaps} AC with no task (gap)</span><br>`:`All AC covered by ≥1 task ✓<br>`)+
-          `<b>${total}</b> tasks · <b>${done}</b> done<br><b>${tasks.filter(t=>t.weight==='substantial').length}</b> substantial (where I stop)<br>Every <span style="color:var(--blue)">view diff</span> is real git.</div></div>`;
+          `<b>${total}</b> tasks · <b>${done}</b> done<br><b>${tasks.filter(stops).length}</b> where I stop<br>Every <span style="color:var(--blue)">view diff</span> is real git.</div></div>`;
 
       renderExploration(d);
       bindDiffs(); bindHover();

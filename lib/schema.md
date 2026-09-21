@@ -26,7 +26,7 @@ Conventions:
 | `what` | array | always | Acceptance criteria. See below. |
 | `frictions` | array | conditional | Known traps / blind spots. See below. |
 | `assumptions` | array | conditional | What we are betting on while unresolved. Born in any phase, checked by `/close`. See below. |
-| `howItWorks` | object | conditional | `{ file, caption }` pointing at the feature's `how-it-works.svg`, hand-authored in `/shape`. The SVG is text: `Read` it, and its labels and arrows are the mechanism. The board inlines the SVG so its `currentColor` follows the theme, so author it in `currentColor`, not literal hues. `caption` is the one-line claim **below** the figure: do not repeat it as a subtitle inside the SVG. |
+| `howItWorks` | object | conditional | `{ file, caption }` pointing at the feature's `how-it-works.svg`, drawn in `/shape` step 3, which owns how it is authored. The SVG is text: `Read` it, and its labels and arrows are the mechanism. The board inlines the file, so the drawing follows the board's theme, and `caption` is the one-line claim **below** the figure. |
 | `artifacts` | array | conditional | Published visuals with their live URL and their local source. See below. |
 | `howItLooks` | array | conditional (UI features) | The look, one entry per screen. See below. Filled in `/shape` or in `/spec`, whichever gets there first. Distinct from `howItWorks`, which is the mechanism. |
 | `dependsOn` | array | optional | Feature slugs this one depends on, rendered on the dashboard as chips (colored by the dep's status). |
@@ -51,7 +51,7 @@ Conventions:
    "status": "todo|doing|done",
    "phase": "2a",                           // optional → groups under a phases[] entry
    "covers": ["AC-1", "AC-7"],              // optional → the WHAT↔HOW link (acceptance criteria this task satisfies)
-   "gate": true,                            // optional → explicit "I stop here"
+   "gate": true,                            // optional → /build stops here even when trivial; the board flags it like a substantial one
    "why": "..." }`                          // optional
 
 ## `what[]`  (acceptance criteria, the WHAT)

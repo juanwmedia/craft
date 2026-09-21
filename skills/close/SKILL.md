@@ -23,7 +23,7 @@ Arg given: that slug. None: the `in-progress` feature; several, ask. None at all
 - Each **task**: `status` matches reality, `done` only if truly done. Note any deviation from the planned approach.
 - Each **AC**: `done` where the code satisfies it; a partial or unbuilt one is the human's decision; behaviour built beyond the WHAT gets an AC. A `done` one gets `evidence`: what was run to satisfy it, and which of its clauses nothing ran against. An AC whose evidence would be empty was reasoned about, not exercised, and the human decides whether that is enough.
 - **Coverage** still holds: every AC covered by at least one task.
-- **The visuals**: `howItWorks` still draws the mechanism that got built, `howItLooks` still shows the screen that shipped. Drift is a finding: redraw, or say on the board that it is stale and why.
+- **The visuals**: `howItWorks` still draws the mechanism that got built, `howItLooks` still shows the screen that shipped. Drift is a finding: redraw it as `/shape` step 3 says (the `artifact-diagramming` skill, the same standalone file, the caption on the board), or say on the board that it is stale and why.
 
 ## 2. Settle the open assumptions
 
