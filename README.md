@@ -98,7 +98,7 @@ docs/craft/
 |---|---|---|
 | `craft:review` | Refutes a diff against the frozen ACs in a fresh context. | `/build` at a phase boundary, `/close` and `/tweak` before the commits, `delegate` at its gates |
 | `craft:evaluate` | Verifies every claim in a named artifact against the sources in a fresh context, and ends with what each finding demands | `/spec` on the cut, `/build` on the phase's coverage, `/close` on the graduation list, or you, on anything |
-| `craft:delegate` | Executes a phase from the board without asking, gated by `review`, one report and a proposed commit | `/build` in `above the loop`, only when you hand it over |
+| `craft:delegate` | Runs `/build` for one phase with nobody to ask: every pause is a report line, every question the smallest safe choice on the board, then one report and a proposed commit | `/build` in `above the loop`, only when you hand it over |
 
 Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contract is `lib/schema.md`.
 
