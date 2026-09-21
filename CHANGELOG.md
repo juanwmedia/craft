@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.0 (2026-09-21)
+
+- The worktree is an offer, not a rule. One Offer section in `references/worktree.md`, shared by `/shape` and `/spec`, asks once at the feature's birth: open the feature's worktree (the recommended default) or build in the tree the session stands in. The Offer runs Busy first, so uncommitted work in the tree is named in the question; what happens to that work stays the human's, and the worktree option needs nothing done to it, the new tree cuts clean from HEAD. Declined, the board carries no `tree`, every phase already handles that (spec updates in place, build builds where it is, close has nothing to close), and the feature stays where it started; there is no mid-feature migration. The same gate closes a silent bug: re-running `/spec` or `/shape` on a closed feature now updates its board in place instead of opening a new tree. The accepted cost: a feature built in the main tree keeps it busy, so `/tweak` asks its busy-tree question for as long as that feature is in flight.
+
 ## 3.2.1 (2026-09-21)
 
 - Opening a worktree whose directory was removed by hand runs `git worktree prune` first: git keeps the deleted tree registered and refuses to add the same path back until the stale record is cleared, so Open step 1 failed exactly in the case it exists for.
