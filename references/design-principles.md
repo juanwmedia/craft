@@ -14,4 +14,4 @@ Human-facing artifacts are HTML built for legibility (colors, shapes, arrows, li
 ## Lenses vs producers
 The lifecycle skills (`/shape` → `/spec` → `/build` → `/close`) **produce** the feature; their output lives on the board. `craft:evaluate` and `craft:review` are **lenses**: they audit, they do not own board content, and they run in a fresh context so they never inherit the author's reasoning. "One feature, one place" governs producers; lenses are exempt.
 
-Explaining is not a lens of its own. `/shape` teaches while it interviews (explain before asking, never from memory), so understanding is a move inside a producer, not a skill beside it.
+Explaining is not a lens of its own. `/shape` teaches while it interviews (explain before asking, never from memory), so understanding is a move inside a producer, not a skill beside it. The one exception is `/wtf`, the human's escape hatch when an answer did not land: it re-explains and touches nothing, neither producer nor lens.

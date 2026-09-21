@@ -58,7 +58,7 @@ All four lifecycle skills write to the **same board** (`data.json`); the HTML is
 /tweak <what>        → not a feature: precedent, done-list, change, review, one commit. Fast, no ceremony.
 ```
 
-`craft:evaluate` audits whatever you name, and `/spec`, `/build` and `/close` run it at their own gates; `/board` opens the live board and `/board stop` closes it.
+`craft:evaluate` audits whatever you name: `/spec`, `/build` and `/close` run it at their own gates, and `/evaluate` is your manual trigger for the same fresh-context audit. `/board` opens the live board and `/board stop` closes it. `/wtf` re-explains the last answer when it did not land.
 
 Not everything is a feature. Copy, tracking events, a fourth panel like the other three: that is `/tweak`, the conversation is the spec and the commit is the record. A line with no precedent in the code to point at is `/shape` or `/spec`.
 
@@ -78,7 +78,7 @@ docs/craft/
 ~/code/craft/
 ├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts
 ├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md · tools.md, the procedures the skills load by path, and the principles behind them
-├── skills/                 # shape · spec · build · close · tweak · board · worktree
+├── skills/                 # shape · spec · build · close · tweak · board · worktree · evaluate · wtf
 └── agents/                 # review · evaluate · delegate
 ```
 
@@ -93,6 +93,8 @@ docs/craft/
 | `/tweak` | ⚡ Change what already has a shape: precedent, done-list, step by step or all at once, review, one commit | code, and one line in `docs/craft/conventions.md` on your yes. Never the board |
 | `/board` | Open the live board, or `stop` to close it | nothing |
 | `/worktree` | Prepare a project for worktrees, once: proposes the hook that gives every new tree its dependencies, env, database and domain | `.claude/hooks/` and the `hooks` entry of `.claude/settings.json`, on your yes |
+| `/evaluate` | Hand what you name (or the last output, quoted into the brief) to the `craft:evaluate` agent and return its verdicts untouched | nothing |
+| `/wtf` | Re-explain the last answer that did not land: the context it assumed, the plain retelling, where the work stands | nothing |
 
 | Agent | What it does | Who calls it |
 |---|---|---|
