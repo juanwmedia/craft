@@ -77,7 +77,7 @@ docs/craft/
 
 ~/code/craft/
 ├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts
-├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md · tools.md, inherited by all skills
+├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md · tools.md, the procedures the skills load by path, and the principles behind them
 ├── skills/                 # shape · spec · build · close · tweak · board · worktree
 └── agents/                 # review · evaluate · delegate
 ```
@@ -111,11 +111,17 @@ Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contrac
 /plugin install craft@craft
 ```
 
+`/build` loads the `frontend-design` skill before the first UI component. It ships with Claude Code's official marketplace, not with Craft, so install it once or that step finds nothing:
+
+```bash
+/plugin install frontend-design@claude-plugins-official
+```
+
 Symlinking the skills into `~/.claude/skills/` does **not** work: they resolve `${CLAUDE_PLUGIN_ROOT}` to find the board server and the shared references, and a skill outside a plugin has no plugin root.
 
 ### Upgrading from 2.x
 
-3.0 moves the boards and renames two skills. The **Breaking** note at the top of `CHANGELOG.md` lists every step.
+3.0 moves the boards and renames two skills. The **Breaking** note in the 3.0.0 section of `CHANGELOG.md` lists every step.
 
 ## License
 

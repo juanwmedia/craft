@@ -35,4 +35,4 @@ The three files written, enumerated, and what each new worktree will get; or "no
 
 - Never run the hook, never install anything: the hook installs, on the next worktree.
 - Only those three files. Never `CLAUDE.md`, never `.gitignore`, never `settings.local.json`.
-- A tool that lives on the machine and not in the repo is a section of `references/tools.md`, never a line in this skill or in the shipped scripts. Its lines stay guarded with `command -v`, so the committed hook is harmless on a machine without the tool.
+- A tool that lives on the machine and not in the repo is a section of `${CLAUDE_PLUGIN_ROOT}/references/tools.md`, never a line in this skill or in the shipped scripts. Its lines stay guarded with `command -v`, so the committed hook is harmless on a machine without the tool.

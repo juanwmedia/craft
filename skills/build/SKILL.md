@@ -28,7 +28,7 @@ Arg given: that slug. None: the `data.json` under `docs/craft/*/` with unfinishe
 
 ## 3. Collaboration mode (default: `in the loop`)
 
-`references/modes.md`, shared with `/close`. **`in the loop`**: the human is in every task, trivial ones included. **`above the loop`**: they state the goal and validate the result, present at the start and the end, not the middle. Entered only on their word ("go ahead"), left on their word ("stop, show me"). Never silently leave `in the loop`.
+`${CLAUDE_PLUGIN_ROOT}/references/modes.md`. **`in the loop`**: the human is in every task, trivial ones included. **`above the loop`**: they state the goal and validate the result, present at the start and the end, not the middle. Entered only on their word ("go ahead"), left on their word ("stop, show me"). Never silently leave `in the loop`.
 
 ## 4. Decide the approach, out loud
 

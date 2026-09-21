@@ -3,7 +3,7 @@ name: shape
 description: Give what you are about to build its shape before anything is specified, a feature in a project, a project from nothing, or an idea with no repo yet. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, proves technology hands-on, and draws how it works on the feature board. Use before /spec.
 disable-model-invocation: true
 argument-hint: [feature-slug | context]
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch, AskUserQuestion, Agent, Skill, Artifact, EnterWorktree
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebFetch, WebSearch, AskUserQuestion, Skill, Artifact, EnterWorktree
 ---
 
 Craft: **Shape** to Spec to Build to Close.

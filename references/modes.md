@@ -1,8 +1,8 @@
 # Craft collaboration modes
 
-How much the human is in the loop while the work is **executed**: `/build`, and the reconciliation in `/close`. **Default: `in the loop`.** Modes switch only when the human says so, never silently.
+How much the human is in the loop while the work is **executed**: `/build`. **Default: `in the loop`.** Modes switch only when the human says so, never silently.
 
-The decision layer has no mode. `/shape` and `/spec` are always the human: what the thing is and what counts as done are theirs, and nothing hands that over.
+The decision layer has no mode. `/shape` and `/spec` are always the human, and so is `/close`'s reconciliation: what the thing is, what counts as done and what actually shipped are theirs, and nothing hands that over.
 
 ## `in the loop` (default)
 

@@ -3,18 +3,20 @@ name: close
 description: Reconcile the living board against what was actually built. Trues up data.json, settles the open assumptions, graduates the few durable findings to docs/craft, puts the diff to a fresh-context reviewer, and proposes commits. The final step after /build. Use when the user says "done", "let's commit", "wrap up", or wants to close a feature.
 disable-model-invocation: true
 argument-hint: feature-slug
-allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill, Agent, AskUserQuestion, ExitWorktree
+allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Skill, Agent, AskUserQuestion, EnterWorktree, ExitWorktree
 ---
 
 Craft: Shape to Spec to Build to **Close**.
 
 Close answers **what actually shipped, and what of it must outlive the feature**. Because `/build` kept the board current, this is a truth-up, not a reconstruction: brief, one sentence where one does.
 
-Board: `docs/craft/<slug>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schema.md`). The reconciliation, what graduates and the commits are the human's calls, surfaced, never silent (`references/modes.md`, shared with `/build`).
+Board: `docs/craft/<slug>/data.json` (contract: `${CLAUDE_PLUGIN_ROOT}/lib/schema.md`). The reconciliation, what graduates and the commits are the human's calls, surfaced, never silent (`${CLAUDE_PLUGIN_ROOT}/references/modes.md`: the execution has a mode, this does not).
 
 ## 0. Resolve the feature
 
 Arg given: that slug. None: the `in-progress` feature; several, ask. None at all: reconcile the session's git changes without a board.
+
+`<repo>/.claude/worktrees/<slug>` exists (`<repo>` is the main tree, as `${CLAUDE_PLUGIN_ROOT}/references/worktree.md` defines it) and the session is outside it: the board and the work are both in there, and reconciling from outside trues up a board that is not the one that was built. Before reading anything, one closed fork (`AskUserQuestion`), enter it (`${CLAUDE_PLUGIN_ROOT}/references/worktree.md`, Enter) or stay; nothing is read or written before the answer. No such tree: close where you are.
 
 ## 1. Reconcile the board against reality
 
@@ -22,7 +24,7 @@ Arg given: that slug. None: the `in-progress` feature; several, ask. None at all
 
 - Each **task**: `status` matches reality, `done` only if truly done. Note any deviation from the planned approach.
 - Each **AC**: `done` where the code satisfies it; a partial or unbuilt one is the human's decision; behaviour built beyond the WHAT gets an AC. A `done` one gets `evidence`: what was run to satisfy it, and which of its clauses nothing ran against. An AC whose evidence would be empty was reasoned about, not exercised, and the human decides whether that is enough.
-- **Coverage** still holds: every AC covered by at least one task.
+- **Coverage** still holds: every AC covered by at least one task in its own phase.
 - **The visuals**: `howItWorks` still draws the mechanism that got built, `howItLooks` still shows the screen that shipped. Drift is a finding: redraw it as `/shape` step 3 says (the `artifact-diagramming` skill, the same standalone file, the caption on the board), or say on the board that it is stale and why.
 
 ## 2. Settle the open assumptions

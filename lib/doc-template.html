@@ -158,7 +158,7 @@
         <section id="shape-sec"><details class="fold" id="shape-fold"><summary>How it works</summary><div id="shape"></div></details></section>
         <section id="mockup-sec"><details class="fold" id="looks-fold"><summary>How it looks</summary><div id="mockup"></div></details></section>
       </div>
-      <section id="phases-sec"><h2>What ↔ How, by phase</h2><div id="phases"></div></section>
+      <section id="phases-sec"><h2>What ↔ How</h2><div id="phases"></div></section>
       <section id="exploration-sec"><details class="explore-toggle"><summary>Shaping: what we asked, proved and decided</summary><div class="explore" id="exploration"></div></details></section>
     </div>
     <aside class="aside">
@@ -197,28 +197,49 @@
         `<pre class="diffbox" data-open="0"></pre></div><div>${vd}</div></div>`;
     }
 
+    const PHASE_GATE = '<div class="phase-gate">⏸ Phase boundary. Your turn: go run it.</div>';
+    const UNGROUPED = '\u0000ungrouped';
+    const groupOf = (x, ids) => ids.includes(x.phase) ? x.phase : UNGROUPED;
+
+    function phaseBody(acs, pts, frics){
+      const acHtml = acs.length ? acs.map(a=>{
+        const covered = pts.some(t=>(t.covers||[]).includes(a.id));
+        return `<div class="acnode ${a.done?'ok':''} ${covered?'':'gap'}" data-ac="${esc(a.id)}"><i class="dot"></i>`+
+          `<div class="tx"><span class="nid">${esc(a.id)}</span>${esc(a.text)}${covered?'':'<span class="warn">⚠ no task covers this (gap)</span>'}</div></div>`;
+      }).join('') : '<div class="files">no acceptance criteria</div>';
+      const taskHtml = pts.length ? `<div class="board">${pts.map(taskRow).join('')}</div>` : '<div class="files">no tasks</div>';
+      const pf = frics.filter(f=>f.relatesTo && (acs.some(a=>a.id===f.relatesTo)||pts.some(t=>t.id===f.relatesTo)));
+      const fricHtml = pf.length ? `<div class="pblock-fric">${pf.map(f=>`<div class="pfric"><span class="ico">⚠ ${esc(f.title)}</span> <span class="rel">(→ ${esc(f.relatesTo)})</span><br>${esc(f.text)}</div>`).join('')}</div>` : '';
+      return `<div class="pblock-grid"><div class="pcol what"><div class="pcol-h">WHAT: acceptance criteria</div>${acHtml}</div>`+
+        `<div class="pcol how"><div class="pcol-h">HOW: tasks</div>${taskHtml}</div></div>`+fricHtml;
+    }
+
     function renderPhases(d){
       const phases = d.phases||[], what = d.what||[], tasks = d.tasks||[], frics = d.frictions||[];
-      if(!phases.length) return `<div class="board">${tasks.map(taskRow).join('')}</div>`;
-      return phases.map(p=>{
+      if(!phases.length) return `<div class="pblock active">${phaseBody(what, tasks, frics)}${PHASE_GATE}</div>`;
+      const ids = phases.map(p=>p.id);
+      const blocks = phases.map(p=>{
         const acs = what.filter(a=>a.phase===p.id);
         const pts = tasks.filter(t=>t.phase===p.id);
-        const acHtml = acs.length ? acs.map(a=>{
-          const covered = pts.some(t=>(t.covers||[]).includes(a.id));
-          return `<div class="acnode ${a.done?'ok':''} ${covered?'':'gap'}" data-ac="${esc(a.id)}"><i class="dot"></i>`+
-            `<div class="tx"><span class="nid">${esc(a.id)}</span>${esc(a.text)}${covered?'':'<span class="warn">⚠ no task covers this (gap)</span>'}</div></div>`;
-        }).join('') : '<div class="files">no acceptance criteria</div>';
-        const taskHtml = pts.length ? `<div class="board">${pts.map(taskRow).join('')}</div>` : '<div class="files">no tasks</div>';
-        const pf = frics.filter(f=>f.relatesTo && (acs.some(a=>a.id===f.relatesTo)||pts.some(t=>t.id===f.relatesTo)));
-        const fricHtml = pf.length ? `<div class="pblock-fric">${pf.map(f=>`<div class="pfric"><span class="ico">⚠ ${esc(f.title)}</span> <span class="rel">(→ ${esc(f.relatesTo)})</span><br>${esc(f.text)}</div>`).join('')}</div>` : '';
         const badge = `<span class="badge ${p.state}">${p.state==='done'?'DONE':p.state==='active'?'NOW':'TODO'}</span>`;
         return `<div class="pblock ${p.state}" data-phase="${esc(p.id)}">`+
           `<div class="pblock-hd"><span class="pblock-name">${esc(p.label)}</span>${badge}`+
             (p.outcome?`<div class="pblock-out">★ <b>Usable when done:</b> ${esc(p.outcome)}</div>`:'')+`</div>`+
-          `<div class="pblock-grid"><div class="pcol what"><div class="pcol-h">WHAT: acceptance criteria</div>${acHtml}</div>`+
-            `<div class="pcol how"><div class="pcol-h">HOW: tasks</div>${taskHtml}</div></div>`+
-          fricHtml+`<div class="phase-gate">⏸ Phase boundary. Your turn: go run it.</div></div>`;
+          phaseBody(acs, pts, frics)+PHASE_GATE+`</div>`;
       }).join('');
+      const looseAcs = what.filter(a=>groupOf(a, ids)===UNGROUPED);
+      const looseTasks = tasks.filter(t=>groupOf(t, ids)===UNGROUPED);
+      if(!looseAcs.length && !looseTasks.length) return blocks;
+      return blocks+`<div class="pblock"><div class="pblock-hd"><span class="pblock-name">Ungrouped: no phase of this board claims these</span></div>`+
+        phaseBody(looseAcs, looseTasks, frics)+`</div>`;
+    }
+
+    // One rule for a gap, so the aside count and the red markers in the blocks cannot disagree.
+    function gapCount(d){
+      const phases = d.phases||[], what = d.what||[], tasks = d.tasks||[];
+      if(!phases.length) return what.filter(a=>!tasks.some(t=>(t.covers||[]).includes(a.id))).length;
+      const ids = phases.map(p=>p.id);
+      return what.filter(a=>!tasks.some(t=>groupOf(t, ids)===groupOf(a, ids)&&(t.covers||[]).includes(a.id))).length;
     }
 
     function render(d){
@@ -272,7 +293,7 @@
       document.getElementById('xfric').innerHTML = xf.map(f=>`<div class="xfric"><div class="hd">⚠ ${esc(f.title)}</div><p>${esc(f.text)}</p></div>`).join('');
 
       const acOk = what.filter(a=>a.done).length, acPct = what.length?Math.round(acOk/what.length*100):0;
-      const gaps = what.filter(a=>!tasks.some(t=>t.phase===a.phase&&(t.covers||[]).includes(a.id))).length;
+      const gaps = gapCount(d);
       document.getElementById('aside-top').innerHTML =
         `<div class="panel"><h3>North Star</h3><div class="nsbox"><span class="star">★</span> ${esc(d.northStar)}</div></div>`+
         `<div class="panel"><h3>Coverage</h3><div class="sum">Acceptance criteria done <b>${acOk}/${what.length}</b><div class="covbar"><i style="width:${acPct}%"></i></div>`+

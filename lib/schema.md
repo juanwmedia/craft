@@ -8,7 +8,7 @@ stable**, because multiple views (spec doc, dashboard, future templates) read th
 Conventions:
 - Truth is structured (this JSON). HTML is **generated**, never hand-edited.
 - All content is **English** (the canonical language).
-- `weight: "substantial"` ⇒ always a **gate** (I stop, even when the dial is loosened). `"trivial"` ⇒ still stops by default `in the loop`; streams only when the human dials it loose.
+- Where `/build` stops is one rule: `weight: "substantial"` **or** `gate: true`. Either one is a gate (I stop, even when the dial is loosened) and the board flags both. A `trivial` task with no `gate` still stops by default `in the loop`; it streams only when the human dials it loose.
 - A slice is "done / usable" when its related `what` (acceptance criteria) flip to `done`.
 
 ---
@@ -37,8 +37,8 @@ Conventions:
 `{ "id": "2a", "label": "Phase 2a, clickable slice", "state": "done|active|todo",
    "outcome": "Open /en/spot-the-slop, type a diagnosis, SlopMentat replies." }`
 - A phase = a vertical increment that ships **one usable, testable thing on screen** (its `outcome`), not a skeleton.
-- The board groups tasks (via each task's `phase` field) under their phase header, and the **phase-boundary gate** (`⏸ your turn, go test it`) falls at the end of each phase.
-- Tasks with no matching `phase` render ungrouped at the end.
+- The board groups tasks (via each task's `phase` field) under their phase header, and closes every phase with the **phase-boundary gate**, the line that hands the outcome back to the human. No `phases[]`: the whole feature renders as one block, with the same gate at its foot.
+- A task or an AC whose `phase` matches no entry here renders in an **Ungrouped block** at the end, with the same coverage check inside it, so nothing counted in the tally is invisible on the board.
 
 ## `decisions[]`  (the How)
 `{ "id": "D2", "title": "...", "why": "...", "links": "D4" }`
@@ -58,7 +58,7 @@ Conventions:
 `{ "id": "AC-1", "text": "...", "done": true|false, "phase": "2a", "evidence": "..." }`
 - `phase` groups the AC under its phase block.
 - `evidence` is optional and written at `/close`: what was run to satisfy this AC, and what of it was not run. No template renders it; it is there so the next reader can tell a criterion that was exercised from one that was reasoned about.
-- Every AC must be **covered by ≥1 task** (a task's `covers` includes this AC's id); an AC with no covering task renders as a **gap** (red).
+- Every AC must be **covered by ≥1 task in its own phase** (a task's `covers` includes this AC's id and the two share a `phase`); an AC covered only from another phase renders as a **gap** (red), exactly like one covered by nothing. A board with no `phases[]` is one phase, so there the phase does not enter into it.
 
 ## `assumptions[]`  (what we are betting on)
 `{ "id": "AS1", "text": "Tracking events will exist by phase 3.",
@@ -69,7 +69,7 @@ Conventions:
 - `blocking: true` means the phase that owns it cannot exit. In `/shape` that is exactly the completion criterion: you leave when nothing blocking is open.
 - Distinct from a `friction`: a friction is something you already hit, an assumption is something you are betting on.
 - `checkAt`: a phase id, `close`, or a date. `/close` walks every `open` assumption and asks.
-- Rendered as a visible amber card next to the frictions, never collapsed away. A `blocking: true` one renders red, because it is the thing stopping a phase from closing.
+- Rendered as a visible amber card next to the frictions, never tucked into a fold. A `blocking: true` one renders red, because it is the thing stopping a phase from closing. A `resolved` one drops off the board: `/close` settled it and git keeps the record.
 
 ## `artifacts[]`  (published visuals)
 `{ "id": "A1", "title": "Export flow", "kind": "diagram|mockup|explorable",
@@ -109,6 +109,5 @@ Conventions:
 ## Storage model (decision A)
 - `data.json` = the committed truth (small, diffs cleanly).
 - `lib/doc-template.html` = the shared view (CSS + renderer), evolved **once** for all features.
-- Served: `board-serve` injects `data.json` into the template at request time (live-reload on data change).
-- Offline / GitHub / sharing: `craft bake <feature>` produces a single self-contained HTML with the data embedded.
-- The template supports both: if an embedded `#feature-data` block is present it uses it (baked); otherwise it fetches `./data.json` (served).
+- Served: `board-serve` pipes the template unchanged and the page fetches its own `./data.json`, so one template serves every feature and a write to the data live-reloads the page.
+- The template also boots from an embedded `#feature-data` block when one is present, which is what a self-contained single-file copy would use. Craft ships nothing that produces one today.
