@@ -15,8 +15,8 @@ The argument names the artifact; a leading number is the pass count (default 1).
 ## Steps
 
 1. **Build the brief.** The agent starts blank and cannot see this chat, so the brief carries everything: the artifact (a file path, a board plus the fields to audit, or the text itself quoted inline when the artifact is conversation output), the pass count, and whatever the human has pre-answered so no passes are spent on it.
-2. **Launch `craft:evaluate`** with `Agent` and wait for it.
-3. **Return the findings verbatim**: tables, critical findings, score, the decisions each finding demands. Add nothing, soften nothing, fix nothing.
+2. **Launch `craft:evaluate`** with `Agent`, in the background: the human keeps the conversation while it runs, and the findings arrive as a task notification. Never block the turn waiting unless the human asks for it.
+3. **Return the findings verbatim** when the notification arrives: tables, critical findings, score, the decisions each finding demands. Add nothing, soften nothing, fix nothing, and never predict them while the agent runs.
 
 ## Guardrails
 

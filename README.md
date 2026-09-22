@@ -43,7 +43,7 @@ graph LR
     D -->|gate| R
 ```
 
-One feature, one tree, if you say yes: `/shape` and `/spec` offer a worktree per feature (`.claude/worktrees/<slug>`), `/close` merges it and removes it, and the board is one page for every tree of every repo. `/worktree` prepares a project's hook once, so a new tree comes with its dependencies.
+One feature, one tree, if you say yes: `/shape` and `/spec` offer a worktree per feature (`.claude/worktrees/<slug>`), `/close` merges it and removes it, and the board is one page for every tree of every repo. `/worktree` prepares the hook once, private to your machine or shared with the repo, so a new tree comes with its dependencies.
 
 All four lifecycle skills write to the **same board** (`data.json`); the HTML is generated from it. Every task maps to an acceptance criterion (coverage is checked before code), and features ship in **phases**, each a vertical slice that puts something usable on screen, Phase 1 proving the core assumption.
 
@@ -76,7 +76,7 @@ docs/craft/
     └── look/               # Optional: screenshots or artboards of how it looks
 
 ~/code/craft/
-├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts
+├── lib/                    # board-serve.js (live board server) + doc/dashboard templates + schema.md + the worktree hook scripts and their settings entry template
 ├── references/             # modes.md · design-principles.md · discipline.md · how-it-looks.md · context-template.md · worktree.md · tools.md, the procedures the skills load by path, and the principles behind them
 ├── skills/                 # shape · spec · build · close · tweak · board · worktree · evaluate · wtf
 └── agents/                 # review · evaluate · delegate
@@ -92,7 +92,7 @@ docs/craft/
 | `/close` | Reconcile, graduate findings, propose commits | the board + `docs/craft/` (glossary, conventions, decisions). Never `CLAUDE.md` |
 | `/tweak` | ⚡ Change what already has a shape: precedent, done-list, step by step or all at once, review, one commit | code, and one line in `docs/craft/conventions.md` on your yes. Never the board |
 | `/board` | Open the live board, or `stop` to close it | nothing |
-| `/worktree` | Prepare a project for worktrees, once: proposes the hook that gives every new tree its dependencies, env, database and domain | `.claude/hooks/` and the `hooks` entry of `.claude/settings.json`, on your yes |
+| `/worktree` | Prepare worktrees, once, private to your machine (recommended) or shared with the repo: proposes the hook that gives every new tree its dependencies, env, database and domain | `hooks/` and `settings.json` in your user config dir, or `.claude/hooks/` plus `.claude/settings.json`, on your yes |
 | `/evaluate` | Hand what you name (or the last output, quoted into the brief) to the `craft:evaluate` agent and return its verdicts untouched | nothing |
 | `/wtf` | Re-explain the last answer that did not land: the context it assumed, the plain retelling, where the work stands | nothing |
 
@@ -111,6 +111,17 @@ Each skill's full documentation is in `skills/<name>/SKILL.md`. The data contrac
 ```bash
 /plugin marketplace add juanwmedia/craft
 /plugin install craft@craft
+```
+
+Third-party marketplaces do not auto-update: without the flag below, a new Craft release arrives only when you run `claude plugin marketplace update craft && claude plugin update craft@craft` yourself. The `autoUpdate` flag (see `extraKnownMarketplaces` in Claude Code's settings reference) makes both a startup step. Your user `settings.json` is the place for it (`~/.claude/settings.json`, or `settings.json` under `CLAUDE_CONFIG_DIR` when you use one): it then covers every repo on the machine.
+
+```json
+"extraKnownMarketplaces": {
+  "craft": {
+    "source": { "source": "github", "repo": "juanwmedia/craft" },
+    "autoUpdate": true
+  }
+}
 ```
 
 `/build` loads the `frontend-design` skill before the first UI component. It ships with Claude Code's official marketplace, not with Craft, so install it once or that step finds nothing:
