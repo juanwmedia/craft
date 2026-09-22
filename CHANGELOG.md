@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.0 (2026-09-22)
+
+- A worktree's Herd domain names the repo, not just the feature: `herd link` composes `<site>-<slug>.test` (`fl-next-login.test`), `<site>` read at run time from the Site column of the `herd links` / `herd parked` row that matches the main tree (that match is also what gates the link), with `basename` of the main tree as the fallback. A feature has no domain of its own, the repo does, so two repos with the same feature slug stop fighting over one `.test` name. The remove block stops caring about names entirely: it unlinks by inode (`-ef`) over the Sites directory, which also cleans up old `<slug>.test` links from trees opened before this release; already linked trees keep their old domain until closed.
+- `/worktree` step 1 informs about a differing private hook and stops: the diff is shown, updating happens only on your ask, and your own hand edits (an `npm ci` swapped for a symlink) are never offered for overwriting again and again.
+- The Write-never-heredoc rule now also lives where every in-tree session reads: the Enter procedure of `references/worktree.md` (with the plain-git rule beside it) and `/shape`'s guardrails, whose hand-authored SVG is the longest file anyone writes inside a tree. Two more field refusals confirmed the rule was placed too narrowly in 3.5.0.
+
 ## 3.5.1 (2026-09-22)
 
 - The Herd create block guards itself at run time: `herd link` only fires when `herd links` or `herd parked` lists the main tree's own path. Before, `command -v herd` was the only guard, so the private (machine-global) hook of 3.5.0 would have linked a `.test` domain for every worktree of every repo on a machine with Herd, Node monorepos included; the first private field run caught it. `references/tools.md` now states the general rule: every tool block must be safe to run on any repo of any machine, `command -v` guarding the binary and the block's own runtime check guarding the action, with per-repo trimming demoted to a shared-variant optimization. The create-block contract gains `$main`. One subtlety the tests caught: the guard greps with `-c`, not `-q`, because the shipped script's `pipefail` turns the SIGPIPE of an early-exiting `grep -q` into a false condition and a served repo then silently got no link.
