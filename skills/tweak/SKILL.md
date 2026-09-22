@@ -22,7 +22,7 @@ Before asking anything, look it up: every occurrence of what changes (each local
 
 ## 2. Agree the done-list
 
-As few lines as it takes, five at most, each testable and each pointing at its precedent. Agreed in one round in conversation, then frozen.
+As few lines as it takes, each testable and each pointing at its precedent. Agreed in one round in conversation, then frozen.
 
 The gate is the pointer, not the size. A line with nothing in the code to point at, or a decision the precedent does not answer and someone will ask about later, means there is something to draw: stop, this is `/shape` or `/spec`. A list that does not fit one round is a spec.
 
