@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.5.0 (2026-09-22)
+
+What the first field run of the worktree flow taught (an Nx monorepo inside a team repo), audited claim by claim before landing here.
+
+- `/worktree` asks private or shared before proposing anything. **Private** (recommended): the two shipped scripts, complete and untrimmed, go to `hooks/` under your user config dir (`CLAUDE_CONFIG_DIR` aware) with absolute-path entries in that dir's `settings.json`; one hook serves every repo on the machine and nothing touches a team's `.claude/`. **Shared** keeps today's behavior: trimmed scripts committed to the repo. Trimming the private variant would be a bug: the guards are what make the one hook inert where a repo does not match.
+- The hook scripts now guard every binary, not only every file: `composer`, `pnpm`, `npm` and `yarn` are checked with `command -v`, and a lockfile whose manager is missing gets one loud stderr line ("dependencies not installed") instead of killing the hook. The `node -e` JSON parsing is gone (it was the one unguarded dependency, breaking the "harmless anywhere" promise on machines without node); `sed` reads the hook payload instead.
+- The `${CLAUDE_PROJECT_DIR}` literal left the skill text: Claude Code substitutes that token in skill prose with a format-blind regex (backticks and fences do not stop it), so the shared settings entry now ships as `lib/worktree-hooks.json` and the skill says to merge the file verbatim. Reference files read at runtime are not substituted, so `references/worktree.md` keeps naming the variable.
+- The Output section stops claiming a hook written mid-session fires on the next worktree of the same session. The honest version: project hooks load from the project root the session was launched at, and a session launched above or beside the repo never reads the repo's entry, restart or not. When a tree comes back bare anyway, Open step 4 now offers a closed fork: run the prepare steps the approved script body names by hand, reporting each, or continue bare, never silently either.
+- Open step 4 says the verification runs from inside the tree with plain commands: the worktree isolation guard refuses `git -C <repo>` forms, and `git rev-parse <branch>` resolves the same ref from where you stand; anything written inside the tree goes through `Write`, never a heredoc.
+- Close finds the private hook: the `WorktreeRemove` lookup now covers project and user scope, running the script the entry's command names; before, a hook outside the repo silently fell to bare `git worktree remove` and whatever the hook undoes stayed linked.
+- `/evaluate` launches the `craft:evaluate` agent in the background: the conversation stays available while the audit runs, and the verdicts return verbatim when the notification arrives. Blocking the turn is now the exception, on the human's ask.
+- The README says how to enable marketplace auto-update (`autoUpdate: true` under `extraKnownMarketplaces`, user settings): third-party marketplaces do not auto-update by default, which is why every consumer, this repo's author included, kept seeing stale versions.
+
 ## 3.4.0 (2026-09-21)
 
 - `/wtf`: the escape hatch for an answer that did not land. It names, in one line, the context the answer assumed you had, says it again in plain language (what it means for you first, numbered, five items per list at most, no term you have not used yourself), and ends with where the work stands plus exactly one next action. It never advances the work, never defends the original wording, and never introduces a decision the answer did not contain.
