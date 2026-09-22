@@ -94,12 +94,13 @@ Conventions:
 - `relatesTo` (optional): an AC id or task id this friction hangs off → it renders inside that phase's block. **Absent ⇒ cross-cutting** → renders in a general "Cross-cutting frictions" block.
 
 ## `exploration`  (the capabilities map, from `/shape`)
-`{ "question": "...", "capabilities": [ { "text": "...", "tested": true } ], "constraints": ["..."], "decisions": [ { "text": "we'll use X because Y" } ], "openQuestions": ["..."], "sources": ["url"] }`
+`{ "question": "...", "verifiedAt": "<commit sha>", "capabilities": [ { "text": "...", "tested": true } ], "constraints": ["..."], "decisions": [ { "text": "we'll use X because Y" } ], "openQuestions": ["..."], "sources": ["url"] }`
+- `verifiedAt` (optional): the commit `/shape` verified the capabilities against (`git rev-parse HEAD` at shape time). A later consumer runs `git diff <verifiedAt> -- <file>` to know whether a capability still describes the code before re-reading it.
 - `resolved`: `[ { "q": "...", "a": "...", "why": "..." } ]` the interview outcome from `/shape`. The `why` is what lets a later phase tell whether the answer still holds.
 - `openQuestions` is superseded by top-level `assumptions[]`, which carries an owner, a consequence and a check point instead of a bare string.
 - `glossary`: `[ { "term": "...", "is": "...", "avoid": ["..."] } ]` the terms settled while shaping. Also written straight into `docs/craft/glossary.md`, which is what `/spec` reads.
 - Written by `/shape`. Optional: present only when a feature was shaped.
-- `capabilities[].tested`: `true` = verified hands-on (✓), `false` = assumed from docs (○).
+- `capabilities[].tested`: `true` = verified hands-on or confirmed by reading this repo's code (✓), `false` = assumed from docs alone (○).
 - `decisions` here are **technology** choices (what to build with), distinct from the top-level `decisions[]` (the feature's design/HOW decisions made in `/build`).
 - `sources` (optional): doc/reference URLs.
 - Renders in a **collapsed "Exploration" section at the foot of the board**: the research origin, present but tucked away.

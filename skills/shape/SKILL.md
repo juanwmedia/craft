@@ -46,7 +46,7 @@ Ask **every question that can be answered now, in one numbered round**, each car
 
 ## 2. Prove what you assumed
 
-Only for technology you cannot settle by reading. They touch it, you guide: install, hello world, the features this feature needs, then push until it breaks. Encourage deviation, the unexpected result teaches most. Mark each capability `tested: true` (hands-on) or `false` (assumed from docs). Record constraints and sources. **The browser is earned, not the default**: use it only for what is observable nowhere else, through Claude in Chrome or the Chrome DevTools MCP.
+Only for technology you cannot settle by reading. They touch it, you guide: install, hello world, the features this feature needs, then push until it breaks. Encourage deviation, the unexpected result teaches most. Mark each capability `tested: true` (hands-on, or confirmed by reading this repo's code) or `false` (assumed from docs alone). Record constraints and sources. **The browser is earned, not the default**: use it only for what is observable nowhere else, through Claude in Chrome or the Chrome DevTools MCP.
 
 ## 3. Draw how it works
 
@@ -64,6 +64,7 @@ Anything beyond these two visuals is on request only.
 
 ## 5. Leave
 
+- `exploration.verifiedAt` gets the current commit (`git rev-parse HEAD`): the SHA the capabilities were verified against, so a later consumer can diff a file against it instead of re-reading everything.
 - Glossary terms go to `docs/craft/glossary.md` **now**, one `_Avoid_` line each. Spec reads them minutes later.
 - Decision candidates stay in `exploration.decisions`. `/close` decides which reach `docs/craft/decisions.md`.
 - Then `/spec <slug>`.
