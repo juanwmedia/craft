@@ -40,4 +40,4 @@ What was written, enumerated, and what each new worktree will get; or "nothing t
 
 - Never run the hook, never install anything: the hook installs, on the next worktree.
 - Private writes the two scripts and the user `settings.json`; shared writes the three project files. Never both at once, never `CLAUDE.md`, never `.gitignore`, never `settings.local.json`.
-- A tool that lives on the machine and not in the repo is a section of `${CLAUDE_PLUGIN_ROOT}/references/tools.md`, never a line in this skill or in the shipped scripts. Its lines stay guarded with `command -v`, so the hook is harmless on a machine without the tool.
+- A tool that lives on the machine and not in the repo is a section of `${CLAUDE_PLUGIN_ROOT}/references/tools.md`, never a line in this skill or in the shipped scripts. Its lines stay guarded twice, `command -v` for the machine and the block's own runtime check for the repo, so the hook is harmless wherever it lands.
