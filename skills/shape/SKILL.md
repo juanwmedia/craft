@@ -72,5 +72,5 @@ Anything beyond these two visuals is on request only.
 
 - No production code. Throwaway experiments only.
 - Never `tested: true` from documentation alone.
-- Write the visual, look once, publish. Never loop on screenshots.
+- Write the visual, look once, publish. Never loop on screenshots. The drawing, and any file inside a worktree, is written with `Write`, never a shell heredoc: the isolation guard refuses them.
 - Idea mode may end with nothing on disk. That is a valid outcome.

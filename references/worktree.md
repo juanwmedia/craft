@@ -31,7 +31,7 @@ Input: the slug, and a session standing in any tree of the repo. `<repo>` below 
 
 ## Enter
 
-Input: a slug whose tree exists. The session's cwd is already under `.claude/worktrees/<slug>`: nothing to do. Otherwise `EnterWorktree` with `path: <repo>/.claude/worktrees/<slug>`. A tree entered by path is not removed by `ExitWorktree remove`; Close below does not rely on it.
+Input: a slug whose tree exists. The session's cwd is already under `.claude/worktrees/<slug>`: nothing to do. Otherwise `EnterWorktree` with `path: <repo>/.claude/worktrees/<slug>`. A tree entered by path is not removed by `ExitWorktree remove`; Close below does not rely on it. Inside any tree, files are written with `Write`, never a shell heredoc, and git runs plain, never `git -C <repo>`: the isolation guard refuses both.
 
 ## Busy
 
