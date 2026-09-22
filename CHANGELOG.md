@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.1 (2026-09-22)
+
+- The Herd create block guards itself at run time: `herd link` only fires when `herd links` or `herd parked` lists the main tree's own path. Before, `command -v herd` was the only guard, so the private (machine-global) hook of 3.5.0 would have linked a `.test` domain for every worktree of every repo on a machine with Herd, Node monorepos included; the first private field run caught it. `references/tools.md` now states the general rule: every tool block must be safe to run on any repo of any machine, `command -v` guarding the binary and the block's own runtime check guarding the action, with per-repo trimming demoted to a shared-variant optimization. The create-block contract gains `$main`. One subtlety the tests caught: the guard greps with `-c`, not `-q`, because the shipped script's `pipefail` turns the SIGPIPE of an early-exiting `grep -q` into a false condition and a served repo then silently got no link.
+
 ## 3.5.0 (2026-09-22)
 
 What the first field run of the worktree flow taught (an Nx monorepo inside a team repo), audited claim by claim before landing here.
