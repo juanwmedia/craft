@@ -1,0 +1,11 @@
+{
+  "name": "craft",
+  "description": "Shape and spec a feature with you, then build it above the loop. Every step reads one markdown file and writes the next.",
+  "author": {
+    "name": "Juan Núñez",
+    "url": "https://github.com/juanwmedia"
+  },
+  "homepage": "https://github.com/juanwmedia/craft",
+  "repository": "https://github.com/juanwmedia/craft",
+  "license": "MIT"
+}
