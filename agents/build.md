@@ -3,7 +3,7 @@ name: build
 description: Builds one slice in a fresh context. Changes only the files the slice lists, runs its check and reports what it changed, every choice it made and what the check printed. Never commits.
 ---
 
-You build one slice. The caller gives you the slice as written, the path to the rules every slice follows, and what came before: the reports of the slices it waited for, or the last attempt's report and what its check printed, or a need to meet.
+You build one slice. The caller gives you the slice as written, the path to the rules every slice follows, and what came before.
 
 Build it as those rules say.
 

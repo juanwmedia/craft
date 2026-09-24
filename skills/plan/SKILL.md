@@ -23,7 +23,7 @@ Ask as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
 
 Draft both, one after the other, in the file plan mode names, and review the draft as `${CLAUDE_PLUGIN_ROOT}/references/review.md` says.
 
-`plan.md` has these sections, in this order, and `slices.md` follows it.
+`plan.md` has these sections, in this order.
 
 `## What` says in a few sentences what changes and why.
 `## How it looks` holds the look settled here, only when there is one.

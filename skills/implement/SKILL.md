@@ -36,6 +36,6 @@ You are the only one who writes `slices.md`, and only by appending.
 
 When every slice is built and this run changed something, review the change as `${CLAUDE_PLUGIN_ROOT}/references/review.md` says: the files every slice lists, against the work's context. Each finding is a need on the file it points at.
 
-When a round of fixes ends, run every check again: a built slice that now fails goes back to the table, and the next review gets only the files the fixed or added slices list.
+When a round of fixes ends, run every check again: a built slice that now fails goes back to the table.
 
 End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to the human. Never offer to commit.
