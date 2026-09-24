@@ -1,6 +1,6 @@
 ---
 name: shape
-description: Give an idea its shape before anything is specified. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, and writes shape.md in the work's folder.
+description: Give an idea its shape before anything is specified. Interviews you until nothing blocking is open, looks facts up in the code instead of asking.
 argument-hint: <slug [what changed] | idea>
 disable-model-invocation: true
 ---

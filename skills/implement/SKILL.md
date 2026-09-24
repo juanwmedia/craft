@@ -1,8 +1,8 @@
 ---
 name: implement
-description: Build a set of slices above the loop. Runs every slice whose wait is over in parallel, one agent each on files no other slice touches, checks each slice itself and retries it while it makes progress, and reviews the whole change once every slice is built. Never commits.
+description: Build a set of slices above the loop. Runs every slice whose wait is over in parallel, one agent each on files no other slice touches, checks each slice itself and retries it while it makes progress, and reviews the whole change once every slice is built.
 argument-hint: <slug | path/to/slices>
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 Implement answers whether the slices are built. 
@@ -38,4 +38,6 @@ When every slice is built and this run changed something, review the change as `
 
 When a round of fixes ends, run every check again: a built slice that now fails goes back to the table.
 
-End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to the human. Never offer to commit.
+End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to the human. 
+
+Never offer to commit.

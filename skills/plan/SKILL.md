@@ -1,8 +1,8 @@
 ---
 name: plan
-description: Split the work into slices that never touch the same file. Reads the code, asks only what it cannot answer, and writes plan.md and slices.md in the work's folder once you approve it.
+description: Split the work into slices that never touch the same file. Reads the code, asks only what it cannot answer.
 argument-hint: <slug [what changed] | idea | path/to/context>
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 Plan answers how the work splits into slices that can be built with nobody to ask. 
