@@ -8,6 +8,8 @@ A reviewer always finds something, so reviewing the same thing again and hoping 
 
 A feature is named by its slug, the same word in every command, and everything written about it lives in `docs/craft/<slug>/`.
 
+Each feature runs in its own worktree. When a new one starts in a tree with uncommitted changes, shape and plan offer to move it to a new worktree first, and write `.worktreeinclude` when the repo has none. In the desktop app, Worktree location set to Custom keeps the trees outside the repo.
+
 1. `/craft:shape <idea>` settles what we are building with you and writes `shape.md`.
 2. `/craft:plan <slug>` splits it into slices that never share a file, with a check each, and writes `plan.md` (what the whole must do) and `slices.md` (the slices) once you approve it.
 3. `/craft:implement <slug>` builds every slice it can in parallel, retries what fails, and reviews the whole change once every slice is built. When the Acceptance needs a file no slice owns, it adds a slice to `slices.md` itself, but it never touches `plan.md` and never commits.

@@ -9,6 +9,8 @@ Plan answers how the work splits into slices that can be built with nobody to as
 
 Its input is `$ARGUMENTS`, read as `${CLAUDE_PLUGIN_ROOT}/references/work.md` says.
 
+When the work is new and this tree holds uncommitted changes, read `${CLAUDE_PLUGIN_ROOT}/references/worktree.md` before anything else.
+
 Its output is `plan.md` and `slices.md` in the work's folder. A change to a slice that is already built becomes a new slice, or a check that fails again until the change is in.
 
 Writing anything outside that folder is prohibited, except the plan file that plan mode names.

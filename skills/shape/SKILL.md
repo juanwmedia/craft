@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 Shape answers what we are building and whether it holds up. Its input is `$ARGUMENTS`, read as `${CLAUDE_PLUGIN_ROOT}/references/work.md` says.
 
+When the work is new and this tree holds uncommitted changes, read `${CLAUDE_PLUGIN_ROOT}/references/worktree.md` before anything else.
+
 Its output is `shape.md` in the work's folder. Writing anything outside that folder is prohibited.
 
 Ask as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
