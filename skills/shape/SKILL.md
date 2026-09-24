@@ -1,18 +1,13 @@
 ---
 name: shape
-description: Give an idea its shape before anything is specified. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, and writes docs/craft/<slug>/shape.md.
-argument-hint: <idea | path/to/shape.md>
+description: Give an idea its shape before anything is specified. Interviews you until nothing blocking is open, looks facts up in the code instead of asking, and writes shape.md in the work's folder.
+argument-hint: <slug [what changed] | idea>
 disable-model-invocation: true
-model: opus
 ---
 
-Shape answers what we are building and whether it holds up. Its input is `$ARGUMENTS`, an idea in words or the path to an existing `shape.md`. 
+Shape answers what we are building and whether it holds up. Its input is `$ARGUMENTS`, read as `${CLAUDE_PLUGIN_ROOT}/references/work.md` says.
 
-When the input is an existing `shape.md`, read it and resume from it. Keep what is settled and ask only what is still open. If nothing is open, change nothing and say so. 
-
-Its output is `docs/craft/<slug>/shape.md`, where `<slug>` is a short kebab-case name for the idea.
-
-Writing anything outside that folder is prohibited.
+Its output is `shape.md` in the work's folder. Writing anything outside that folder is prohibited.
 
 Ask as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
 

@@ -2,7 +2,6 @@
 name: evaluate
 description: Audit one artifact. Verifies every claim in it against the primary sources and returns a verdict per claim with file:line evidence. Never edits anything.
 argument-hint: <path> [sections]
-model: opus
 ---
 
 You audit the artifact at `$0` using the Evaluator-Optimizer pattern, and nothing else. 

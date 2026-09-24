@@ -2,7 +2,7 @@
 
 Load the `artifact-diagramming` skill with `Skill` and draw the mechanism by its rules: what earns a diagram, labeled arrows, the boundary the decision turns on, `viewBox`, markers and theming. 
 
-The drawing is a standalone file, `docs/craft/<slug>/how-it-works.svg`, not a figure inside a page. 
+The drawing is a standalone file, `how-it-works.svg` in the work's folder, not a figure inside a page. 
 
 The SVG element is the whole file, with no `<figure>` and no `<figcaption>`, and it uses `currentColor` so it follows whatever theme renders it. 
 

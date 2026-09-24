@@ -1,20 +1,15 @@
 ---
 name: plan
-description: Split the work into slices that never touch the same file. Reads the code, asks only what it cannot answer, and writes docs/craft/<slug>/plan.md once you approve it.
-argument-hint: <idea | path/to/context | path/to/plan.md>
+description: Split the work into slices that never touch the same file. Reads the code, asks only what it cannot answer, and writes plan.md in the work's folder once you approve it.
+argument-hint: <slug [what changed] | idea | path/to/context>
 disable-model-invocation: true
-model: opus
 ---
 
 Plan answers how the work splits into slices that can be built with nobody to ask. 
 
-Its input is `$ARGUMENTS`: an idea in words, the path to any file with context, or the path to an existing `plan.md`.
+Its input is `$ARGUMENTS`, read as `${CLAUDE_PLUGIN_ROOT}/references/work.md` says.
 
-A file with context is the starting point, and what it settled is not reopened.
-
-An existing `plan.md` is resumed: keep what is settled and ask only what is open. If nothing is open, change nothing and say so.
-
-Its output is `docs/craft/<slug>/plan.md`, where `<slug>` is the one the context names, or else a short kebab-case name for the work.
+Its output is `plan.md` in the work's folder. A change to a slice that is already built becomes a new slice, or a check that fails again until the change is in.
 
 Writing anything outside that folder is prohibited, except the plan file that plan mode names.
 
@@ -32,7 +27,7 @@ Draft `plan.md` in the file plan mode names and review it as `${CLAUDE_PLUGIN_RO
 
 `## What` says in a few sentences what changes and why.
 `## How it looks` holds the look settled here, only when there is one.
-`## Acceptance` lists what the whole must do once every slice is in, one observable behaviour per line. Every line is proven by the `done:` of one slice.
+`## Acceptance` lists what the whole must do once every slice is in, one observable behaviour per line. Every line is proven by one slice's check.
 `## Slices` holds the slices as `${CLAUDE_PLUGIN_ROOT}/references/slice.md` says. Every file a slice names exists in the repo or is one that slice creates.
 
 `ExitPlanMode` is the approval. 
