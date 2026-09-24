@@ -1,6 +1,6 @@
 # Craft
 
-Use all the help AI agents can give, keep control of what gets built, and enjoy building it.
+A minimalistic (and opinionated) approach to building things with AI agents: use all the help they can give, keep control of what gets built, and enjoy building it.
 
 ## The idea
 
