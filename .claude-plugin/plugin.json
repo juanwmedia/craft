@@ -1,11 +1,11 @@
 {
   "name": "craft",
-  "description": "Shape and spec a feature with you, then build it above the loop. Every step reads one markdown file and writes the next.",
+  "description": "A minimalistic (and opinionated) approach to enjoy building things using AI agents, without losing control.",
   "author": {
-    "name": "Juan Núñez",
+    "name": "Juan Andrés Núñez",
     "url": "https://github.com/juanwmedia"
   },
-  "homepage": "https://github.com/juanwmedia/craft",
+  "homepage": "https://www.wmedia.es",
   "repository": "https://github.com/juanwmedia/craft",
   "license": "MIT"
 }

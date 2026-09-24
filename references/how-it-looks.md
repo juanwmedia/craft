@@ -6,6 +6,6 @@ Otherwise load the `artifact-design` skill with `Skill` and draw each screen as 
 
 When the look is open, draw 2 to 4 directions, each named for the axis it explores.
 
-Link each screen with one line: its name and the file or url.
+Embed each screenshot with `![<screen>](look/<screen>.png)`, and link each HTML file with `[<screen>](look/<screen>.html)` and each url with `[<screen>](<url>)`, one line per screen.
 
 Write with `Write`, look at it once, and move on.

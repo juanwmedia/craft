@@ -4,13 +4,13 @@ mkdir -p src docs/craft/login
 cat > src/token.js <<'JS'
 export const TOKEN_TTL_MINUTES = 15;
 export function createToken(email) {
-  return { email, value: crypto.randomUUID(), expiresInMinutes: TOKEN_TTL_MINUTES };
+  return { email, value: crypto.randomUUID(), expiresAt: Date.now() + TOKEN_TTL_MINUTES * 60_000 };
 }
 JS
 cat > src/session.js <<'JS'
-export const SESSION_TTL_MINUTES = 60;
 export function startSession(token) {
-  return { email: token.email, expiresInMinutes: SESSION_TTL_MINUTES };
+  if (Date.now() > token.expiresAt) throw new Error("expired token");
+  return { email: token.email };
 }
 JS
 cat > docs/craft/login/how-it-works.svg <<'SVG'
@@ -26,17 +26,15 @@ Sign in with a link sent by email, for people who forget their password.
 ## How it works
 
 ![How it works](how-it-works.svg)
-A one-time token from `createToken` becomes a session in `startSession`.
+A token from `createToken` becomes a session in `startSession`, unless it has expired.
 
 ## Decisions
 
 - Tokens expire after 15 minutes, because a link left in an inbox should not open a session a day later.
-- Sessions last 60 minutes, to match the rest of the app.
 
 ## Assumptions
 
-- A token lives 15 minutes, which is what makes an old link harmless. Tested: `src/token.js:1`.
-- A session lives 60 minutes. Tested: `src/session.js:1`.
+- An expired token cannot start a session, which is what makes an old link harmless. Tested: `src/session.js:2`.
 - Nobody shares an inbox, or a link opens someone else's session. Assumed, product can confirm it.
 MD
 git init -q .

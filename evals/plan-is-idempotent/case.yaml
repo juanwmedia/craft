@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: plan-is-idempotent
+description: >-
+  Plan runs on a plan.md where nothing is open: every section is written, every
+  slice has touches, after and done, and no two slices share a file. Plan has to
+  change nothing and say so. EnterPlanMode, ExitPlanMode and AskUserQuestion do
+  not exist in a child session, so the case asserts only that nothing was
+  written, by any tool.
+tags: [plan, idempotent]
+context:
+  scaffold_script: fixture.sh

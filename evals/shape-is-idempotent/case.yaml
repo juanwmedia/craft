@@ -2,7 +2,7 @@ schema_version: "1.1"
 name: shape-is-idempotent
 description: >-
   Shape runs on a shape.md where nothing is open: every section is written,
-  every tested assumption cites a real file and line, and the drawing exists.
+  the tested assumption cites the file and line that enforces it, and the drawing exists.
   Shape has to change nothing and say so. The confirmation behind
   AskUserQuestion cannot be tested here, because a child session has nobody
   to answer it, so AskUserQuestion is left out of allowed_tools and the case

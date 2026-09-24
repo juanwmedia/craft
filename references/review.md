@@ -6,4 +6,4 @@ The first audit covers the whole draft. After the human asks for changes or edit
 
 Anything refuted means fix the draft and audit again. 
 
-Only a clean draft goes to the human, with `AskUserQuestion`.
+Only a clean draft goes to the human, by its path, never pasted.

@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: plan-flags-shared-file
+description: >-
+  Plan runs on a plan.md whose two slices both list src/token.js in touches and
+  do not wait for each other, so builders would run them at once on the same
+  file. Plan has to name the conflict instead of calling the plan done. This
+  tests that Plan catches the overlap when it reads a plan, not that parallel
+  builders stay apart. Nothing can be approved in a child session, so the case
+  also asserts that nothing was written, by any tool.
+tags: [plan, slices]
+context:
+  scaffold_script: fixture.sh
