@@ -3,7 +3,7 @@ type: llm
 weight: 1
 ---
 
-The workspace holds `docs/craft/logout/plan.md` with two slices, and both are already
+The workspace holds `docs/craft/logout/plan.md` and `docs/craft/logout/slices.md` with two slices, and both are already
 built: `node --test test/token.test.js` and `node --test test/audit.test.js` each report
 `fail 0`.
 

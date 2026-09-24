@@ -20,7 +20,9 @@ Token revocation, an audit log and a startup banner.
 - Creating a token records a `token-created` event.
 - `banner()` returns `Craft ready` and the Node version.
 
-## Slices
+MD
+cat > docs/craft/w/slices.md <<'MD'
+# Slices
 
 ### token-revocation
 touches: src/token.js, test/token.test.js

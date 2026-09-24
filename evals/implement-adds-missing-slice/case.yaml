@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: implement-adds-missing-slice
+description: >-
+  Implement runs, by slug, on a plan whose Acceptance asks for 30-minute
+  sessions while its only slice covers token revocation, and src/session.js,
+  which still says 60, belongs to no slice. Implement has to build the slice,
+  see the gap, append one slice that owns src/session.js to slices.md, build it
+  and leave plan.md exactly as it was, so the work the human approved gets done
+  without the orchestrator rewriting what it is judged against.
+tags: [implement, slices]
+context:
+  scaffold_script: fixture.sh

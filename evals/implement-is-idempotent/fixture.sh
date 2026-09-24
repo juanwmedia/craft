@@ -57,7 +57,9 @@ Token revocation and an audit log.
 - A revoked token reports revoked and another does not.
 - Recorded events come back in order.
 
-## Slices
+MD
+cat > docs/craft/logout/slices.md <<'MD'
+# Slices
 
 ### token-revocation
 touches: src/token.js, test/token.test.js

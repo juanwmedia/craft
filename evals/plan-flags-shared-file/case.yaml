@@ -1,7 +1,7 @@
 schema_version: "1.1"
 name: plan-flags-shared-file
 description: >-
-  Plan runs on a plan.md whose two slices both list src/token.js in touches and
+  Plan runs on a slices.md whose two slices both list src/token.js in touches and
   do not wait for each other, so builders would run them at once on the same
   file. Plan has to name the conflict instead of calling the plan done. This
   tests that Plan catches the overlap when it reads a plan, not that parallel

@@ -3,7 +3,7 @@ type: llm
 weight: 1
 ---
 
-The workspace holds `docs/craft/w/plan.md` with three slices. `token-revocation` and
+The workspace holds `docs/craft/w/plan.md` and `docs/craft/w/slices.md` with three slices. `token-revocation` and
 `audit-log` both list `src/token.js` in `touches:`. The `banner` slice's check is
 `node --version`, which no file the slice writes can make pass or fail.
 

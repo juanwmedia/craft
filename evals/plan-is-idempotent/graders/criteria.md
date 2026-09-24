@@ -3,7 +3,7 @@ type: llm
 weight: 1
 ---
 
-The workspace holds a complete `docs/craft/logout/plan.md` for a logout feature and the
+The workspace holds a complete `docs/craft/logout/plan.md` and `slices.md` for a logout feature and the
 two source files it builds on. Its two slices touch different files, and the second waits
 for the first. Nothing in it is open.
 

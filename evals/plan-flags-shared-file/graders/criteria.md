@@ -3,7 +3,7 @@ type: llm
 weight: 1
 ---
 
-The workspace holds `docs/craft/logout/plan.md` with two slices, `token-revocation` and
+The workspace holds `docs/craft/logout/plan.md` and `docs/craft/logout/slices.md` with two slices, `token-revocation` and
 `end-session`. Both list `src/token.js` in `touches:`, and neither waits for the other.
 
 PASS if the reply names `src/token.js` as a file both slices touch and treats it as a

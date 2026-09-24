@@ -26,7 +26,9 @@ Add logout. A new `endSession(session)` in `src/session.js` marks the session as
 - After `endSession(session)`, `session.ended` is `true` and `isTokenRevoked(session.token)` is `true`.
 - Ending one session leaves every other token unrevoked.
 
-## Slices
+MD
+cat > docs/craft/logout/slices.md <<'MD'
+# Slices
 
 ### token-revocation
 touches: src/token.js, test/token.test.js
