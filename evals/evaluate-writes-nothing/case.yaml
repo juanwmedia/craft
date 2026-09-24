@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: evaluate-writes-nothing
+description: >-
+  A shape.md with one planted false claim: it says src/mailer.js sends the
+  email, and no such file exists. Evaluate has to mark that claim wrong with
+  evidence, keep the true claims verified, and change nothing in the repo. A
+  model without the plugin tends to fix what it finds.
+tags: [evaluate, read-only]
+context:
+  scaffold_script: fixture.sh
