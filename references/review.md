@@ -8,6 +8,6 @@ Run the `craft:evaluate` skill on its path. Anything refuted means fix the draft
 
 ## A code change
 
-Hand the `craft:review` agent the change (a diff range or a list of files) and the file that says what the change must do. If it is not confirmed, fix it and review again while the findings change. An uncertain verdict with no findings goes to the human as it is. 
+Hand the `craft:review` agent the change (a diff range or a list of files) and the files that say what the change must do. If it is not confirmed, fix it and review again while the findings change. An uncertain verdict with no findings goes to the human as it is. 
 
 The same findings twice in a row are a wall: stop and give the human the findings. A confirmed change is ready to ship.

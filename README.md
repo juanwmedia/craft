@@ -9,8 +9,8 @@ A reviewer always finds something, so reviewing the same thing again and hoping 
 A feature is named by its slug, the same word in every command, and everything written about it lives in `docs/craft/<slug>/`.
 
 1. `/craft:shape <idea>` settles what we are building with you and writes `shape.md`.
-2. `/craft:plan <slug>` splits it into slices that never share a file, with a check each, and writes `plan.md` once you approve it.
-3. `/craft:implement <slug>` builds every slice it can in parallel, retries what fails, and reviews the whole change once every slice is built. It never commits.
-4. `/craft:close <slug>` reconciles `shape.md` and `plan.md` with what was actually built, because they will have drifted: the slices, the assumptions that held or broke, the drawings that no longer match. It keeps the few lessons the code cannot tell, then commits and pushes so you can deploy it to testing.
+2. `/craft:plan <slug>` splits it into slices that never share a file, with a check each, and writes `plan.md` (what the whole must do) and `slices.md` (the slices) once you approve it.
+3. `/craft:implement <slug>` builds every slice it can in parallel, retries what fails, and reviews the whole change once every slice is built. When the Acceptance needs a file no slice owns, it adds a slice to `slices.md` itself, but it never touches `plan.md` and never commits.
+4. `/craft:close <slug>` reconciles `shape.md`, `plan.md` and `slices.md` with what was actually built, because they will have drifted: the slices, the assumptions that held or broke, the drawings that no longer match. It keeps the few lessons the code cannot tell, then commits and pushes so you can deploy it to testing.
 
 When something changes, before or after a deploy, name the slug and say what changed: `/craft:plan <slug> <what changed>`, then implement and close again. Every command is safe to run again: it works only on what changed or is still missing.
