@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: implement-rejects-broken-plan
+description: >-
+  Implement runs on a plan that breaks the slice rules twice: two slices both
+  list src/token.js, and one slice's check is `node --version`, which passes or
+  fails whatever the slice writes. Implement has to refuse before launching any
+  agent, name both problems and change nothing, since a broken plan that gets
+  through burns agents on work that can never pass.
+tags: [implement, slices]
+context:
+  scaffold_script: fixture.sh

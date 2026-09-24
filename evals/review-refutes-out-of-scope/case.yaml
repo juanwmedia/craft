@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: review-refutes-out-of-scope
+description: >-
+  An uncommitted change adds revokeToken but never adds isTokenRevoked, and it
+  also doubles the session lifetime in src/session.js, which no criterion asks
+  for. The review has to refute the change, name the missing function and the
+  out of scope file, and change nothing.
+tags: [review]
+context:
+  scaffold_script: fixture.sh

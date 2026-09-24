@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: implement-is-idempotent
+description: >-
+  Implement runs, by slug, on a plan whose two slices are already built: both
+  checks pass. It has to find the plan from the slug, launch no agent, skip the
+  review because this run changed nothing, and change nothing, so running it
+  again never redoes or re-reviews finished work.
+tags: [implement, idempotent]
+context:
+  scaffold_script: fixture.sh
