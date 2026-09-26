@@ -13,17 +13,13 @@ When the work is new and this tree holds uncommitted changes, read `${CLAUDE_PLU
 
 Its output is `plan.md` and `slices.md` in the work's folder. A change to a slice that is already built becomes a new slice, or a check that fails again until the change is in.
 
-Writing anything outside that folder is prohibited, except the plan file that plan mode names.
+Writing anything outside that folder is prohibited.
 
-When the work has a visible surface and the context does not settle its look, settle it first, as `${CLAUDE_PLUGIN_ROOT}/references/how-it-looks.md` says (plan mode cannot write files).
+When the work has a visible surface and the context does not settle its look, settle it first, as `${CLAUDE_PLUGIN_ROOT}/references/how-it-looks.md` says.
 
-When something is open, enter plan mode with `EnterPlanMode` and read the code. 
+Read the code, and ask what it cannot answer as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
 
-If plan mode is unavailable or declined, write nothing: say what is open and stop.
-
-Ask as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
-
-Draft both, one after the other, in the file plan mode names, and review the draft as `${CLAUDE_PLUGIN_ROOT}/references/review.md` says.
+Write both, then review them as `${CLAUDE_PLUGIN_ROOT}/references/review.md` says.
 
 `plan.md` has these sections, in this order.
 
@@ -33,6 +29,4 @@ Draft both, one after the other, in the file plan mode names, and review the dra
 
 `slices.md` holds the slices as `${CLAUDE_PLUGIN_ROOT}/references/slice.md` says. Every file a slice names exists in the repo or is one that slice creates.
 
-`ExitPlanMode` is the approval. 
-
-After it, write the approved draft unchanged to `plan.md` and `slices.md` and end by naming both paths.
+Then ask the human to approve both, naming their paths. A change asked for goes into both and through review again. End by naming both paths.

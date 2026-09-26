@@ -17,7 +17,7 @@ Work runs in parallel only when it can: two slices build at once only when they 
 Each piece of work has a slug, the same word in every command, and everything written about it lives in `docs/craft/<slug>/` as markdown.
 
 1. `/craft:shape <idea>` settles with you what we are building, and writes `shape.md`.
-2. `/craft:plan <slug>` splits it into slices that never share a file, each with a check, and writes `plan.md` and `slices.md` once you approve.
+2. `/craft:plan <slug>` splits it into slices that never share a file, each with a check, and writes `plan.md` and `slices.md` for you to approve.
 3. `/craft:implement <slug>` gives each slice its own agent, runs the check itself, and retries with a fresh agent while each try fails differently. Then it reviews the whole change. It never commits.
 4. `/craft:close <slug>` updates the documents to match what was built, keeps the few lessons the code cannot tell, and asks you once before it commits, pushes and opens the pull request. Nothing else commits.
 
@@ -58,7 +58,7 @@ claude plugin update craft@craft
 
 Skills say what a step does, references say how, and a skill only points to references, never to another skill. Add a step by adding a skill, change a rule by editing one reference.
 
-Craft is built on Claude Code. The skills and references are plain markdown, so the ideas carry to any harness with skills and subagents; the tool names (`EnterPlanMode`, `AskUserQuestion`, `EnterWorktree`) are the part to swap.
+Craft is built on Claude Code. The skills and references are plain markdown, so the ideas carry to any harness with skills and subagents; the tool names (`AskUserQuestion`, `EnterWorktree`) are the part to swap.
 
 ## Coming from 3.x
 
