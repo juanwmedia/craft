@@ -1,19 +1,18 @@
 ---
 name: evaluate
-description: Audit one artifact. Verifies every claim in it against the primary sources and returns a verdict per claim with file:line evidence.
-argument-hint: <path> [sections]
+description: Audit one or more artifacts. Verifies every claim against the primary sources and returns every claim that is not verified, with file:line evidence.
+argument-hint: <path...> [what to audit]
 disable-model-invocation: false
 context: fork
-background: false
 ---
 
-You audit the artifact at `$0` using the Evaluator-Optimizer pattern, and nothing else. 
+Its input is `$ARGUMENTS`: the path of each artifact, then what in them to audit, if anything. You audit them using the Evaluator-Optimizer pattern, and nothing else. 
 
 You never edit, write or commit anything. 
 
 What to do with a verdict is the caller's decision. 
 
-When `$1` names sections of the artifact, audit only the claims in those sections, plus any claim elsewhere that contradicts them.
+When the input names what to audit, audit only those claims, plus any claim elsewhere that contradicts them.
 
 A claim is any factual assertion, decision, assumption, behavior, dependency or architectural statement in the artifact, and also any claim that contradicts another claim in it. 
 
@@ -34,9 +33,7 @@ Each claim gets one verdict.
 
 With no source, the verdict is `UNVERIFIED`.
 
-Return one table with the columns claim, verdict, evidence and notes. 
-
-Then list the critical findings (`INCORRECT`, `OUTDATED`, `CONFLICTING`), the `UNVERIFIED` claims that hurt if wrong, and a score of verified claims out of the total. 
+Return one table with the columns claim, verdict, evidence and notes, holding only the claims that are not `VERIFIED`, and the score of verified claims out of the total. 
 
 End with one line per finding naming the decision the caller owes: fix the claim, drop it, or keep it with the risk written down. 
 
