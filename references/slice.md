@@ -11,6 +11,8 @@ The body says what changes and why, in a few sentences.
 
 Two slices never share a file in `touches:`, so a file several need (a package manifest, a lockfile, a route registry, a migration) belongs to exactly one slice, its owner, and the others wait for it with `after:`.
 
+A slice waits for another when its code uses what that one creates. A check that needs two slices' work goes in the one built later.
+
 A slice that needs a file its `touches:` does not list stops and says which file, instead of changing it.
 
 Whoever writes a new slice runs its check once before the slice is built. A check that already passes proves nothing: rewrite it before going on.
