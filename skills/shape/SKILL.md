@@ -33,4 +33,4 @@ Write the draft to `shape.md` and review it as `${CLAUDE_PLUGIN_ROOT}/references
 
 On confirmation, stop.
 
-End by naming the path to `shape.md`.
+End by naming the path to `shape.md` and the next command, `/craft:plan <slug>`.

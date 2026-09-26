@@ -19,11 +19,12 @@ Each piece of work has a slug, the same word in every command, and everything wr
 1. `/craft:shape <idea>` settles with you what we are building, and writes `shape.md`.
 2. `/craft:plan <slug>` splits it into slices that never share a file, each with a check, and writes `plan.md` and `slices.md` for you to approve.
 3. `/craft:implement <slug>` gives each slice its own agent, runs the check itself, and retries with a fresh agent while each try fails differently. Then it reviews the whole change. It never commits.
-4. `/craft:close <slug>` updates the documents to match what was built, keeps the few lessons the code cannot tell, and asks you once before it commits, pushes and opens the pull request. Nothing else commits.
+4. `/craft:try <slug>` tries live, in the running app, what the work must do, and writes what it saw to `try.md`, with screenshots when a browser can save them. It never changes code.
+5. `/craft:close <slug>` updates the documents to match what was built, keeps the few lessons the code cannot tell, and asks you once before it commits, pushes and opens the pull request. Nothing else commits.
 
 Every command is idempotent: run it again and it only works on what changed or is still missing. A slice whose check already passes is left alone, and close with nothing new says so and stops.
 
-When something changes, run `/craft:plan <slug> <what changed>`, then implement and close again.
+When something changes, run `/craft:plan <slug> <what changed>`, then implement, try and close again.
 
 When shape or plan starts new work in a tree with uncommitted changes, it offers to move it to its own worktree.
 

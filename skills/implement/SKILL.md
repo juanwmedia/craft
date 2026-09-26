@@ -38,6 +38,6 @@ When every slice is built and this run changed something, review the change as `
 
 When a round of fixes ends, run every check again: a built slice that now fails goes back to the table.
 
-End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to the human. 
+End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to the human. When every slice is built, name the next command, `/craft:try <slug>`, or `/craft:close <slug>` to skip it.
 
 Never offer to commit.

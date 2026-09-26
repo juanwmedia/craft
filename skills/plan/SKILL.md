@@ -29,4 +29,4 @@ Write both, then review them as `${CLAUDE_PLUGIN_ROOT}/references/review.md` say
 
 `slices.md` holds the slices as `${CLAUDE_PLUGIN_ROOT}/references/slice.md` says. Every file a slice names exists in the repo or is one that slice creates.
 
-Then ask the human to approve both, naming their paths. A change asked for goes into both and through review again. End by naming both paths.
+Then ask the human to approve both, naming their paths. A change asked for goes into both and through review again. End by naming both paths and the next command, `/craft:implement <slug>`.
