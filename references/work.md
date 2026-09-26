@@ -4,6 +4,8 @@ Each piece of work lives in its own folder, `docs/craft/<slug>/`, where `<slug>`
 
 The slug is how the human names the work in every command.
 
+With no git repository here, say so and stop.
+
 When the first word of `$ARGUMENTS` is the slug of a folder that exists, or the input is a path inside one, that is the work. 
 
 The files in its folder are its context, and the rest of the input is what changed since they were written.
