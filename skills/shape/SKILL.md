@@ -17,7 +17,7 @@ An answer nobody can give today is not a blocker: bet on one, record it as an as
 
 Challenge the idea and offer the simpler shape when you see one.
 
-An assumption is tested only when you saw it work in this repo's code or the human ran it in front of you. Documentation alone makes it assumed, never tested. 
+An assumption is tested only when you saw it work in this repo's code, in a read-only run you made and cite, or the human ran it in front of you. Documentation alone makes it assumed, never tested. 
 
 You are done when nothing blocking is open and the human confirms.
 
