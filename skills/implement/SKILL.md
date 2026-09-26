@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Build a set of slices above the loop. Runs every slice whose wait is over in parallel, one agent each on files no other slice touches, checks each slice itself and retries it while it makes progress, and reviews the whole change once every slice is built.
+description: Build the slices above the loop, one agent per slice, and review the whole change.
 argument-hint: <slug | path/to/slices>
 disable-model-invocation: false
 ---
