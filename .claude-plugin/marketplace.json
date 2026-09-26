@@ -1,0 +1,15 @@
+{
+  "name": "craft",
+  "owner": {
+    "name": "Juan Núñez"
+  },
+  "metadata": {
+    "description": "A minimalistic (and opinionated) approach to enjoy building things using AI agents, without losing control."
+  },
+  "plugins": [
+    {
+      "name": "craft",
+      "source": "./"
+    }
+  ]
+}
