@@ -29,7 +29,7 @@ Draft both, one after the other, in the file plan mode names, and review the dra
 
 `## What` says in a few sentences what changes and why.
 `## How it looks` holds the look settled here, only when there is one.
-`## Acceptance` lists what the whole must do once every slice is in, one observable behaviour per line. Every line is proven by one slice's check. A line that follows a pattern the code already has ends with the `file:line` where that pattern lives.
+`## Acceptance` lists what the whole must do once every slice is in, one observable behaviour per line. Every line is proven by one slice's check and names that slice. A line that follows a pattern the code already has ends with the `file:line` where that pattern lives.
 
 `slices.md` holds the slices as `${CLAUDE_PLUGIN_ROOT}/references/slice.md` says. Every file a slice names exists in the repo or is one that slice creates.
 
