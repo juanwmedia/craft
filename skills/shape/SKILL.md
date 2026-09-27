@@ -29,6 +29,8 @@ You are done when nothing blocking is open and the human confirms.
 `## Decisions` lists each decision with its why. 
 `## Assumptions` lists each bet with what breaks if it is wrong, marked tested or assumed. A tested one cites the file and line where it works, an assumed one names who can confirm it. The first is the one the whole shape hangs on.
 
+Shape settles the what, the why, the decisions and the bets. All other metadata belongs to plan, unless a decision rests on them.
+
 Write the draft to `shape.md` and review it as `${CLAUDE_PLUGIN_ROOT}/references/review.md` says. 
 
 On confirmation, stop.
