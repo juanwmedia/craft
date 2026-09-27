@@ -15,3 +15,5 @@ Write them for the agents that read them next and the human who approves them. S
 Otherwise the input is a new idea, or the path to a file with context from elsewhere. The slug is the one that context names, or else a new name for it.
 
 What the context settles is not reopened: work only on what changed and what it leaves open. With nothing changed and nothing open, change nothing and say so.
+
+When you hand work to an agent, say in one line what it is doing and what you do meanwhile. When its result arrives, say in one line what it changed and what comes next.

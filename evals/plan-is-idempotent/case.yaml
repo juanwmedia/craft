@@ -1,11 +1,10 @@
 schema_version: "1.1"
 name: plan-is-idempotent
 description: >-
-  Plan runs on a plan.md and slices.md where nothing is open: every section is written, every
-  slice has touches, after and done, and no two slices share a file. Plan has to
-  change nothing and say so. EnterPlanMode, ExitPlanMode and AskUserQuestion do
-  not exist in a child session, so the case asserts only that nothing was
-  written, by any tool.
+  Plan runs on a plan.md and slices.md that already passed plan and three
+  evaluate passes: every acceptance line names its slice, every check fails
+  today and says exactly what it prints, and no two slices share a file. With
+  nothing changed and nothing open, plan has to change nothing and say so.
 tags: [plan, idempotent]
 context:
   scaffold_script: fixture.sh

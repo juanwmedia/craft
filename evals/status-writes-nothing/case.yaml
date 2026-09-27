@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: status-writes-nothing
+description: >-
+  Five folders under docs/craft: alpha has only shape.md, beta is planned with
+  nothing built, gamma has an uncommitted change in the file its slice touches,
+  delta is built and committed, and old-login holds Craft 3 files. Status has to
+  give where each open work came from, what it waits on and the next command,
+  leave out delta and old-login, say what it cannot know, and write nothing.
+tags: [status, read-only]
+context:
+  scaffold_script: fixture.sh

@@ -26,6 +26,8 @@ Every command is idempotent: run it again and it only works on what changed or i
 
 When something changes, run `/craft:plan <slug> <what changed>`, then implement, try and close again.
 
+When you lose track, `/craft:status [slug]` says where every open work stands, what it waits on and the next step.
+
 When an answer does not land, `/craft:wtf [the fragment]` says it again in plain words, without moving the work forward.
 
 When shape or plan starts new work in a tree with uncommitted changes, it offers to move it to its own worktree.
