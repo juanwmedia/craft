@@ -4,7 +4,7 @@ Write the result first, then review it in a fresh context. The first pass covers
 
 ## A draft
 
-Run the `craft:evaluate` skill on its path. While it runs, say so in one line. Until its verdict the draft is frozen: talk about anything, but change it, approve it or build on it only after the verdict. Anything refuted means fix the draft and audit again. Only a clean draft goes to the human, by its path, never pasted.
+Hand the `craft:evaluate` agent its path. While it runs, say so in one line. Until its verdict the draft is frozen: talk about anything, but change it, approve it or build on it only after the verdict. Anything refuted means fix the draft and audit again. Only a clean draft goes to the human, by its path, never pasted.
 
 ## A code change
 

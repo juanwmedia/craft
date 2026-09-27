@@ -2,7 +2,7 @@
 name: shape
 description: Give an idea its shape before anything is specified. Interviews you until nothing blocking is open, looks facts up in the code instead of asking.
 argument-hint: <slug [what changed] | idea>
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 Shape answers what we are building and whether it holds up. Its input is `$ARGUMENTS`, read as `${CLAUDE_PLUGIN_ROOT}/references/work.md` says.
