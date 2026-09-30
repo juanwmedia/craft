@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: close-is-idempotent
+description: >-
+  Close runs on a work whose slice is built, checked and committed, with
+  nothing uncommitted in its files. It has to say there is nothing to close
+  and stop, writing nothing and committing nothing.
+tags: [close, idempotent]
+context:
+  scaffold_script: fixture.sh

@@ -1,1 +1,3 @@
 evals/results/
+evals/*/*-*-*-*-*.jsonl
+.DS_Store

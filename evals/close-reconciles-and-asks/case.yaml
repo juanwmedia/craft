@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: close-reconciles-and-asks
+description: >-
+  The slice was built with a file it does not list (src/revocations.js), its
+  check passes, shape.md still holds an assumed assumption the build proved,
+  and a leftover probe file (probe-audit.mjs) sits untracked in the root. Close
+  has to make the slice list the file it changed, mark the assumption tested
+  with its file:line, and ask the human before committing, naming only the
+  work's files. No answer comes, so nothing may be committed.
+tags: [close, reconcile]
+context:
+  scaffold_script: fixture.sh

@@ -28,8 +28,8 @@ When an agent reports, run its check yourself, and act on what happens and on ev
 | Every open slice hits a wall the same way | Stop everything: the ground is broken, not the code |
 | A need whose owner is not built yet | Wait for the owner |
 | A need whose owner is built | Launch a fresh agent for the owner with its slice and the need, starting from the code already built |
-| A need on a file with no owner, which the context asks for and nothing in it rules out | Append one slice that owns the file to `slices.md`, with `added:`, check it against `slice.md` and run it like any other |
-| A need its owner's own slice contradicts, one that comes from an `added:` slice, or any other | It goes to the human as it is |
+| A need on a file with no owner, which the context asks for and nothing in it rules out | Append one slice that owns the file to `slices.md`, marked as added while building, check it against `slice.md` and run it like any other |
+| A need its owner's own slice contradicts, one that comes from a slice added while building, or any other | It goes to the human as it is |
 | The agent ends with no report, or a tool it needs is down | Launch once more; if that fails too, stop everything and say what broke |
 
 You are the only one who writes `slices.md`, and only by appending.

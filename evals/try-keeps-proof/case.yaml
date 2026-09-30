@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: try-keeps-proof
+description: >-
+  A small command line app is built and its check passes, but only one of the
+  two behaviours its plan asks for works: greeting with no name prints
+  "Hello, undefined" instead of "Hello, stranger". Try has to run both live,
+  write try.md with one passed and one failed and what it saw, change no code,
+  and name the plan command for what failed.
+tags: [try]
+context:
+  scaffold_script: fixture.sh

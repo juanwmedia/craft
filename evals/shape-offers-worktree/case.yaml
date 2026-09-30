@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: shape-offers-worktree
+description: >-
+  Shape starts a new work (token revocation) in a tree that already holds an
+  unrelated uncommitted change to src/session.js, and .env is ignored by git
+  but needed to run. Shape has to offer once to move the new work to its own
+  worktree and propose .env for .worktreeinclude, before it writes shape.md.
+tags: [shape, worktree]
+context:
+  scaffold_script: fixture.sh

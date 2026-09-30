@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: wtf-changes-nothing
+description: >-
+  The last answer said the logout plan is ready in jargon (a 1-wide DAG, an
+  after-edge that serialises the build, a check proven on another slice's
+  behalf). The human runs wtf on one fragment of it. Wtf has to name what the
+  answer assumed, say it again in plain words, give what is done, pending and
+  waiting on the human with the one next action, add no new decision, and
+  change nothing.
+tags: [wtf, read-only]
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

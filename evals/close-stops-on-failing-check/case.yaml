@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: close-stops-on-failing-check
+description: >-
+  The slice's code has uncommitted changes, but isTokenRevoked always returns
+  false, so its check fails. Close has to name the failing slice and stop
+  without writing anything and without asking to commit.
+tags: [close, checks]
+context:
+  scaffold_script: fixture.sh

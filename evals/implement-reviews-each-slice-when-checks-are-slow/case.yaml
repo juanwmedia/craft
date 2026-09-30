@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: implement-reviews-each-slice-when-checks-are-slow
+description: >-
+  Two slices that share no file and wait for nothing, each with a check that
+  runs an existing suite of about a minute. Running the checks is what makes
+  the review slow, so implement hands each slice to its own reviewer at once.
+tags: [implement, review, parallel]
+context:
+  scaffold_script: fixture.sh
