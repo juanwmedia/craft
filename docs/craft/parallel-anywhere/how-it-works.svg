@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" role="img" aria-label="A trace grader passes when the second craft:build agent starts before the first one's task_notification, and fails when the first ends before the second starts" fill="none" stroke="currentColor" font-family="system-ui, sans-serif" font-size="12">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="currentColor" stroke="none"/></marker></defs>
+<text x="20" y="30" fill="currentColor" stroke="none" font-weight="600">at once: grader passes</text>
+<line x1="140" y1="60" x2="700" y2="60" marker-end="url(#arrow)"/>
+<text x="700" y="80" fill="currentColor" stroke="none" text-anchor="end" font-size="11">trace.jsonl, line by line</text>
+<line x1="180" y1="50" x2="180" y2="70"/>
+<text x="180" y="44" fill="currentColor" stroke="none" text-anchor="middle" font-size="11">task_started A</text>
+<line x1="330" y1="50" x2="330" y2="70" stroke-width="2"/>
+<text x="330" y="44" fill="currentColor" stroke="none" text-anchor="middle" font-size="11" font-weight="600">task_started B</text>
+<line x1="500" y1="50" x2="500" y2="70"/>
+<text x="500" y="44" fill="currentColor" stroke="none" text-anchor="middle" font-size="11">task_notification A</text>
+<rect x="180" y="92" width="320" height="12" rx="2"/>
+<text x="340" y="122" fill="currentColor" stroke="none" text-anchor="middle" font-size="11">A runs; B starts inside it</text>
+<text x="20" y="160" fill="currentColor" stroke="none" font-weight="600">in order: grader fails</text>
+<line x1="140" y1="190" x2="700" y2="190" marker-end="url(#arrow)"/>
+<line x1="180" y1="180" x2="180" y2="200"/>
+<text x="180" y="174" fill="currentColor" stroke="none" text-anchor="middle" font-size="11">task_started A</text>
+<line x1="330" y1="180" x2="330" y2="200"/>
+<text x="330" y="174" fill="currentColor" stroke="none" text-anchor="middle" font-size="11">task_notification A</text>
+<line x1="500" y1="180" x2="500" y2="200"/>
+<text x="500" y="174" fill="currentColor" stroke="none" text-anchor="middle" font-size="11">task_started B</text>
+<rect x="180" y="222" width="150" height="12" rx="2"/>
+<rect x="500" y="222" width="150" height="12" rx="2"/>
+<text x="20" y="64" fill="currentColor" stroke="none" font-size="11">A, B: craft:build</text>
+<text x="20" y="194" fill="currentColor" stroke="none" font-size="11">A, B: craft:build</text>
+</svg>
