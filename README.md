@@ -10,7 +10,7 @@ Code is cheap. Once the uncertainty is gone and the decisions are written down, 
 
 Every step is reviewed in a fresh context: the documents against the code before you see them, the code against the documents once it is built. After the first review, each one narrows to what the last fix changed, while every check still runs over the whole change.
 
-Work runs in parallel only where the slow part is independent. Slices that share no file and do not wait for each other build at once. When the slices' checks are slow, the change is reviewed at once, one reviewer per slice. Tries that share neither the browser nor the data run at once too. An audit of a document is never split: every agent pays its own setup (reading the code, installing what it needs to test a claim), so splitting it cost two to five times the tokens for the same wait. It runs in the background instead, and a draft is audited again only when a fix changes a decision.
+Work runs in parallel only where the slow part is independent. Slices that share no file and do not wait for each other build at once, except when the assumption the shape hangs on is still assumed: then the first slice is the thinnest path that proves it from start to end, and the rest wait for it. When the slices' checks are slow, the change is reviewed at once, one reviewer per slice. Tries that share neither the browser nor the data run at once too. An audit of a document is never split: every agent pays its own setup (reading the code, installing what it needs to test a claim), so splitting it cost two to five times the tokens for the same wait. It runs in the background instead, and a draft is audited again only when a fix changes a decision.
 
 ## Flow
 

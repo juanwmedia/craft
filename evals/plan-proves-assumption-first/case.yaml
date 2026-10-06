@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: plan-proves-assumption-first
+description: >-
+  Plan runs on a shape whose first assumption (Holded accepts mixed VAT lines
+  and returns an id) is still assumed. Besides the client that calls Holded, the
+  work has a webhook route, a badge and a nightly job, and the route and the
+  badge use none of the client's code. Plan has to make the first slice the thinnest
+  path that proves the assumption from start to end (paying an invoice sends it
+  to Holded, so it touches both src/payments.js and src/holded.js) and make
+  every other slice wait for it, writing nothing outside the work's folder.
+tags: [plan, slices]
+context:
+  scaffold_script: fixture.sh

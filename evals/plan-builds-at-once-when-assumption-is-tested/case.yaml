@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: plan-builds-at-once-when-assumption-is-tested
+description: >-
+  The same work as plan-proves-assumption-first, but the shape's first
+  assumption is tested: src/quotes.js already sends mixed VAT lines to the same
+  Holded endpoint. Nothing is left to prove first, so plan must not make every
+  slice wait for one: at least two slices wait for nothing, writing nothing
+  outside the work's folder.
+tags: [plan, slices]
+context:
+  scaffold_script: fixture.sh

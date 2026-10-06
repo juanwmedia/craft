@@ -13,6 +13,8 @@ Two slices never share a file in `touches:`, so a file several need (a package m
 
 A slice waits for another when its code uses what that one creates. A check that needs two slices' work goes in the one built later.
 
+When the assumption the shape hangs on is still assumed, the first slice is the thinnest path that proves it from start to end (vertical slicing), and every slice it does not wait for waits for it.
+
 A slice that needs a file its `touches:` does not list stops and says which file, instead of changing it.
 
 Whoever writes a new slice runs its check once before the slice is built. A check that already passes proves nothing: rewrite it before going on.
