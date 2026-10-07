@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-label="Claude Code events feed the mod's in-memory state, which draws one line above the prompt" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="none" stroke="currentColor">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor" stroke="none"/></marker></defs>
+<text x="20" y="24" fill="currentColor" stroke="none" font-weight="600">Claude Code session</text>
+<rect x="20" y="40" width="220" height="44" rx="4"/>
+<text x="130" y="60" text-anchor="middle" fill="currentColor" stroke="none">/craft:&lt;phase&gt; &lt;slug&gt;</text>
+<text x="130" y="76" text-anchor="middle" fill="currentColor" stroke="none" opacity=".7">command.run</text>
+<rect x="20" y="100" width="220" height="44" rx="4"/>
+<text x="130" y="120" text-anchor="middle" fill="currentColor" stroke="none">craft:* agent starts, ends</text>
+<text x="130" y="136" text-anchor="middle" fill="currentColor" stroke="none" opacity=".7">agent.spawn, turn.complete</text>
+<rect x="20" y="220" width="220" height="44" rx="4"/>
+<text x="130" y="240" text-anchor="middle" fill="currentColor" stroke="none">/craft:bar [off | on]</text>
+<text x="130" y="256" text-anchor="middle" fill="currentColor" stroke="none" opacity=".7">command.run, answered by the mod</text>
+<rect x="20" y="290" width="220" height="44" rx="4" stroke-dasharray="4 3"/>
+<text x="130" y="310" text-anchor="middle" fill="currentColor" stroke="none">docs/craft/&lt;slug&gt;/slices.md</text>
+<text x="130" y="326" text-anchor="middle" fill="currentColor" stroke="none" opacity=".7">read with $.fs</text>
+<line x1="270" y1="20" x2="270" y2="345" stroke-dasharray="2 4" opacity=".6"/>
+<text x="278" y="24" fill="currentColor" stroke="none" font-weight="600">mod (hooks/register.ts)</text>
+<rect x="320" y="110" width="200" height="150" rx="4" stroke-width="1.6"/>
+<text x="420" y="134" text-anchor="middle" fill="currentColor" stroke="none" font-weight="600">state, in memory</text>
+<text x="336" y="160" fill="currentColor" stroke="none">slug (folder lookup), phase</text>
+<text x="336" y="182" fill="currentColor" stroke="none">slice names</text>
+<text x="336" y="204" fill="currentColor" stroke="none">running agents, start times</text>
+<text x="336" y="226" fill="currentColor" stroke="none">slices whose builder ended</text>
+<text x="336" y="248" fill="currentColor" stroke="none" opacity=".7">off flag in $.store</text>
+<line x1="240" y1="62" x2="318" y2="150" marker-end="url(#a)"/>
+<text x="262" y="92" fill="currentColor" stroke="none" font-size="11">sets phase</text>
+<line x1="240" y1="122" x2="318" y2="196" marker-end="url(#a)"/>
+<text x="250" y="150" fill="currentColor" stroke="none" font-size="11">adds, removes</text>
+<line x1="240" y1="242" x2="318" y2="248" marker-end="url(#a)"/>
+<text x="256" y="238" fill="currentColor" stroke="none" font-size="11">flips</text>
+<line x1="240" y1="312" x2="330" y2="262" marker-end="url(#a)"/>
+<text x="262" y="306" fill="currentColor" stroke="none" font-size="11">names</text>
+<rect x="580" y="150" width="160" height="70" rx="4"/>
+<text x="660" y="176" text-anchor="middle" fill="currentColor" stroke="none" font-weight="600">one line</text>
+<text x="660" y="194" text-anchor="middle" fill="currentColor" stroke="none" opacity=".7">ui.render AbovePrompt</text>
+<text x="660" y="210" text-anchor="middle" fill="currentColor" stroke="none" opacity=".7">Box, Text</text>
+<line x1="520" y1="185" x2="578" y2="185" marker-end="url(#a)"/>
+<text x="530" y="176" fill="currentColor" stroke="none" font-size="11">draws</text>
+<text x="660" y="246" text-anchor="middle" fill="currentColor" stroke="none" font-size="11">redrawn 4 times a second</text>
+<text x="660" y="261" text-anchor="middle" fill="currentColor" stroke="none" font-size="11">only while an agent runs</text>
+</svg>

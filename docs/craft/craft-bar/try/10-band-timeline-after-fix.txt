@@ -1,0 +1,10 @@
+   0.6s  craft gamma · implement · □□□□ 0/4
+  68.9s  craft gamma · implement · ▣□□□ 0/4 · ⠏ one 0:00
+ 107.9s  craft gamma · implement · ■□□□ 1/4
+ 119.6s  craft gamma · implement · ■▣▣□ 1/4 · ⠹ two 0:00 +1
+ 139.9s  craft gamma · implement · ■▣■□ 2/4 · ⠼ two 0:20
+ 177.1s  craft gamma · implement · ■■■□ 3/4
+ 187.2s  craft gamma · implement · ■■■▣ 3/4 · ⠹ four 0:00
+ 234.3s  craft gamma · implement · ■■■■ 4/4
+ 242.7s  craft gamma · implement · ■■■■ 4/4 · ⠼ review 0:00
+ 317.4s  craft gamma · implement · ■■■■ 4/4

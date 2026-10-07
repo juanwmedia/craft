@@ -1,0 +1,44 @@
+
+ ▐▛███▛█   Claude Code v2.1.292
+▝▜██████▀  Fable 5.1 with high effort · Claude Team
+ ▝▝   ▝▝   /private/tmp/claude-501/-Users-juan-nunez-code/d7a07d36-08f4-4a94-89cf-da8f18fadd03/scratchpad/fixture
+
+  Get to finished work sooner with Opus 5.5. Switch anytime with /model.
+
+❯ /craft:implement gamma
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+✳ Bunning…
+craft gamma · implement · □□□□ 0/4                                                                                                      [-]
+                                                                      Advisor Tool (experimental) is on and may use more tokens · /advisor
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ╸ fixture  main │ Fable 5.1 │ +0 -0 │ ░░░░░ 0%
+  -- INSERT -- ⏵⏵ auto mode on (shift+tab to cycle)

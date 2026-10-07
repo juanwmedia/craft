@@ -1,0 +1,25 @@
+<title>Craft bar</title>
+<style>
+:root { --page: #f4f3ef; --ink: #23221f; --muted: #66645d; --term: #1c1b19; --fg: #d6d3cb; --dim: #7d7a72; --strong: #f2efe8; --sep: #55534d; --built: #7fc06a; --run: #e8a948; --phase: #8ab4f0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #141413; --ink: #e8e6df; --muted: #9c998f; color-scheme: dark } }
+:root[data-theme="dark"] { --page: #141413; --ink: #e8e6df; --muted: #9c998f; color-scheme: dark }
+body { background: var(--page); color: var(--ink); font: 15px/1.6 system-ui, sans-serif; padding-inline: 16px; padding-block: 32px; }
+main { max-width: 860px; margin: 0 auto; display: grid; gap: 12px; }
+h1 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
+.row { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; align-items: center; }
+.label { font-size: 13px; color: var(--muted); }
+.band { background: var(--term); color: var(--fg); border-radius: 8px; padding: 8px 12px; font: 13px/1.6 ui-monospace, Menlo, monospace; white-space: nowrap; overflow-x: auto; }
+.dim { color: var(--dim); } .strong { color: var(--strong); font-weight: 600; } .sep { color: var(--sep); padding: 0 6px; }
+.built { color: var(--built); } .run { color: var(--run); } .phase { color: var(--phase); }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); margin-top: 8px; }
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; gap: 4px; } }
+</style>
+<main>
+<h1>Craft bar, one line above the prompt</h1>
+<div class="row"><span class="label">Shaping</span><div class="band"><span class="dim">craft</span> <span class="strong">checkout-retry</span><span class="sep">·</span><span class="phase">shape</span></div></div>
+<div class="row"><span class="label">Planning</span><div class="band"><span class="dim">craft</span> <span class="strong">checkout-retry</span><span class="sep">·</span><span class="phase">plan</span><span class="sep">·</span><span class="run">⠋</span> <span class="strong">evaluate</span> <span class="dim">1:05</span></div></div>
+<div class="row"><span class="label">Building</span><div class="band"><span class="dim">craft</span> <span class="strong">checkout-retry</span><span class="sep">·</span><span class="phase">implement</span><span class="sep">·</span><span class="built">■■■</span><span class="run">▣▣</span><span class="dim">□</span> 3/6<span class="sep">·</span><span class="run">⠋</span> <span class="strong">draw</span> <span class="dim">2:14</span> <span class="dim">+1</span></div></div>
+<div class="row"><span class="label">All built</span><div class="band"><span class="dim">craft</span> <span class="strong">checkout-retry</span><span class="sep">·</span><span class="phase">implement</span><span class="sep">·</span><span class="built">■■■■■■</span> 6/6</div></div>
+<div class="row"><span class="label">/craft:bar off</span><div class="band dim">no band</div></div>
+<div class="legend"><span><span class="built">■</span> built</span><span><span class="run">▣</span> building</span><span><span class="dim">□</span> waiting</span></div>
+</main>

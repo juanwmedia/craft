@@ -1,0 +1,21 @@
+1791402164.6 SPAWN-ENTER craft:build one bg=true
+1791402164.7 SPAWN-RESOLVED one {"model":"claude-fable-5-1","agentId":"a5ce806ee51285e36"}
+1791402166.9 TURN-COMPLETE agent=undefined
+1791402203.4 TURN-COMPLETE agent=a5ce806ee51285e36
+1791402215.4 SPAWN-ENTER craft:build two bg=true
+1791402215.4 SPAWN-ENTER craft:build three bg=true
+1791402215.5 SPAWN-RESOLVED two {"model":"claude-fable-5-1","agentId":"a6e6cf1566c5944bf"}
+1791402215.5 SPAWN-RESOLVED three {"model":"claude-fable-5-1","agentId":"a33ffa0e91f628a1e"}
+1791402217.4 TURN-COMPLETE agent=undefined
+1791402235.7 TURN-COMPLETE agent=a33ffa0e91f628a1e
+1791402240.3 TURN-COMPLETE agent=undefined
+1791402272.8 TURN-COMPLETE agent=a6e6cf1566c5944bf
+1791402282.9 SPAWN-ENTER craft:build four bg=true
+1791402283 SPAWN-RESOLVED four {"model":"claude-fable-5-1","agentId":"a8b6287f78409fc08"}
+1791402284.4 TURN-COMPLETE agent=undefined
+1791402329.9 TURN-COMPLETE agent=a8b6287f78409fc08
+1791402338.7 SPAWN-ENTER craft:review undefined bg=true
+1791402338.7 SPAWN-RESOLVED undefined {"model":"claude-fable-5-1","agentId":"a713ea27276a73a94"}
+1791402340.6 TURN-COMPLETE agent=undefined
+1791402413.1 TURN-COMPLETE agent=a713ea27276a73a94
+1791402442 TURN-COMPLETE agent=undefined

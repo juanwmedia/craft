@@ -1,0 +1,44 @@
+
+
+⏺ Agent "Build slice four" finished · 47s
+
+⏺ All four slices are built and pass. Checks run fast, so one review agent takes the whole change against gamma's context. I wait for its
+  verdict.
+
+⏺ craft:review(Review gamma change)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Review agent is running on the four files. Waiting for its verdict.
+
+› Message from @craft-review (ctrl+o to expand)
+
+⏺ Advising using Fable 5.1
+  ⎿  ✔ Advisor has reviewed the conversation and will apply the feedback
+
+⏺ All four gamma slices are built and the review confirmed the change with no findings.
+
+  ┌───────┬───────┐
+  │ Slice │ State │
+  ├───────┼───────┤
+  │ one   │ built │
+  ├───────┼───────┤
+  │ two   │ built │
+  ├───────┼───────┤
+  │ three │ built │
+  ├───────┼───────┤
+  │ four  │ built │
+  └───────┴───────┘
+
+  None were added this run. The review hands nothing to the human. The untracked docs/craft/alpha/ folder predates this run and was not
+  touched.
+
+  Next: /craft:try gamma, or /craft:close gamma to skip it.
+
+⏺ Agent "Review gamma change" finished · 1m 14s
+craft gamma · implement · ■■■■ 4/4                                                                                                      [-]
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ /craft:try gamma
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ╸ fixture  main │ Fable 5.1 │ +0 -0 │ ░░░░░ 7%
+  -- INSERT -- ⏵⏵ auto mode on (shift+tab to cycle)

@@ -1,0 +1,48 @@
+# Craft bar
+
+## What
+
+One line above the Claude Code prompt that says what craft is doing in this session right now: the work's slug, its phase, one square per slice while implementing, and the craft agent that is running with its elapsed time. It is for whoever runs craft and leaves it working: a glance tells them whether anything moves, without asking Claude and without spending a turn. It ships as a TypeScript mod inside the craft plugin. `/craft:status` and every other skill stay as they are.
+
+## How it works
+
+![How it works](how-it-works.svg)
+Claude Code's events fill a small state in the mod's memory, and the mod draws that state as one line above the prompt.
+
+- New files: `hooks/hooks.json` (`"modules": ["./register.ts"]`), `hooks/register.ts` with the wiring, one plain module with the logic it imports, their tests, a `tsconfig.json`, and the skill `skills/bar/SKILL.md`, which is what makes `/craft:bar` exist.
+- `command.run` on `/^craft:/`: a phase command (`shape`, `plan`, `implement`, `try`, `close`) sets the phase to its own name, forgets the slug, then returns `next(e)` so the skill runs as always. Other craft commands change nothing.
+- Slug, read as `references/work.md:9` and `:15` say: the first word of the arguments when `docs/craft/<word>/` exists at the repo's top level, or the folder after `docs/craft/` when the first word is a path inside one. Otherwise (a new idea, which shape names itself) the one folder under `docs/craft/` that was not there when the command ran, comparing `$.fs.list` names with the list taken then. Looked up when the command runs and after each main-loop `turn.complete` until found; until then the line shows the phase without a slug.
+- Slices: while the phase is `implement`, the mod reads the work's `slices.md` with `$.fs` when the command runs and after each main-loop turn (implement may append slices), keeping each `### <name>` (`references/slice.md:3`).
+- Agents: `agent.spawn` with a `craft:` type adds a running agent, named by its slice (the first `### <name>` line of a `craft:build` prompt, which implement puts after lines of its own) or by its type without the prefix (`evaluate`, `review`). `turn.complete` with that `agentId` removes it and, for a builder, marks its slice as built.
+- A square is building while a builder for its slice runs, built once one of its builders has ended, and waiting otherwise. A relaunched builder turns it building again.
+- Drawing: `ui.render` at `AbovePrompt`, with `Box` and `Text` only, above whatever the engine draws there, and nothing while a survey holds the band (`hasSurvey`). While an agent runs, `$.clock.every(250)` invalidates the render so the spinner and the time move; otherwise nothing ticks.
+- `/craft:bar off` and `/craft:bar on` are answered by the mod with one line of `text` and kept in `$.store`, so the choice holds in every session. A bare `/craft:bar` toggles. Where mods do not run, the skill answers instead, saying in one line that the bar needs Claude Code mods.
+- Context: the mod adds nothing Claude reads, except the one line `/craft:bar` answers.
+
+## How it looks
+
+[band](look/band.html)
+
+## Decisions
+
+- **The phase is the last craft command this session ran.** Not worked out from files and git like `/craft:status` does: the bar says what this session is doing, which is exactly what the human wants to see move. No git calls and no phase rules to keep in sync with the status skill.
+- **This session and this worktree only.** No other worktrees, no other sessions, nothing persisted but the off flag. The state dies with the session, so it is never stale.
+- **Its own command, `/craft:bar`.** The status skill keeps its job and its eval untouched. The skill file exists so the command shows in the typeahead and answers where mods do not run; `disable-model-invocation: true` keeps Claude from running it on its own.
+- **One line, four pieces, no buttons.** After a dim `craft` label: slug, phase, squares with a count, spinner with name and time (`+N` when more agents run). The human approved this look. Deferred to later versions, one at a time: a "your turn" signal, a next-command button, phase dots, the wave, the relaunch count, a failed check in red and its last line.
+- **Shows only once the session uses craft.** After a phase command or a `craft:` agent; a session that never touches craft sees nothing.
+- **No red in this version.** Implement rewrites each check into commands of its own, so the bar cannot tell a slice's check by its command (seen live on 2026-10-07: `for n in one two three four; do ... done`). A square turns built when its builder finishes, which the events say for certain; red waits for a signal that can be trusted.
+- **TypeScript, one test runner.** Every file is TypeScript, as the built-in mods are; the human asked for it. Logic and wiring are both tested with `claude plugin test` in `.test.ts` files. The kit refused a `node:child_process` import in a probe on 2026-10-07; nothing here needs Node's own modules, so one runner is enough. `tsc` checks everything against the declarations Claude Code writes into `.claude-plugin/types/` when it loads the plugin with `--plugin-dir`.
+- **Two code files.** `register.ts` holds only the wiring (events, `$`, drawing); the logic module holds parsing, state and what the line says, as plain functions the tests call directly.
+- **Built fresh.** The abandoned `craft-board-mod` attempt (pane, every worktree, status takeover) was never committed, is deleted, and nothing of it is carried over.
+
+## Assumptions
+
+- Tested: a line drawn at `AbovePrompt` shows right above the prompt. On 2.1.292 (2026-10-07), a probe mod returning `Text` there, in an interactive `claude --plugin-dir` session in a throwaway repo driven through a pseudo-terminal, put `PROBE-BAND above the prompt` on the row above the prompt box, and the bar drew there in every live try (`try.md`). Works at `hooks/register.ts:128`. If wrong, there is no bar.
+- Tested: `command.run` sees a plugin skill's command before it runs, and its answer replaces the skill. On 2.1.292 (2026-10-07), `claude -p "/craft:status"` with a probe mod printed the intercepted event, and a probe plugin with `skills/bar/SKILL.md` marked `disable-model-invocation: true` and a mod answering `/^barprobe:/` printed `barprobe: PROBE-BAR barprobe:bar [off]` for `claude -p --plugin-dir . "/barprobe:bar off"`, without the skill's own line. Live, `/craft:bar off`, `on` and bare each answered their line (`try.md`). Works at `hooks/register.ts:84`. If wrong, neither the phase nor `/craft:bar` works.
+- Tested: the mod sees craft agents start and end, matched by one `agentId`, two at once included. In a headless `/craft:implement` of a four-slice work in a throwaway repo on 2.1.292 (2026-10-07), a probe mod logged an `agent.spawn` for each `craft:build` and the `craft:review`, foreground and background, each `next(e)` resolving to its `agentId` at once, and each agent's final `turn.complete` carrying the same `agentId`; slices `two` and `three` spawned 3 seconds apart and ran together. Works at `hooks/register.ts:95` and `:105`. If wrong, the bar shows slug and phase but no squares moving and no spinner.
+- Tested: a `craft:build` prompt holds its slice's `### <name>` on a line of its own, below lines implement writes first (`Work in this tree, no worktree: ...`), as the same probe logged for all four builders, and live after the fix `one`, `two` and `four` showed by their slice while `three` ran beside `two`, counted in its `+1` and its square (`try.md`). Works at `hooks/bar.ts:91`. Broke as first assumed: the shape had bet on the first line of the prompt. If wrong, its square never shows as building.
+- Tested: a Claude Code without mods still loads craft whole. With `hooks/hooks.json` holding `modules`, versions 2.1.260 and 2.1.280 listed every `craftx:*` skill. Not run again on this mod. If wrong, users on old versions lose craft.
+- Assumed: a relaunched builder's prompt also holds its slice's `### <name>` before any other `### ` line, since implement relaunches with "the slice, the last report and what the check printed" (`skills/implement/SKILL.md:26`) and its first launches put the slice before the reports. If wrong, a relaunched builder shows by its type and its square stays built while it runs. Still assumed: no slice relaunched in the live tries; the kit test covers the logic. Claude confirms it in the next live implement that relaunches.
+- Tested: interactive implement spawns parallel builders in the same instant. In a live `/craft:implement gamma` on 2.1.292 (2026-10-07) with a mod logging spawns beside the bar, `two` and `three` both entered `agent.spawn` within the same tenth of a second, all builders in the background. That is why the first live try showed no `+1`: the old hook read the state before awaiting the clock, and one spawn overwrote the other. Every hook now awaits before it touches the state, and the live try after the fix showed `+1` for that wave (`try.md`). Works at `hooks/register.ts:98`. If wrong, parallel builders show as one.
+- Assumed: the line draws the same in the Desktop Code tab, where the mods docs say `Box` and `Text` render too. Still assumed: the plugin docs give `--plugin-dir` for the terminal and a marketplace install for Desktop (https://code.claude.com/docs/en/plugins/install.md), so it waits for the plugin to be installed that way. The human confirms it there.
+- Broken: implement runs each check exactly as its `done:` line writes it. Live it ran them rewritten (`for n in one two three four; do ... done`), so the bar dropped check results: no red square in this version.

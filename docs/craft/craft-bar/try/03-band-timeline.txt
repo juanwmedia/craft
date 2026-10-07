@@ -1,0 +1,9 @@
+   0.6s  craft gamma · implement · □□□□ 0/4
+  90.0s  craft gamma · implement · □□□□ 0/4 · ⠸ build 0:00
+ 159.7s  craft gamma · implement · □□□□ 0/4
+ 183.7s  craft gamma · implement · □□□□ 0/4 · ⠏ build 0:00
+ 244.0s  craft gamma · implement · □□□□ 0/4
+ 268.0s  craft gamma · implement · □□□□ 0/4 · ⠦ build 0:00
+ 331.1s  craft gamma · implement · □□□□ 0/4
+ 350.7s  craft gamma · implement · □□□□ 0/4 · ⠦ review 0:00
+ 433.5s  craft gamma · implement · □□□□ 0/4

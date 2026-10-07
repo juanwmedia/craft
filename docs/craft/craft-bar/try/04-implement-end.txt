@@ -1,0 +1,44 @@
+
+› Message from @craft-build (ctrl+o to expand)
+
+  Ran 1 shell command
+
+⏺ Agent "Build slice four" finished · 1m 3s
+
+⏺ All four slices are built and pass. Handing the whole change to one reviewer, since the checks run instantly.
+
+⏺ craft:review(Review gamma change)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ The reviewer is running over the four files against the shape, plan and slices. Its verdict decides whether anything goes back to a
+  builder or the work is ready for /craft:try gamma.
+
+› Message from @craft-review (ctrl+o to expand)
+
+  Ran 1 shell command
+
+⏺ Agent "Review gamma change" finished · 1m 23s
+
+⏺ Advising using Fable 5.1
+  ⎿  ✔ Advisor has reviewed the conversation and will apply the feedback
+
+⏺ Work gamma is built and reviewed. All four checks pass, and the reviewer confirmed the change with no findings.
+
+  - one: built
+  - two: built
+  - three: built
+  - four: built
+
+  No slice was added this run. The review hands nothing to the human. The untracked docs/craft/alpha/ folder predates this run and is not
+  part of the change.
+
+  Next: /craft:try gamma, or /craft:close gamma to skip it.
+
+✻ Cooked for 8m 8s · done 8:58 PM
+craft gamma · implement · □□□□ 0/4                                                                                                      [-]
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ /craft:try gamma
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ╸ fixture  main │ Fable 5.1 │ +0 -0 │ ░░░░░ 8%
+  -- INSERT -- ⏵⏵ auto mode on (shift+tab to cycle)

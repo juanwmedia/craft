@@ -28,6 +28,10 @@ When something changes, run `/craft:plan <slug> <what changed>`, then implement,
 
 When you lose track, `/craft:status [slug]` says where every open work stands, what it waits on and the next step.
 
+In sessions where Claude Code runs mods, a line above the prompt shows the work's slug, its phase, its slices while implementing and the craft agent running now. `/craft:bar off` hides it in every session and `/craft:bar on` brings it back.
+
+![The craft bar in each state](docs/craft/craft-bar/look/band.png)
+
 When an answer does not land, `/craft:wtf [the fragment]` says it again in plain words, without moving the work forward.
 
 When shape or plan starts new work in a tree with uncommitted changes, it offers to move it to its own worktree.
