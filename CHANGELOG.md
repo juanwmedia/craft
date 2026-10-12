@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.8.1
+
+- In shape and plan, the first evaluate pass audits only what the work rests on: decisions and assumptions against the code, each acceptance line against its slice's check, each slice against the slice rules. Wording and agreement between documents wait for close. Measured on one closed work with six planted defects, three of substance and three of wording: three scoped runs found the three of substance every time, skipped the wording, and took about a third less than three full runs.
+- Every agent names its model: evaluate and review run on Opus, build on Sonnet, whatever model the session uses.
+
 ## 4.8.0
 
 The craft bar: one line above the prompt that says what craft is doing in this session, without asking Claude or spending a turn.

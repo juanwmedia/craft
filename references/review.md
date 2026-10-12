@@ -4,7 +4,7 @@ Write the result first, then review it in a fresh context. The first pass covers
 
 ## A draft
 
-Hand the `craft:evaluate` agent its path. Until its verdict the draft is frozen: talk about anything, but change it, approve it or build on it only after the verdict. Fix what it refutes, and audit again only when a fix changes a decision or a claim a decision rests on. Only a clean draft goes to the human, by its path, never pasted.
+Hand the `craft:evaluate` agent its path. In shape and plan the first pass audits only what the work rests on: decisions and assumptions against the code, each acceptance line against its slice's check, each slice against the slice rules. Wording and agreement between documents wait for close. Until its verdict the draft is frozen: talk about anything, but change it, approve it or build on it only after the verdict. Fix what it refutes, and audit again only when a fix changes a decision or a claim a decision rests on. Only a clean draft goes to the human, by its path, never pasted.
 
 ## A code change
 
