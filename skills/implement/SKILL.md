@@ -29,7 +29,7 @@ When an agent reports, run its check yourself, and act on what happens and on ev
 | A need whose owner is not built yet | Wait for the owner |
 | A need whose owner is built | Launch a fresh agent for the owner with its slice and the need, starting from the code already built |
 | A need on a file with no owner, which the context asks for and nothing in it rules out | Append one slice that owns the file to `slices.md`, marked as added while building, check it against `slice.md` and run it like any other |
-| A need its owner's own slice contradicts, one that comes from a slice added while building, or any other | It goes to the human as it is |
+| A need its owner's own slice contradicts, one that comes from a slice added while building, or any other | It goes to whoever answers, as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says, as it is |
 | The agent ends with no report, or a tool it needs is down | Launch once more; if that fails too, stop everything and say what broke |
 
 You are the only one who writes `slices.md`, and only by appending.
@@ -38,6 +38,6 @@ When every slice is built and this run changed something, review the change as `
 
 When a round of fixes ends, run every check again: a built slice that now fails goes back to the table.
 
-End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to the human. When every slice is built, name the next command, `/craft:try <slug>`, or `/craft:close <slug>` to skip it.
+End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to whoever answers. When every slice is built, name the next command, `/craft:try <slug>`, or `/craft:close <slug>` to skip it.
 
 Never offer to commit.

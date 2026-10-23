@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-label="A question leaves a phase, ask.md reads the craft.detached git flag, and the question goes to the human when it is off or to craft:act-as-me when it is on, whose answer is appended to detached.md before the phase goes on; the detached skill writes the flag and the bar mod reads it." font-family="system-ui, sans-serif" font-size="12" fill="currentColor" stroke="currentColor" stroke-width="1.2">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" stroke="none"/>
+    </marker>
+  </defs>
+
+  <rect x="20" y="40" width="170" height="60" rx="6" fill="none"/>
+  <text x="105" y="64" text-anchor="middle" stroke="none">a phase</text>
+  <text x="105" y="82" text-anchor="middle" stroke="none" font-size="10" opacity="0.7">shape, plan, implement, try, close</text>
+
+  <line x1="190" y1="70" x2="230" y2="70" marker-end="url(#arrow)"/>
+  <text x="210" y="62" text-anchor="middle" stroke="none" font-size="11">question</text>
+
+  <rect x="230" y="40" width="150" height="60" rx="6" fill="none"/>
+  <text x="305" y="64" text-anchor="middle" stroke="none">ask.md</text>
+  <text x="305" y="82" text-anchor="middle" stroke="none" font-size="10" opacity="0.7">reads craft.detached in .git/config</text>
+
+  <line x1="305" y1="100" x2="305" y2="170" marker-end="url(#arrow)"/>
+  <text x="315" y="140" stroke="none" font-size="11">off</text>
+
+  <rect x="230" y="170" width="150" height="50" rx="6" fill="none"/>
+  <text x="305" y="191" text-anchor="middle" stroke="none">AskUserQuestion</text>
+  <text x="305" y="208" text-anchor="middle" stroke="none" font-size="11" opacity="0.7">the human answers</text>
+
+  <line x1="380" y1="70" x2="470" y2="70" marker-end="url(#arrow)" stroke="#d9822b"/>
+  <text x="425" y="62" text-anchor="middle" stroke="none" font-size="11" fill="#d9822b">on</text>
+
+  <rect x="470" y="30" width="180" height="80" rx="6" fill="none" stroke="#d9822b"/>
+  <text x="560" y="54" text-anchor="middle" stroke="none">craft:act-as-me</text>
+  <text x="560" y="72" text-anchor="middle" stroke="none" font-size="11" opacity="0.7">Fable 5.1, fresh context</text>
+  <text x="560" y="90" text-anchor="middle" stroke="none" font-size="11" opacity="0.7">reads the repo, edits nothing</text>
+
+  <line x1="560" y1="110" x2="560" y2="170" marker-end="url(#arrow)" stroke="#d9822b"/>
+  <text x="570" y="144" stroke="none" font-size="11">answer + why</text>
+
+  <rect x="470" y="170" width="180" height="50" rx="6" fill="none"/>
+  <text x="560" y="191" text-anchor="middle" stroke="none">detached.md</text>
+  <text x="560" y="208" text-anchor="middle" stroke="none" font-size="11" opacity="0.7">phase, question, answer, why</text>
+
+  <path d="M 560 220 L 560 240 L 105 240 L 105 100" fill="none" marker-end="url(#arrow)"/>
+  <text x="330" y="234" text-anchor="middle" stroke="none" font-size="11">the phase goes on</text>
+
+  <line x1="650" y1="70" x2="730" y2="70" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+  <rect x="730" y="50" width="60" height="40" rx="6" fill="none" stroke-dasharray="4 3"/>
+  <text x="760" y="67" text-anchor="middle" stroke="none" font-size="11">stop</text>
+  <text x="760" y="82" text-anchor="middle" stroke="none" font-size="10" opacity="0.7">names it</text>
+  <text x="690" y="62" text-anchor="middle" stroke="none" font-size="10">cannot decide</text>
+
+  <line x1="20" y1="260" x2="780" y2="260" opacity="0.3" stroke-dasharray="2 4"/>
+
+  <rect x="20" y="290" width="150" height="50" rx="6" fill="none"/>
+  <text x="95" y="311" text-anchor="middle" stroke="none">/craft:detached</text>
+  <text x="95" y="328" text-anchor="middle" stroke="none" font-size="11" opacity="0.7">on | off, a skill</text>
+
+  <line x1="170" y1="315" x2="270" y2="315" marker-end="url(#arrow)"/>
+  <text x="220" y="307" text-anchor="middle" stroke="none" font-size="11">writes</text>
+
+  <rect x="270" y="290" width="150" height="50" rx="6" fill="none"/>
+  <text x="345" y="311" text-anchor="middle" stroke="none">.git/config</text>
+  <text x="345" y="328" text-anchor="middle" stroke="none" font-size="11" opacity="0.7">craft.detached = true</text>
+
+  <line x1="420" y1="315" x2="520" y2="315" marker-end="url(#arrow)"/>
+  <text x="470" y="307" text-anchor="middle" stroke="none" font-size="11">read by $.process</text>
+
+  <rect x="520" y="290" width="150" height="50" rx="6" fill="none"/>
+  <text x="595" y="311" text-anchor="middle" stroke="none">bar mod</text>
+  <text x="595" y="328" text-anchor="middle" stroke="none" font-size="10" opacity="0.7">draws "detached", and the X</text>
+
+
+  <text x="20" y="390" stroke="none" font-size="11" opacity="0.7">Routines start with /craft:detached on as their first message. Nothing in the mod decides anything.</text>
+</svg>

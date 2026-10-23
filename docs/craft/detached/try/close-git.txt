@@ -1,0 +1,20 @@
+4558503 (HEAD -> greet, origin/greet) feat: add greet(name) returning the signed-off greeting
+fcad038 (origin/main, main) chore: greet work, shaped and planned
+--- remote
+4558503 (greet) feat: add greet(name) returning the signed-off greeting
+fcad038 (HEAD -> main) chore: greet work, shaped and planned
+commit 455850334ec8d127854abaf246b520eb366addbb
+Author: juanwmedia <juan@wmedia.es>
+Date:   Fri Oct 23 14:30:18 2026 +0200
+
+    feat: add greet(name) returning the signed-off greeting
+    
+    Adds src/greet.js, whose greet(name) returns `Hello, <name>!` as product
+    copy fixed. Reconciles slice greet in slices.md: its check now proves the
+    return value and its body matches the shape. Records the detached answers
+    from implement and close.
+
+ docs/craft/greet/detached.md | 33 +++++++++++++++++++++++++++++++++
+ docs/craft/greet/slices.md   |  4 ++--
+ src/greet.js                 |  3 +++
+ 3 files changed, 38 insertions(+), 2 deletions(-)

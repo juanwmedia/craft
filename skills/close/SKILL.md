@@ -21,8 +21,8 @@ Then bring the documents up to date with the code:
 
 Review every document that changed as `${CLAUDE_PLUGIN_ROOT}/references/review.md` says.
 
-A lesson is what a model could not infer by itself, from an assumption that broke or a slice added while building. Write each one worth keeping in the repo's `CLAUDE.md`, or `AGENTS.md` when there is none, in the style it already has. With neither, ask the human whether to create one.
+A lesson is what a model could not infer by itself, from an assumption that broke or a slice added while building. Write each one worth keeping in the repo's `CLAUDE.md`, or `AGENTS.md` when there is none, in the style it already has. With neither, ask whether to create one, as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
 
-Before anything leaves this machine, ask the human once with `AskUserQuestion`: the files to commit (the work's files, plus where a lesson went), the commit message (what changed and why), a branch named after the slug when this is the main branch or `develop` (the human may name another), and whether to open a pull request when the branch has none. A yes creates the branch if one was proposed, commits only those files, pushes (which updates the branch's pull request if it has one) and opens the pull request if asked.
+Before anything leaves this machine, ask once, as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says: the files to commit (the work's files, plus where a lesson went), the commit message (what changed and why), a branch named after the slug when this is the main branch or `develop` (the answer may name another), and whether to open a pull request when the branch has none. When `craft:act-as-me` answered, its block in `detached.md` is written first and `detached.md` is among the files committed. A yes creates the branch if one was proposed, commits only those files, pushes (which updates the branch's pull request if it has one) and opens the pull request if asked.
 
-End with what was committed, where it was pushed, the pull request link if there is one, the assumptions that broke, and the lessons written.
+End with what was committed, where it was pushed, the pull request link if there is one, the assumptions that broke, and the lessons written. Name who gave the yes: when `craft:act-as-me` answered, the reply says it did, never that the reader approved.

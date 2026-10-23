@@ -21,4 +21,4 @@ Next: the exact command.
 
 Leave out a closed work unless its slug is named, and a folder that has none of those files, saying how many were left out.
 
-What the files cannot show, such as whether the human approved a draft, is said to be unknown, never guessed.
+What the files cannot show, such as whether a draft was approved, is said to be unknown, never guessed.

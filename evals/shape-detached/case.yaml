@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: shape-detached
+description: >-
+  Shape starts a new work (token revocation) in a clean committed repository
+  where craft.detached is true. Every question, the final confirmation of the
+  draft included, has to go to the craft:act-as-me agent and never to
+  AskUserQuestion, and each answer with its why has to be appended to
+  detached.md in the work's folder before shape.md is done.
+tags: [shape, detached]
+context:
+  scaffold_script: fixture.sh
