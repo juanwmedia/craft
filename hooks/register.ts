@@ -10,6 +10,7 @@ import {
   initialState,
   pieces,
   startPhase,
+  withDetached,
   withSlices,
 } from './bar'
 
@@ -23,6 +24,11 @@ const WORKS = 'docs/craft'
 const SLICES = 'slices.md'
 const RENDER = 'ui.render'
 const NONE = ''
+const WARNING = 'warning'
+const CLOSE = 'x'
+const DISMISS = 'dismiss'
+const FLAG = ['git', 'config', '--get', 'craft.detached']
+const FLAG_ON = 'true'
 const TICK_MS = 250
 const CRAFT = /^craft:/
 const STYLES: Record<Tone, TextProps> = {
@@ -30,10 +36,11 @@ const STYLES: Record<Tone, TextProps> = {
   slug: { bold: true },
   phase: { color: 'suggestion' },
   built: { color: 'success' },
-  building: { color: 'warning' },
+  building: { color: WARNING },
   waiting: { dimColor: true },
   dim: { dimColor: true },
   plain: {},
+  detached: { color: WARNING },
 }
 
 let state = initialState()
@@ -41,6 +48,12 @@ let ticker: Timer | undefined
 
 async function hidden($: EngineInterface): Promise<boolean> {
   return (await $.store.get(HIDDEN)) === true
+}
+
+async function readDetached($: EngineInterface): Promise<void> {
+  const root = await $.session.root()
+  const result = await $.process.run(FLAG, { cwd: root }).catch(() => undefined)
+  state = withDetached(state, result?.exitCode === 0 && result.stdout.trim() === FLAG_ON)
 }
 
 async function folders($: EngineInterface): Promise<string[]> {
@@ -72,11 +85,15 @@ function tick($: EngineInterface): void {
   $.ui.invalidate(RENDER)
 }
 
+async function setHidden($: EngineInterface, isHidden: boolean): Promise<void> {
+  await $.store.set(HIDDEN, isHidden)
+  $.ui.invalidate(RENDER)
+}
+
 async function answerBar($: EngineInterface, args: string): Promise<{ text: string }> {
   const word = args.trim()
   const isHidden = word === OFF ? true : word === ON ? false : !(await hidden($))
-  await $.store.set(HIDDEN, isHidden)
-  $.ui.invalidate(RENDER)
+  await setHidden($, isHidden)
   return { text: isHidden ? OFF_TEXT : ON_TEXT }
 }
 
@@ -87,6 +104,7 @@ export const register: Register = on => {
     if (phase !== undefined) {
       const names = await folders($)
       state = startPhase(state, phase, e.args, names)
+      await readDetached($)
       await readSlices($)
     }
     return next(e)
@@ -109,6 +127,7 @@ export const register: Register = on => {
           const names = await folders($)
           state = findSlug(state, names)
         }
+        await readDetached($)
         await readSlices($)
       }
     } else if (state.agents.some(agent => agent.id === e.agentId)) {
@@ -128,9 +147,11 @@ export const register: Register = on => {
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const line = pieces(state, await $.clock.now())
     if (e.props.hasSurvey || line.length === 0 || (await hidden($))) return next(e)
-    const { Box, Text } = $.ui.resolve(e)
+    const { Box, Button, Text } = $.ui.resolve(e)
     const below = await next(e)
     const texts = line.map(piece => Text({ ...STYLES[piece.tone], children: piece.text }))
-    return Box({ flexDirection: 'column', children: [Box({ key: BAR, children: Text({ children: texts }) }), below] })
+    const close = Button({ key: CLOSE, label: CLOSE, role: DISMISS, plain: true, onPress: () => setHidden($, true) })
+    const row = Box({ children: [Box({ key: BAR, flexGrow: 1, children: Text({ children: texts }) }), close] })
+    return Box({ flexDirection: 'column', children: [row, below] })
   })
 }

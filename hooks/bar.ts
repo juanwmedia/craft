@@ -1,3 +1,5 @@
+const DETACHED = 'detached'
+
 export const TONE = {
   label: 'label',
   slug: 'slug',
@@ -7,6 +9,7 @@ export const TONE = {
   waiting: 'waiting',
   dim: 'dim',
   plain: 'plain',
+  detached: DETACHED,
 } as const
 
 export type Tone = (typeof TONE)[keyof typeof TONE]
@@ -19,6 +22,7 @@ export type Agent = { id: string; name: string; slice?: string; startedAt: numbe
 
 export type State = {
   isActive: boolean
+  isDetached: boolean
   phase?: string
   slug?: string
   before: string[]
@@ -43,7 +47,7 @@ const NEWLINE = '\n'
 const GLYPHS: Record<Square, string> = { built: '■', building: '▣', waiting: '□' }
 
 export function initialState(): State {
-  return { isActive: false, before: [], slices: [], agents: [], ended: [] }
+  return { isActive: false, isDetached: false, before: [], slices: [], agents: [], ended: [] }
 }
 
 export function commandPhase(command: string): string | undefined {
@@ -66,6 +70,10 @@ export function startPhase(state: State, phase: string, args: string, names: str
   const slug = slugFromArgs(args, names)
   const work = slug !== undefined && slug === state.slug ? state : { ...initialState(), agents: state.agents }
   return { ...work, isActive: true, phase, slug, before: names }
+}
+
+export function withDetached(state: State, isDetached: boolean): State {
+  return { ...state, isDetached }
 }
 
 export function findSlug(state: State, names: string[]): State {
@@ -117,6 +125,7 @@ export function pieces(state: State, now: number): Piece[] {
   const line: Piece[] = [{ text: PREFIX.slice(0, -1), tone: TONE.label }]
   if (state.slug !== undefined) line.push({ text: SPACE, tone: TONE.dim }, { text: state.slug, tone: TONE.slug })
   if (state.phase !== undefined) line.push({ text: SEPARATOR, tone: TONE.dim }, { text: state.phase, tone: TONE.phase })
+  if (state.isDetached) line.push({ text: SEPARATOR, tone: TONE.dim }, { text: DETACHED, tone: TONE.detached })
   if (state.phase === IMPLEMENT && state.slices.length > 0) {
     const tones = state.slices.map(slice => sliceTone(state, slice))
     const built = tones.filter(tone => tone === TONE.built).length

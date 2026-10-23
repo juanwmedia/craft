@@ -19,7 +19,7 @@ Challenge the idea and offer the simpler shape when you see one.
 
 An assumption is tested only when you saw it work in this repo's code, in a read-only run you made and cite, or the human ran it in front of you. Documentation alone makes it assumed, never tested. 
 
-You are done when nothing blocking is open and the human confirms.
+You are done when nothing blocking is open and whoever answers confirms it, as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says.
 
 `shape.md` has these sections, in this order.
 

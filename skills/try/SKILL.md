@@ -11,7 +11,7 @@ Its input is `$ARGUMENTS`, read as `${CLAUDE_PLUGIN_ROOT}/references/work.md` sa
 
 Try each thing the work must do the most direct way this session allows: a browser, a request, a log, the database. Whoever tries a thing tries it from start to end. What cannot be seen live says why.
 
-Before a try leaves this machine (a real mail, a record in someone else's service), ask the human once with `AskUserQuestion`, naming what it will leave outside.
+Before a try leaves this machine (a real mail, a record in someone else's service), ask once, as `${CLAUDE_PLUGIN_ROOT}/references/ask.md` says, naming what it will leave outside.
 
 Tries that share neither the browser nor the data may run at once, each by its own agent. Only you write `try.md`.
 

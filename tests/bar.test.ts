@@ -41,6 +41,13 @@ const PLAN_COMMAND = `${PLUGIN}:${PLAN}`
 const IMPLEMENT_COMMAND = `${PLUGIN}:${IMPLEMENT}`
 const PLANNING = `${PLUGIN} ${SLUG} · ${PLAN}`
 const SHAPING = `${PLUGIN} · ${SHAPE}`
+const DETACHED = 'detached'
+const BUTTON = 'Button'
+const CLOSE = 'x'
+const TRUE = 'true'
+const FALSE = 'false'
+const FLAG_ARGV = 'git config --get craft.detached'
+const SEPARATOR = ' · '
 
 function source(name: string): string {
   return `src/${name}.ts`
@@ -72,7 +79,7 @@ function prompt(name: string): string {
 
 type Ui = Mounted<typeof SURFACE, typeof BAND>
 
-type World = { folders: string[]; files: Record<string, string> }
+type World = { folders: string[]; files: Record<string, string>; flag?: string }
 
 function world(on: On, folders: string[], stored: Record<string, unknown> = {}) {
   const state: World = {
@@ -90,6 +97,11 @@ function world(on: On, folders: string[], stored: Record<string, unknown> = {}) 
   on('fs.read', ($, e) => {
     const text = state.files[e.path]
     return text === undefined ? { deny: MISSING } : { value: text }
+  })
+  on('process.run', (_, e) => {
+    const answer = e.argv.join(' ') === FLAG_ARGV ? state.flag : undefined
+    const stdout = answer === undefined ? NOTHING : `${answer}${NEWLINE}`
+    return { value: { exitCode: answer === undefined ? 1 : 0, stdout, stderr: NOTHING, isStdoutTruncated: false, isStderrTruncated: false } }
   })
   on('command.run', () => ({ text: NOTHING }))
   on('agent.spawn', ($, e) => ({ model: MODEL, agentId: e.description }))
@@ -304,5 +316,35 @@ test('a survey leaves only the engine drawing', async ($, on) => {
   await run($, PLAN_COMMAND, SLUG)
   const ui = await mount($, true)
   expect(await line(ui)).toBeUndefined()
-  expect(await ui.drawn()).toEqual({ type: TEXT, children: [ENGINE] })
+  expect(await ui.drawn()).toMatchObject({ type: TEXT, children: [ENGINE] })
+})
+
+test('the flag draws detached after the phase while it is on, and a main-loop turn drops it once the flag is gone', async ($, on) => {
+  const { state } = world(on, [SLUG])
+  const ui = await mount($)
+  state.flag = TRUE
+  await run($, PLAN_COMMAND, SLUG)
+  expect(await line(ui)).toBe(`${PLANNING}${SEPARATOR}${DETACHED}`)
+  expect(await leaf(ui, DETACHED)).toMatchObject({ color: WARNING })
+  state.flag = undefined
+  await end($)
+  expect(await line(ui)).toBe(PLANNING)
+  state.flag = FALSE
+  await run($, PLAN_COMMAND, SLUG)
+  expect(await line(ui)).toBe(PLANNING)
+  state.flag = TRUE
+  await end($)
+  expect(await line(ui)).toBe(`${PLANNING}${SEPARATOR}${DETACHED}`)
+})
+
+test('pressing the x by its key hides the line and leaves hidden true in the store, which a bare /craft:bar shows by switching it on', async ($, on) => {
+  world(on, [SLUG])
+  const ui = await mount($)
+  await run($, PLAN_COMMAND, SLUG)
+  expect(await line(ui)).toBe(PLANNING)
+  expect(await ui.find({ type: BUTTON, key: CLOSE })).toBeDefined()
+  await ui.press({ key: CLOSE })
+  expect(await line(ui)).toBeUndefined()
+  expect((await run($, BAR)).text).toMatch(/on\.$/)
+  expect(await line(ui)).toBe(PLANNING)
 })
