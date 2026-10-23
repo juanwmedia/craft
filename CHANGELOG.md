@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.9.1
+
+- The craft bar shows the work, the phase and `detached` for a phase the model starts with the Skill tool, the same as for one you type. Before, a phase started that way (a routine asking in words, a session moving on to the next phase) showed only `craft`.
+- `/craft:detached` answers one line, whether the mode is on or off in this repository, without the line about routines.
+- The bar draws above the prompt in the terminal and in the desktop app. The web (claude.ai/code) does not draw it.
+
 ## 4.9.0
 
 Detached mode: craft carries a piece of work with nobody at the keyboard.

@@ -15,6 +15,6 @@ Craft gets a second mode. With `craft.detached` set to `true` in the repository'
 - `references/worktree.md`, `references/review.md` and the plan, implement, try and close skills name no human and no `AskUserQuestion` when they hand over a decision: each asks as `references/ask.md` says. Proven by `rules`, whose check greps the word human in all six and `AskUserQuestion` in the worktree offer, try and close, the three that named it.
 - `/craft:detached on` sets `craft.detached` to `true` in the repository's local git config, `/craft:detached off` removes it, and each answers one line naming the mode. Proven by `detached-skill`.
 - While the flag is `true`, the bar draws `detached` after the phase, and drops it once a main-loop turn ends with the flag gone, as a piece after the phase piece at `hooks/bar.ts:127`. Proven by `bar`.
-- A press on the X at the end of the bar hides it and keeps the choice in the store, as `/craft:bar off` does at `hooks/register.ts:89`. Proven by `bar`.
-- The README names `/craft:detached on`, `craft:act-as-me`, `detached.md` and the routine's first message; the changelog has a 4.9.0 entry and the plugin manifest says 4.9.0. Proven by `docs`.
+- A press on the X at the end of the bar hides it and keeps the choice in the store, as `/craft:bar off` does at `hooks/register.ts:90`. Proven by `bar`.
+- The README names `/craft:detached on`, `craft:act-as-me`, `detached.md` and the routine's first message; the changelog has a 4.9.0 entry and the plugin manifest says 4.9.1. Proven by `docs`.
 - Both switch skills, `/craft:detached` and `/craft:bar`, can be invoked by the model, so a prompt written in words turns the mode on. Proven by `bar-skill`; the path from words was seen live in `try.md`.
