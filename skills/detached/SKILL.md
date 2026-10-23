@@ -13,4 +13,4 @@ Detached mode is the flag `craft.detached` in this repository's local git config
 
 Run nothing else, and read and write nothing else.
 
-Answer one line and nothing more: detached mode is on or off in this repository now, and a routine turns it on with `/craft:detached on` as its first message.
+Answer one line and nothing more: `Detached mode is on in this repository.` or `Detached mode is off in this repository.`

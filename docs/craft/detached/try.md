@@ -22,10 +22,16 @@ With close finished, ctrl+x tab put the focus on the bar and Enter pressed the `
 
 `/craft:close greet` reconciled `slices.md`, had the audit, sent the commit, branch and pull request question to `craft:act-as-me` and, on its yes, created the branch `greet`, committed three files and pushed to `origin` with the machine's own git. The remote now has `greet` at the same commit. Seen on the way: close changed one word of the approved commit body after the approval, to mention the close answers too, and said so in its report. Proof: [close-git.txt](try/close-git.txt), [close-detached.md](try/close-detached.md).
 
-## The agent from a cloud routine: skipped
+## The agent from a cloud routine: passed
 
-A cloud routine checks out the repository from GitHub and loads the installed plugin, and neither holds this work until it is released. The headless runs above are the same situation with nobody to ask, run on this machine.
+After 4.9.0 was released, a one-off routine on the `wmedia` environment, with this repository as its only source, sent three messages in order: `/craft:detached on`, `/craft:shape` with a small idea and "never commit or push", and a command that prints the flag and every `detached.md`. The session started in `/home/user/craft` and loaded craft 4.9.0 from there. The first message set the flag to `true`. Shape sent its six questions to an agent and wrote `detached.md` with six blocks of phase, question, answer and why; the run called `AskUserQuestion` zero times and committed nothing, though a stop hook of the environment asked it to. The log shows the `Agent` call and a prompt in `act-as-me`'s form, not the agent type. Shape did not finish: its evaluate pass refuted 7 of 20 claims of the draft, which says nothing about the mode. Proof: [cloud-detached.md](try/cloud-detached.md), https://claude.ai/code/session_014ReY6tCEsTPtc1SXHsRtaU.
 
-## The agent from the desktop app: skipped
+A second routine with two sources, `wmedia` and this repository, starts in `/home/user`, which is no repository. `/craft:detached on` there set the flag in `/home/user/wmedia`, a repository the model picked by itself, and said which. It works, and it is the model's guess. Proof: https://claude.ai/code/session_01Xh1WyXTGFgV6Q4SjJrWbMt.
 
-The desktop app loads the installed plugin, which is still 4.8.1 without `craft:act-as-me`. The interactive terminal session above runs the same engine.
+## The bar from the desktop app: passed, once it saw phases the model starts
+
+In the desktop app on 4.9.0 the bar drew above the prompt with its `x`, and the human's press hid it: the installed plugin's store went to `"hidden": true`. The bar said only `craft`: in that session the model had started `craft:plan` and `craft:implement` with the Skill tool, the bar learned a phase only from a typed command, and the craft agents alone made it active. So it never said the work, the phase or `detached` for a phase the model started, in a routine asked in words or in any session. The bar now also reads the Skill tool's call (`hooks/register.ts:117`). In an interactive session with this tree, the flag on and the model asked in words to run `craft:close demo`, the bar drew `craft demo · close · detached` with its `x`. Proof: [desktop-bar.png](try/desktop-bar.png), [store-desktop-after-x.json](try/store-desktop-after-x.json), [bar-skill-tool.txt](try/bar-skill-tool.txt).
+
+## The bar from claude.ai/code: does not draw
+
+In a web session on the `wmedia` environment with this repository, `/craft:bar on` answered from the mod, and `/craft:close detached`, twice, drew no bar. The mod's API raises the band above the prompt on the terminal and the desktop only, so the web has no bar, `detached` and `x` included.

@@ -15,6 +15,7 @@ import {
 } from './bar'
 
 const BAR = 'craft:bar'
+const SKILL = 'Skill'
 const HIDDEN = 'hidden'
 const OFF = 'off'
 const ON = 'on'
@@ -90,6 +91,15 @@ async function setHidden($: EngineInterface, isHidden: boolean): Promise<void> {
   $.ui.invalidate(RENDER)
 }
 
+async function enterPhase($: EngineInterface, command: string, args: string): Promise<void> {
+  const phase = commandPhase(command)
+  if (phase === undefined) return
+  const names = await folders($)
+  state = startPhase(state, phase, args, names)
+  await readDetached($)
+  await readSlices($)
+}
+
 async function answerBar($: EngineInterface, args: string): Promise<{ text: string }> {
   const word = args.trim()
   const isHidden = word === OFF ? true : word === ON ? false : !(await hidden($))
@@ -100,13 +110,12 @@ async function answerBar($: EngineInterface, args: string): Promise<{ text: stri
 export const register: Register = on => {
   on('command.run', { command: CRAFT }, async ($, e, next) => {
     if (e.command === BAR) return answerBar($, e.args)
-    const phase = commandPhase(e.command)
-    if (phase !== undefined) {
-      const names = await folders($)
-      state = startPhase(state, phase, e.args, names)
-      await readDetached($)
-      await readSlices($)
-    }
+    await enterPhase($, e.command, e.args)
+    return next(e)
+  }).catch(($, e, next) => next(e))
+
+  on('tool.call', { tool: SKILL }, async ($, e, next) => {
+    await enterPhase($, e.skill, e.args ?? NONE)
     return next(e)
   }).catch(($, e, next) => next(e))
 

@@ -1,0 +1,45 @@
+
+ ▐▛███▛█   Claude Code v2.1.303
+▝▜██████▀  Opus 5.5 with high effort · Claude Max
+ ▝▝   ▝▝   ~/demo
+
+▎ [✻] [✻] [✻] · Share Claude Code and earn $50 in usage credits · /passes
+
+❯ /craft:bar on
+  ⎿  craft: The craft bar is on.
+
+❯ Use the Skill tool to run the skill craft:close with args demo. Do nothing else.
+
+⏺ Skill(craft:close)
+  ⎿  Successfully loaded skill
+
+  Thought for 1s, ran 1 shell command
+
+⏺ Nothing to close: demo has no uncommitted changes (the working tree is clean, and the only file in the work is docs/craft/demo/shape.md,
+  which is committed). The work also has no slices.md yet, so craft:plan demo is the next step.
+
+✻ Brewed for 11s · done 3:49 PM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+craft demo · close · detached                                                                                                         x [-]
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ /craft:plan demo
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⚠ Transcript saving is off — inherited CLAUDE_CODE_CHILD_SESSION marker · restart with CLAUDE_CODE_FORCE_SESSION_PERSISTENCE=1 to keep …
+  ╸ repo  main │ Opus 5.5 │ +0 -0 │ $0.5049264 │ ░░░░░ 6%
+  -- INSERT -- ⏵⏵ bypass permissions on (shift+tab to cycle)
