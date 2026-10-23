@@ -170,6 +170,10 @@ function bash($: Engine) {
   return $.tool.call({ tool: 'Bash', command: show(BETA) })
 }
 
+function skill($: Engine, name: string, args?: string) {
+  return $.tool.call({ tool: 'Skill', skill: name, args })
+}
+
 test('nothing is drawn before craft activity', async ($, on) => {
   world(on, [SLUG])
   const ui = await mount($)
@@ -347,4 +351,17 @@ test('pressing the x by its key hides the line and leaves hidden true in the sto
   expect(await line(ui)).toBeUndefined()
   expect((await run($, BAR)).text).toMatch(/on\.$/)
   expect(await line(ui)).toBe(PLANNING)
+})
+
+test('a phase the model runs with the Skill tool draws like a typed one, detached included, and other skills change nothing', async ($, on) => {
+  const { state } = world(on, [SLUG])
+  const ui = await mount($)
+  await skill($, `${PLUGIN}:status`, SLUG)
+  await skill($, 'commit')
+  expect(await line(ui)).toBeUndefined()
+  state.flag = TRUE
+  await skill($, PLAN_COMMAND, SLUG)
+  expect(await line(ui)).toBe(`${PLANNING}${SEPARATOR}${DETACHED}`)
+  await skill($, IMPLEMENT_COMMAND, SLUG)
+  expect(await line(ui)).toBe(`${PLUGIN} ${SLUG} · ${IMPLEMENT}${SEPARATOR}${DETACHED} · ${WAITING.repeat(3)} 0/3`)
 })

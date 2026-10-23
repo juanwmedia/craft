@@ -50,7 +50,7 @@ touches: skills/detached/SKILL.md
 after: agent
 done: `P=$PWD; d=$(mktemp -d); cd $d && git init -q . && claude -p --plugin-dir $P --max-turns 3 '/craft:detached on' 2>/dev/null | grep -ci detached; git config --get craft.detached; claude -p --plugin-dir $P --max-turns 3 '/craft:detached off' 2>/dev/null | grep -ci detached; git config --get craft.detached > /dev/null 2>&1; echo $?` prints `1`, `true`, `1`, `1`
 
-`skills/detached/SKILL.md` follows the frontmatter of `skills/bar/SKILL.md` with `name: detached`, an `argument-hint` of `[on | off]` and `disable-model-invocation: false`, so a routine's prompt can ask for the mode in words and the model turns it on with the Skill tool. Its body: `on` runs `git config --local craft.detached true`, `off` runs `git config --local --unset craft.detached` and treats a missing key as off, a bare `/craft:detached` switches to the other state, and each answers one line saying which mode this repository is in now and that a routine turns it on with `/craft:detached on` as its first message. Nothing else is read or written.
+`skills/detached/SKILL.md` follows the frontmatter of `skills/bar/SKILL.md` with `name: detached`, an `argument-hint` of `[on | off]` and `disable-model-invocation: false`, so a routine's prompt can ask for the mode in words and the model turns it on with the Skill tool. Its body: `on` runs `git config --local craft.detached true`, `off` runs `git config --local --unset craft.detached` and treats a missing key as off, a bare `/craft:detached` switches to the other state, and each answers one line saying which mode this repository is in now. Nothing else is read or written.
 
 ### bar
 touches: hooks/bar.ts, hooks/register.ts, tests/bar.test.ts
