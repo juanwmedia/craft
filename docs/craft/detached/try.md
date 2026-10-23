@@ -4,11 +4,11 @@ What it took to run: a toy repository made for the try (`greeter`, with `docs/cr
 
 ## Turning the mode on and off in words: passed
 
-Two headless sessions in a fresh repository asked in plain words to turn detached mode on, then off. Each called the `craft:detached` skill by itself (`on`, then `off`), the flag went from unset to `true` and back to unset, and each answered one line naming the routine's first message. Proof: [words-on-trace.jsonl](try/words-on-trace.jsonl), [words-off-trace.jsonl](try/words-off-trace.jsonl).
+Two headless sessions in a fresh repository asked in plain words to turn detached mode on, then off. Each called the `craft:detached` skill by itself (`on`, then `off`), the flag went from unset to `true` and back to unset, and each answered one line naming the routine's first message. Proof: the git config read before and after each session; the traces were read and not kept.
 
 ## Implement hands a need its owner's slice contradicts to the agent: passed
 
-`/craft:implement greet` ran headless with the flag on. The builder followed the slice and returned `Hi Ada`; the review refuted it against `shape.md` and `plan.md`; implement sent both findings to `craft:act-as-me` instead of the human, rebuilt the slice with its answer (`Hello, <name>!`) and the second review confirmed it. `detached.md` holds both blocks with phase, question, answer and why. No `AskUserQuestion` call, no commit. Proof: [implement-trace.jsonl](try/implement-trace.jsonl), [implement-detached.md](try/implement-detached.md).
+`/craft:implement greet` ran headless with the flag on. The builder followed the slice and returned `Hi Ada`; the review refuted it against `shape.md` and `plan.md`; implement sent both findings to `craft:act-as-me` instead of the human, rebuilt the slice with its answer (`Hello, <name>!`) and the second review confirmed it. `detached.md` holds both blocks with phase, question, answer and why. No `AskUserQuestion` call, no commit. Proof: [implement-detached.md](try/implement-detached.md); the trace was read and not kept.
 
 ## The bar says detached while the flag is on: passed
 

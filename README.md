@@ -32,7 +32,7 @@ In sessions where Claude Code runs mods, a line above the prompt shows the work'
 
 ![The craft bar in each state](docs/craft/craft-bar/look/band.png)
 
-With `/craft:detached on`, every decision a phase would hand to you goes to `craft:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/craft:detached off` ends it, and a routine turns it on with `/craft:detached on` as its first message.
+With `/craft:detached on`, every decision a phase would hand to you goes to `craft:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/craft:detached off` ends it. It is made for work that runs on its own, such as a Claude Code routine in the cloud whose first message is `/craft:detached on`.
 
 When an answer does not land, `/craft:wtf [the fragment]` says it again in plain words, without moving the work forward.
 
