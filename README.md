@@ -32,6 +32,8 @@ In sessions where Claude Code runs mods, a line above the prompt shows the work'
 
 ![The craft bar in each state](docs/craft/craft-bar/look/band.png)
 
+The bar is a mod, `hooks/register.ts`. Everything it does stays on this machine: it runs `git config --get craft.detached` in the session's repository to learn whether detached mode is on, lists `docs/craft/` and reads the work's `slices.md` to know the slug, the phase and the slices, and watches the `/craft:*` commands, the `Skill` tool calls that start a phase and the `craft:*` agents that spawn, only to draw the line. It changes nothing those calls do, runs no other program, and sends nothing anywhere. `/craft:bar off` is the one thing it keeps, in the plugin's own store, so the bar stays hidden across sessions.
+
 With `/craft:detached on`, every decision a phase would hand to you goes to `craft:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/craft:detached off` ends it. Perfect for detached cloud routines that work on their own: start one with `/craft:detached on` as its first message.
 
 When an answer does not land, `/craft:wtf [the fragment]` says it again in plain words, without moving the work forward.

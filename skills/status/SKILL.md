@@ -1,6 +1,6 @@
 ---
 name: status
-description: Say where every open work stands: where it came from, where it is now, and the next step.
+description: "Say where every open work stands: where it came from, where it is now, and the next step."
 argument-hint: "[slug]"
 disable-model-invocation: false
 ---
