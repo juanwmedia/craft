@@ -10,6 +10,14 @@
     {
       "name": "craft",
       "source": "./"
+    },
+    {
+      "name": "craft-bar",
+      "source": {
+        "source": "github",
+        "repo": "juanwmedia/craft-bar"
+      },
+      "description": "The craft bar: one line above the prompt with the work, its phase, its slices and the craft agent running now. A mod; needs Claude Code 2.1.287 or later with mods on."
     }
   ]
 }

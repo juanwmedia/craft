@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.10.0
+
+The craft bar leaves this plugin and becomes [craft-bar](https://github.com/juanwmedia/craft-bar), installed from the same marketplace with `/plugin install craft-bar@craft`. The Claude plugin directory accepts mods only from Verified organizations, so craft ships no mod and the directory can list it. Updating craft alone removes the bar until craft-bar is installed; `/craft:bar` is now `/craft-bar:bar`.
+
 ## 4.9.2
 
 - Craft is submitted to the Claude plugin directory. The plugin has an icon, the README says what the bar mod runs, reads and keeps, and the listing fields in `plugin.json` are filled in (a shorter description, keywords, documentation and support links).

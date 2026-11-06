@@ -28,11 +28,7 @@ When something changes, run `/craft:plan <slug> <what changed>`, then implement,
 
 When you lose track, `/craft:status [slug]` says where every open work stands, what it waits on and the next step.
 
-In sessions where Claude Code runs mods, a line above the prompt shows the work's slug, its phase, its slices while implementing and the craft agent running now. `/craft:bar off` hides it in every session and `/craft:bar on` brings it back.
-
-![The craft bar in each state](docs/craft/craft-bar/look/band.png)
-
-The bar is a mod, `hooks/register.ts`. Everything it does stays on this machine: it runs `git config --get craft.detached` in the session's repository to learn whether detached mode is on, lists `docs/craft/` and reads the work's `slices.md` to know the slug, the phase and the slices, and watches the `/craft:*` commands, the `Skill` tool calls that start a phase and the `craft:*` agents that spawn, only to draw the line. It changes nothing those calls do, runs no other program, and sends nothing anywhere. `/craft:bar off` is the one thing it keeps, in the plugin's own store, so the bar stays hidden across sessions.
+The craft bar, a line above the prompt with the work's slug, its phase, its slices while implementing and the craft agent running now, is a plugin of its own, [craft-bar](https://github.com/juanwmedia/craft-bar), installed from the same marketplace. It is a mod, which the Claude plugin directory does not take from an unverified publisher, so craft itself ships no code that runs.
 
 With `/craft:detached on`, every decision a phase would hand to you goes to `craft:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/craft:detached off` ends it. Perfect for detached cloud routines that work on their own: start one with `/craft:detached on` as its first message.
 
@@ -45,6 +41,7 @@ When shape or plan starts new work in a tree with uncommitted changes, it offers
 ```bash
 /plugin marketplace add juanwmedia/craft
 /plugin install craft@craft
+/plugin install craft-bar@craft
 ```
 
 Marketplaces outside Anthropic's do not update on their own. To have Craft update in the background, add this to `~/.claude/settings.json` ([how plugin auto-update works](https://wmedia.es/en/tips/claude-code-plugin-update-automatically)):
