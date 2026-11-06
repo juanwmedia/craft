@@ -1,12 +1,23 @@
 {
   "name": "craft",
-  "version": "4.9.1",
-  "description": "A minimalistic (and opinionated) approach to enjoy building things using AI agents, without losing control.",
+  "version": "4.9.2",
+  "description": "A minimalistic (and opinionated) approach to building with AI agents, without losing control.",
   "author": {
     "name": "Juan Andrés Núñez",
     "url": "https://github.com/juanwmedia"
   },
   "homepage": "https://www.wmedia.es",
   "repository": "https://github.com/juanwmedia/craft",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "ai-agents",
+    "workflow",
+    "shape",
+    "plan",
+    "slices",
+    "review",
+    "claude-code"
+  ],
+  "documentationUrl": "https://github.com/juanwmedia/craft#readme",
+  "supportUrl": "https://github.com/juanwmedia/craft/issues"
 }

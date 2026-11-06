@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.9.2
+
+- Craft is submitted to the Claude plugin directory. The plugin has an icon, the README says what the bar mod runs, reads and keeps, and the listing fields in `plugin.json` are filled in (a shorter description, keywords, documentation and support links).
+
 ## 4.9.1
 
 - The craft bar shows the work, the phase and `detached` for a phase the model starts with the Skill tool, the same as for one you type. Before, a phase started that way (a routine asking in words, a session moving on to the next phase) showed only `craft`.
