@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.10.1
+
+- Nothing craft ships reads a key or a token from the environment. The Claude plugin directory held 4.10.0 because two eval fixtures (`plan-proves-assumption-first`, `plan-builds-at-once-when-assumption-is-tested`) built a sample app that read `HOLDED_API_KEY` from the environment, and one check in `docs/craft/detached/slices.md` read `$PWD`. The sample app now takes its key from its own settings module. No skill, agent or reference changes.
+
 ## 4.10.0
 
 The craft bar leaves this plugin and becomes [craft-bar](https://github.com/juanwmedia/craft-bar), installed from the same marketplace with `/plugin install craft-bar@craft`. The Claude plugin directory accepts mods only from Verified organizations, so craft ships no mod and the directory can list it. Updating craft alone removes the bar until craft-bar is installed; `/craft:bar` is now `/craft-bar:bar`.

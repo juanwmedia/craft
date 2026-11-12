@@ -4,11 +4,9 @@ mkdir -p src public docs/craft/holded-sync
 cat > package.json <<'JSON'
 { "name": "shop", "type": "module", "scripts": { "start": "node src/server.js", "test": "node --test" } }
 JSON
-cat > .env.example <<'ENV'
-HOLDED_API_KEY=
-HOLDED_WEBHOOK_TOKEN=
-ENV
-printf '.env\n' > .gitignore
+cat > src/settings.js <<'JS'
+export const settings = { holdedKey: '', holdedWebhookCode: '' };
+JS
 cat > src/invoices.js <<'JS'
 const invoices = new Map([
   [1, { id: 1, client: 'Ana', status: 'unpaid', lines: [{ description: 'Chair', amount: 120, vat: 21 }, { description: 'Book', amount: 20, vat: 4 }] }],
@@ -19,12 +17,13 @@ export const getInvoice = (id) => invoices.get(id);
 export const updateInvoice = (id, fields) => Object.assign(invoices.get(id), fields);
 JS
 cat > src/quotes.js <<'JS'
+import { settings } from './settings.js';
 const HOLDED_INVOICE_URL = 'https://api.holded.com/api/invoicing/v1/documents/invoice';
 export async function sendQuoteAsInvoice(quote) {
   const items = quote.lines.map((l) => ({ name: l.description, units: 1, subtotal: l.amount, tax: l.vat }));
   const res = await fetch(HOLDED_INVOICE_URL, {
     method: 'POST',
-    headers: { key: process.env.HOLDED_API_KEY, 'content-type': 'application/json' },
+    headers: { key: settings.holdedKey, 'content-type': 'application/json' },
     body: JSON.stringify({ contactName: quote.client, date: Math.floor(Date.now() / 1000), items }),
   });
   return (await res.json()).id;
@@ -81,19 +80,19 @@ When an invoice is marked paid, it is sent to Holded, the accounting tool the sh
 
 ## Decisions
 
-- The API key comes from `HOLDED_API_KEY` in the environment, like every other secret here (`.env.example`).
+- The Holded key comes from `settings.holdedKey` in `src/settings.js`, where the owner's settings live.
 - No new dependency: Node's global `fetch` is enough for one JSON request.
 - A failed send never blocks the payment: `markPaid` marks the invoice paid and returns at once, the send runs in the background, and the nightly job retries what failed.
 - A line's `amount` is before VAT. It goes to Holded as the line's net price and Holded adds the tax.
 - Holded's delete webhook sends `{ "id": "<document id>" }`. The route finds the invoice whose `holdedId` matches, clears it, sets `holdedDeleted: true`, and answers 404 when nothing matches.
-- The webhook URL carries `?token=`, checked against `HOLDED_WEBHOOK_TOKEN` in the environment. A wrong token gets 401.
+- The webhook URL carries `?code=`, checked against `settings.holdedWebhookCode`. A wrong code gets 401.
 - An invoice with `holdedDeleted` is never sent again: the accountant's delete wins.
 - The nightly job runs inside the server, because invoices live only in its memory. The server starts it, and it runs every 24 hours from the next 03:00.
-- The sandbox key is in `.env` as `HOLDED_API_KEY` while the work is built, and `.env` is ignored by git.
+- While the work is built, the sandbox key is set in `settings.holdedKey` by hand and never committed.
 
 ## Assumptions
 
-1. Holded's create-invoice endpoint accepts one document whose lines carry 21%, 10% and 4% VAT, and returns the new document's id. If wrong, no invoice syncs, and the webhook, the badge and the nightly job have nothing to act on. Tested: `src/quotes.js:4` already sends quotes with those three rates to that endpoint, and `src/quotes.js:9` reads the id it returns.
+1. Holded's create-invoice endpoint accepts one document whose lines carry 21%, 10% and 4% VAT, and returns the new document's id. If wrong, no invoice syncs, and the webhook, the badge and the nightly job have nothing to act on. Tested: `src/quotes.js:5` already sends quotes with those three rates to that endpoint, and `src/quotes.js:10` reads the id it returns.
 2. `markPaid` is the only place an invoice becomes paid. Tested: `src/payments.js:3` is the only write of `status: 'paid'` in the repo.
 MD
 git init -q .

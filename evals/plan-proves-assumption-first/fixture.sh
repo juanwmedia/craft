@@ -4,11 +4,9 @@ mkdir -p src public docs/craft/holded-sync
 cat > package.json <<'JSON'
 { "name": "shop", "type": "module", "scripts": { "start": "node src/server.js", "test": "node --test" } }
 JSON
-cat > .env.example <<'ENV'
-HOLDED_API_KEY=
-HOLDED_WEBHOOK_TOKEN=
-ENV
-printf '.env\n' > .gitignore
+cat > src/settings.js <<'JS'
+export const settings = { holdedKey: '', holdedWebhookCode: '' };
+JS
 cat > src/invoices.js <<'JS'
 const invoices = new Map([
   [1, { id: 1, client: 'Ana', status: 'unpaid', lines: [{ description: 'Chair', amount: 120, vat: 21 }, { description: 'Book', amount: 20, vat: 4 }] }],
@@ -69,15 +67,15 @@ When an invoice is marked paid, it is sent to Holded, the accounting tool the sh
 
 ## Decisions
 
-- The API key comes from `HOLDED_API_KEY` in the environment, like every other secret here (`.env.example`).
+- The Holded key comes from `settings.holdedKey` in `src/settings.js`, where the owner's settings live.
 - No new dependency: Node's global `fetch` is enough for one JSON request.
 - A failed send never blocks the payment: `markPaid` marks the invoice paid and returns at once, the send runs in the background, and the nightly job retries what failed.
 - A line's `amount` is before VAT. It goes to Holded as the line's net price and Holded adds the tax.
 - Holded's delete webhook sends `{ "id": "<document id>" }`. The route finds the invoice whose `holdedId` matches, clears it, sets `holdedDeleted: true`, and answers 404 when nothing matches.
-- The webhook URL carries `?token=`, checked against `HOLDED_WEBHOOK_TOKEN` in the environment. A wrong token gets 401.
+- The webhook URL carries `?code=`, checked against `settings.holdedWebhookCode`. A wrong code gets 401.
 - An invoice with `holdedDeleted` is never sent again: the accountant's delete wins.
 - The nightly job runs inside the server, because invoices live only in its memory. The server starts it, and it runs every 24 hours from the next 03:00.
-- The sandbox key is in `.env` as `HOLDED_API_KEY` while the work is built, and `.env` is ignored by git.
+- While the work is built, the sandbox key is set in `settings.holdedKey` by hand and never committed.
 
 ## Assumptions
 
