@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.11.1
+
+- The evaluate agent no longer declares `background: true`. The Claude plugin directory refuses that key from a publisher that is not a Verified organization. The review reference now tells the caller to run the agent in the background, so the conversation stays free while a draft is audited, as before.
+
 ## 4.11.0
 
 The plugin moves to `plugin/`, and an install copies only that folder: the skills, the agents, the references and the README. The Claude plugin directory refused 4.10.1 because the eval suite sat in the folder it reads, and it takes scripts and typed frontmatter only from Verified organizations. The evals, the docs and the changelog stay in the repository, outside the plugin. Updating needs nothing new: `claude plugin marketplace update craft`, then `claude plugin update craft@craft`.
