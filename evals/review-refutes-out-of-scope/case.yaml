@@ -8,3 +8,4 @@ description: >-
 tags: [review]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

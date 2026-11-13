@@ -11,3 +11,4 @@ description: >-
 tags: [try, detached]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

@@ -11,3 +11,4 @@ tags: [wtf, read-only]
 context:
   scaffold_script: fixture.sh
   history_file: history.jsonl
+plugins: ["../../plugin"]

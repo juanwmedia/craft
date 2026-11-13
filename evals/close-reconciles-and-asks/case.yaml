@@ -10,3 +10,4 @@ description: >-
 tags: [close, reconcile]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

@@ -9,3 +9,4 @@ description: >-
 tags: [implement, slices]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

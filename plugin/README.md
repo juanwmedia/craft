@@ -1,0 +1,85 @@
+# Craft
+
+A minimalistic (and opinionated) approach to building things with AI agents: use all the help they can give, keep control of what gets built, and enjoy building it.
+
+## The idea
+
+You decide what agents cannot infer: the domain, the architecture, the structure of what gets built. Those are human decisions, and getting them right is the real work. `/craft:shape` and `/craft:plan` are where you spend your time.
+
+Code is cheap. Once the uncertainty is gone and the decisions are written down, the choices left are small enough for an agent to make alone. `/craft:implement` builds, checks and retries with nobody to ask, and reaches you only when it needs a decision the documents did not make.
+
+Every step is reviewed in a fresh context: the documents against the code before you see them, the code against the documents once it is built. After the first review, each one narrows to what the last fix changed, while every check still runs over the whole change.
+
+Work runs in parallel only where the slow part is independent. Slices that share no file and do not wait for each other build at once, except when the assumption the shape hangs on is still assumed: then the first slice is the thinnest path that proves it from start to end, and the rest wait for it. When the slices' checks are slow, the change is reviewed at once, one reviewer per slice. Tries that share neither the browser nor the data run at once too. An audit of a document is never split: every agent pays its own setup (reading the code, installing what it needs to test a claim), so splitting it cost two to five times the tokens for the same wait. It runs in the background instead, and a draft is audited again only when a fix changes a decision.
+
+## Flow
+
+Each piece of work has a slug, the same word in every command, and everything written about it lives in `docs/craft/<slug>/` as markdown.
+
+1. `/craft:shape <idea>` settles with you what we are building, and writes `shape.md`.
+2. `/craft:plan <slug>` splits it into slices that never share a file, each with a check, and writes `plan.md` and `slices.md` for you to approve.
+3. `/craft:implement <slug>` gives each slice its own agent, runs the check itself, and retries with a fresh agent while each try fails differently. Then it reviews the whole change. It never commits.
+4. `/craft:try <slug>` tries live, in the running app, what the work must do, and writes what it saw to `try.md`, with screenshots when a browser can save them. It never changes code.
+5. `/craft:close <slug>` updates the documents to match what was built, keeps the few lessons the code cannot tell, and asks you once before it commits, pushes and opens the pull request. Nothing else commits.
+
+Every command is idempotent: run it again and it only works on what changed or is still missing. A slice whose check already passes is left alone, and close with nothing new says so and stops.
+
+When something changes, run `/craft:plan <slug> <what changed>`, then implement, try and close again.
+
+When you lose track, `/craft:status [slug]` says where every open work stands, what it waits on and the next step.
+
+The craft bar, a line above the prompt with the work's slug, its phase, its slices while implementing and the craft agent running now, is a plugin of its own, [craft-bar](https://github.com/juanwmedia/craft-bar), installed from the same marketplace. It is a mod, which the Claude plugin directory does not take from an unverified publisher, so craft itself ships no code that runs.
+
+With `/craft:detached on`, every decision a phase would hand to you goes to `craft:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/craft:detached off` ends it. Perfect for detached cloud routines that work on their own: start one with `/craft:detached on` as its first message.
+
+When an answer does not land, `/craft:wtf [the fragment]` says it again in plain words, without moving the work forward.
+
+When shape or plan starts new work in a tree with uncommitted changes, it offers to move it to its own worktree.
+
+## Install
+
+```bash
+/plugin marketplace add juanwmedia/craft
+/plugin install craft@craft
+/plugin install craft-bar@craft
+```
+
+Marketplaces outside Anthropic's do not update on their own. To have Craft update in the background, add this to `~/.claude/settings.json` ([how plugin auto-update works](https://wmedia.es/en/tips/claude-code-plugin-update-automatically)):
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "craft": {
+      "source": { "source": "github", "repo": "juanwmedia/craft" },
+      "autoUpdate": true
+    }
+  }
+}
+```
+
+To update by hand, run these and then `/reload-plugins` in the open session:
+
+```bash
+claude plugin marketplace update craft
+claude plugin update craft@craft
+```
+
+## Extending it
+
+Skills say what a step does, references say how, and a skill only points to references, never to another skill. Add a step by adding a skill, change a rule by editing one reference.
+
+Craft is built on Claude Code. The skills and references are plain markdown, so the ideas carry to any harness with skills and subagents; the tool names (`AskUserQuestion`, `EnterWorktree`) are the part to swap.
+
+## Coming from 3.x
+
+Craft 4 is a rewrite, not an update. Craft has evolved as my place in the loop with AI agents has. Craft 3 kept me in the loop: I approved every task as it was built. As I grew comfortable working above the loop, deciding the domain and the plan and letting agents build without watching every step, I rewrote the method to match.
+
+Craft 4 keeps what paid off (shaping before specifying, fresh-context reviews, every claim checked against the code). You spend your time in shape and plan, and the build runs on its own.
+
+Your 3.x files stay in `docs/craft/` as they are; Craft 4 does not read them. To stay on 3.7, pin the marketplace to its tag:
+
+```bash
+claude plugin marketplace remove craft
+claude plugin marketplace add juanwmedia/craft@v3.7.0
+claude plugin install craft@craft
+```

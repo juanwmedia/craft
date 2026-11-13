@@ -9,3 +9,4 @@ description: >-
 tags: [try]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

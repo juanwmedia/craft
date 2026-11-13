@@ -8,3 +8,4 @@ description: >-
 tags: [implement, idempotent]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

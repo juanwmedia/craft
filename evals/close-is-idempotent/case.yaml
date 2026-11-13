@@ -7,3 +7,4 @@ description: >-
 tags: [close, idempotent]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

@@ -1,6 +1,6 @@
 {
   "name": "craft",
-  "version": "4.10.1",
+  "version": "4.11.0",
   "description": "A minimalistic (and opinionated) approach to building with AI agents, without losing control.",
   "author": {
     "name": "Juan Andrés Núñez",
@@ -18,6 +18,6 @@
     "review",
     "claude-code"
   ],
-  "documentationUrl": "https://github.com/juanwmedia/craft#readme",
+  "documentationUrl": "https://github.com/juanwmedia/craft/tree/master/plugin#readme",
   "supportUrl": "https://github.com/juanwmedia/craft/issues"
 }

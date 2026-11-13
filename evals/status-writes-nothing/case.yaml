@@ -9,3 +9,4 @@ description: >-
 tags: [status, read-only]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]

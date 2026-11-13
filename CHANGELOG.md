@@ -1,8 +1,12 @@
 # Changelog
 
+## 4.11.0
+
+The plugin moves to `plugin/`, and an install copies only that folder: the skills, the agents, the references and the README. The Claude plugin directory refused 4.10.1 because the eval suite sat in the folder it reads, and it takes scripts and typed frontmatter only from Verified organizations. The evals, the docs and the changelog stay in the repository, outside the plugin. Updating needs nothing new: `claude plugin marketplace update craft`, then `claude plugin update craft@craft`.
+
 ## 4.10.1
 
-- Nothing craft ships reads a key or a token from the environment. The Claude plugin directory held 4.10.0 because two eval fixtures (`plan-proves-assumption-first`, `plan-builds-at-once-when-assumption-is-tested`) built a sample app that read `HOLDED_API_KEY` from the environment, and one check in `docs/craft/detached/slices.md` read `$PWD`. The sample app now takes its key from its own settings module. No skill, agent or reference changes.
+- No eval fixture reads a key or a token from the environment. The Claude plugin directory held 4.10.0 because the sample app two plan fixtures build read its key from the environment, and one check in `docs/craft/detached/slices.md` read the working directory from a variable. The sample app now takes its key from its own settings module. No skill, agent or reference changes.
 
 ## 4.10.0
 

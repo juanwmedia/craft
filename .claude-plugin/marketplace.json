@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "craft",
-      "source": "./"
+      "source": "./plugin"
     },
     {
       "name": "craft-bar",

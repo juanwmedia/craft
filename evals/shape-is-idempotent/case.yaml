@@ -10,3 +10,4 @@ description: >-
 tags: [shape, idempotent]
 context:
   scaffold_script: fixture.sh
+plugins: ["../../plugin"]
