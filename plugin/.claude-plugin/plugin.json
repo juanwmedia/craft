@@ -1,6 +1,6 @@
 {
-  "name": "craft",
-  "version": "4.11.1",
+  "name": "crafting",
+  "version": "4.12.0",
   "description": "A minimalistic (and opinionated) approach to building with AI agents, without losing control.",
   "author": {
     "name": "Juan Andrés Núñez",

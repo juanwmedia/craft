@@ -4,4 +4,4 @@ timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Bash, Skill, Agent, Write, Edit, TodoWrite]
 ---
 
-/craft:close w
+/crafting:close w

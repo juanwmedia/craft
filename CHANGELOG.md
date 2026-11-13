@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.12.0
+
+The plugin is now named `crafting`, so every command starts with `/crafting:` (`/crafting:shape`, `/crafting:plan`) and every agent with `crafting:`. The Claude plugin directory already lists a connector named `craft`, and only its owner can publish under that name. The project is still Craft: the repository, the marketplace, the `docs/craft/` folder and the `craft.detached` flag keep their names. The installed `craft` no longer updates. Remove it with `claude plugin uninstall craft@craft` and install `crafting@craft`; craft-bar 1.1.0 reads the new prefix.
+
 ## 4.11.1
 
 - The evaluate agent no longer declares `background: true`. The Claude plugin directory refuses that key from a publisher that is not a Verified organization. The review reference now tells the caller to run the agent in the background, so the conversation stays free while a draft is audited, as before.

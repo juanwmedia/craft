@@ -4,4 +4,4 @@ timeout_seconds: 600
 allowed_tools: [Read, Glob, Grep, Bash, Skill, Agent, Write, Edit, TodoWrite]
 ---
 
-/craft:try greet
+/crafting:try greet

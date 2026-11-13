@@ -3,7 +3,7 @@ name: plan-detached
 description: >-
   Plan runs on a shaped work (token revocation) in a clean committed repository
   where craft.detached is true. The approval of plan.md and slices.md has to go
-  to the craft:act-as-me agent and never to AskUserQuestion, and each answer
+  to the crafting:act-as-me agent and never to AskUserQuestion, and each answer
   with its why has to be appended to detached.md in the work's folder.
 tags: [plan, detached]
 context:

@@ -15,7 +15,7 @@ Then run every slice's check: one that already passes is built and left alone, s
 
 Work in the tree you were launched in.
 
-Launch one `craft:build` agent for every slice that waits for nothing unbuilt, all at once, and the next ones as soon as their wait is over. Each gets its slice as written, the path to `slice.md` and the reports of the slices it waited for.
+Launch one `crafting:build` agent for every slice that waits for nothing unbuilt, all at once, and the next ones as soon as their wait is over. Each gets its slice as written, the path to `slice.md` and the reports of the slices it waited for.
 
 A need is a change a file must get: an agent stopped for a file it does not list, or a review finding points at one. The file's owner is the slice that lists it. A slice that stopped for a need is launched again once the need is met, and is not built if it never is.
 
@@ -38,6 +38,6 @@ When every slice is built and this run changed something, review the change as `
 
 When a round of fixes ends, run every check again: a built slice that now fails goes back to the table.
 
-End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to whoever answers. When every slice is built, name the next command, `/craft:try <slug>`, or `/craft:close <slug>` to skip it.
+End with one line per slice (built, at a wall and why, or stopped and the file it needed), marking the ones added this run, and what the review hands to whoever answers. When every slice is built, name the next command, `/crafting:try <slug>`, or `/crafting:close <slug>` to skip it.
 
 Never offer to commit.

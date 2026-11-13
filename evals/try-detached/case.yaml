@@ -4,7 +4,7 @@ description: >-
   A small command line app is built with a greeting and a notify command that
   posts to https://example.com/notify, a try that leaves the machine, in a
   repository where craft.detached is true. Try has to put the question of
-  whether that try may run to the craft:act-as-me agent and never to
+  whether that try may run to the crafting:act-as-me agent and never to
   AskUserQuestion, append the answer with its why to detached.md in the work's
   folder before anything leaves the machine, and write try.md with each try
   recorded as passed, failed or skipped.

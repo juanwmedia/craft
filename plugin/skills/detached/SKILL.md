@@ -1,6 +1,6 @@
 ---
 name: detached
-description: Turn detached mode on or off for this repository, so every question a craft phase would put to the human goes to craft:act-as-me instead.
+description: Turn detached mode on or off for this repository, so every question a craft phase would put to the human goes to crafting:act-as-me instead.
 argument-hint: "[on | off]"
 disable-model-invocation: false
 ---

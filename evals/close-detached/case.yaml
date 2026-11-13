@@ -5,7 +5,7 @@ description: >-
   check passes, shape.md still holds an assumed assumption the build proved,
   a leftover probe file (probe-audit.mjs) sits untracked in the root, and
   craft.detached is true. Close has to send the commit, branch and pull request
-  question to the craft:act-as-me agent instead of the human, log the answer in
+  question to the crafting:act-as-me agent instead of the human, log the answer in
   detached.md, then create a branch named after the slug, commit only the
   work's files and push it to the bare remote inside the eval's directory.
 tags: [close, detached]

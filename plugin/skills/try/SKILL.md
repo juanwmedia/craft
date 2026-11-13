@@ -17,4 +17,4 @@ Tries that share neither the browser nor the data may run at once, each by its o
 
 `try.md` says, for each thing, passed, failed or skipped, how it was tried and what was seen, with a link to what it kept as proof.
 
-End with one line per thing, the path to `try.md`, and the next command: `/craft:close <slug>`, or `/craft:plan <slug> <what failed>`.
+End with one line per thing, the path to `try.md`, and the next command: `/crafting:close <slug>`, or `/crafting:plan <slug> <what failed>`.

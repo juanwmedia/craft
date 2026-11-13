@@ -4,9 +4,9 @@ A minimalistic (and opinionated) approach to building things with AI agents: use
 
 ## The idea
 
-You decide what agents cannot infer: the domain, the architecture, the structure of what gets built. Those are human decisions, and getting them right is the real work. `/craft:shape` and `/craft:plan` are where you spend your time.
+You decide what agents cannot infer: the domain, the architecture, the structure of what gets built. Those are human decisions, and getting them right is the real work. `/crafting:shape` and `/crafting:plan` are where you spend your time.
 
-Code is cheap. Once the uncertainty is gone and the decisions are written down, the choices left are small enough for an agent to make alone. `/craft:implement` builds, checks and retries with nobody to ask, and reaches you only when it needs a decision the documents did not make.
+Code is cheap. Once the uncertainty is gone and the decisions are written down, the choices left are small enough for an agent to make alone. `/crafting:implement` builds, checks and retries with nobody to ask, and reaches you only when it needs a decision the documents did not make.
 
 Every step is reviewed in a fresh context: the documents against the code before you see them, the code against the documents once it is built. After the first review, each one narrows to what the last fix changed, while every check still runs over the whole change.
 
@@ -16,23 +16,23 @@ Work runs in parallel only where the slow part is independent. Slices that share
 
 Each piece of work has a slug, the same word in every command, and everything written about it lives in `docs/craft/<slug>/` as markdown.
 
-1. `/craft:shape <idea>` settles with you what we are building, and writes `shape.md`.
-2. `/craft:plan <slug>` splits it into slices that never share a file, each with a check, and writes `plan.md` and `slices.md` for you to approve.
-3. `/craft:implement <slug>` gives each slice its own agent, runs the check itself, and retries with a fresh agent while each try fails differently. Then it reviews the whole change. It never commits.
-4. `/craft:try <slug>` tries live, in the running app, what the work must do, and writes what it saw to `try.md`, with screenshots when a browser can save them. It never changes code.
-5. `/craft:close <slug>` updates the documents to match what was built, keeps the few lessons the code cannot tell, and asks you once before it commits, pushes and opens the pull request. Nothing else commits.
+1. `/crafting:shape <idea>` settles with you what we are building, and writes `shape.md`.
+2. `/crafting:plan <slug>` splits it into slices that never share a file, each with a check, and writes `plan.md` and `slices.md` for you to approve.
+3. `/crafting:implement <slug>` gives each slice its own agent, runs the check itself, and retries with a fresh agent while each try fails differently. Then it reviews the whole change. It never commits.
+4. `/crafting:try <slug>` tries live, in the running app, what the work must do, and writes what it saw to `try.md`, with screenshots when a browser can save them. It never changes code.
+5. `/crafting:close <slug>` updates the documents to match what was built, keeps the few lessons the code cannot tell, and asks you once before it commits, pushes and opens the pull request. Nothing else commits.
 
 Every command is idempotent: run it again and it only works on what changed or is still missing. A slice whose check already passes is left alone, and close with nothing new says so and stops.
 
-When something changes, run `/craft:plan <slug> <what changed>`, then implement, try and close again.
+When something changes, run `/crafting:plan <slug> <what changed>`, then implement, try and close again.
 
-When you lose track, `/craft:status [slug]` says where every open work stands, what it waits on and the next step.
+When you lose track, `/crafting:status [slug]` says where every open work stands, what it waits on and the next step.
 
 The craft bar, a line above the prompt with the work's slug, its phase, its slices while implementing and the craft agent running now, is a plugin of its own, [craft-bar](https://github.com/juanwmedia/craft-bar), installed from the same marketplace. It is a mod, which the Claude plugin directory does not take from an unverified publisher, so craft itself ships no code that runs.
 
-With `/craft:detached on`, every decision a phase would hand to you goes to `craft:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/craft:detached off` ends it. Perfect for detached cloud routines that work on their own: start one with `/craft:detached on` as its first message.
+With `/crafting:detached on`, every decision a phase would hand to you goes to `crafting:act-as-me` instead, an agent that answers as an extremely pragmatic senior software engineer who takes nothing for granted, and `detached.md` in the work's folder keeps each one with its phase, question, answer and why. `/crafting:detached off` ends it. Perfect for detached cloud routines that work on their own: start one with `/crafting:detached on` as its first message.
 
-When an answer does not land, `/craft:wtf [the fragment]` says it again in plain words, without moving the work forward.
+When an answer does not land, `/crafting:wtf [the fragment]` says it again in plain words, without moving the work forward.
 
 When shape or plan starts new work in a tree with uncommitted changes, it offers to move it to its own worktree.
 
@@ -40,9 +40,11 @@ When shape or plan starts new work in a tree with uncommitted changes, it offers
 
 ```bash
 /plugin marketplace add juanwmedia/craft
-/plugin install craft@craft
+/plugin install crafting@craft
 /plugin install craft-bar@craft
 ```
+
+Until 4.11 the plugin was named `craft` and its commands started with `/craft:`. The installed `craft` no longer updates: remove it with `claude plugin uninstall craft@craft` and install `crafting@craft`. The marketplace, the repository and the `docs/craft/` folder keep their names.
 
 Marketplaces outside Anthropic's do not update on their own. To have Craft update in the background, add this to `~/.claude/settings.json` ([how plugin auto-update works](https://wmedia.es/en/tips/claude-code-plugin-update-automatically)):
 
@@ -61,7 +63,7 @@ To update by hand, run these and then `/reload-plugins` in the open session:
 
 ```bash
 claude plugin marketplace update craft
-claude plugin update craft@craft
+claude plugin update crafting@craft
 ```
 
 ## Extending it
